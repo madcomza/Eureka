@@ -1,0 +1,5 @@
+---
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/madcomxyg/dev1.madcom.co.za/
+    - /bin/cp -R dist/* $DEPLOYPATH
