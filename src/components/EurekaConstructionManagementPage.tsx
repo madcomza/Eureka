@@ -60,12 +60,10 @@ interface EurekaConstructionManagementPageProps {
       | 'contact',
     subcategory?: SolutionSubcategory
   ) => void;
-  onOpenCode?: (tab: 'html' | 'css') => void;
 }
 
 export const EurekaConstructionManagementPage: React.FC<EurekaConstructionManagementPageProps> = ({
   onNavigate,
-  onOpenCode,
 }) => {
   const [solutionsDropdownOpen, setSolutionsDropdownOpen] = useState(false);
 
@@ -274,7 +272,7 @@ export const EurekaConstructionManagementPage: React.FC<EurekaConstructionManage
   return (
     <div className="min-h-screen bg-slate-50 text-slate-800 font-sans">
       {/* Standard Header */}
-      <EurekaHeader currentPage="construction-management" onNavigate={onNavigate} onOpenCode={onOpenCode} />
+      <EurekaHeader currentPage="construction-management" onNavigate={onNavigate}  />
 
       {/* 3. HERO SECTION */}
       <section className="relative bg-gradient-to-br from-[#060e22] via-[#091838] to-[#1a0808] text-white py-16 sm:py-24 px-4 sm:px-6 lg:px-8 border-b border-slate-800 overflow-hidden">
@@ -1159,38 +1157,8 @@ export const EurekaConstructionManagementPage: React.FC<EurekaConstructionManage
         </div>
       </section>
 
-      {/* 10. ELEMENTOR PRO CODE EXPORT TOOLBAR AT BOTTOM */}
-      <section className="bg-slate-900 border-t border-slate-800 py-8 px-4 sm:px-6 text-center text-white">
-        <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="text-left">
-            <h4 className="text-sm font-bold text-white flex items-center gap-2">
-              <FileText className="w-4 h-4 text-amber-400" />
-              <span>Elementor Pro Export Available</span>
-            </h4>
-            <p className="text-xs text-slate-400">
-              Copy ready-to-paste semantic HTML and scoped CSS tailored for Elementor Custom Code blocks.
-            </p>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => onOpenCode?.('html')}
-              className="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs px-4 py-2 rounded transition-colors"
-            >
-              Get Elementor HTML
-            </button>
-            <button
-              onClick={() => onOpenCode?.('css')}
-              className="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-bold text-xs px-4 py-2 rounded transition-colors"
-            >
-              Get Elementor CSS
-            </button>
-          </div>
-        </div>
-      </section>
-
-      {/* 11. FOOTER */}
-      <EurekaFooter onNavigate={onNavigate} onOpenCode={onOpenCode} />
+      {/* 10. FOOTER */}
+      <EurekaFooter onNavigate={onNavigate} />
     </div>
   );
 };

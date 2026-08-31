@@ -55,12 +55,10 @@ interface EurekaRelocationPageProps {
       | 'contact',
     subcategory?: SolutionSubcategory
   ) => void;
-  onOpenCode?: (tab: 'html' | 'css') => void;
 }
 
 export const EurekaRelocationPage: React.FC<EurekaRelocationPageProps> = ({
   onNavigate,
-  onOpenCode,
 }) => {
   const [solutionsDropdownOpen, setSolutionsDropdownOpen] = useState(false);
 
@@ -124,7 +122,7 @@ export const EurekaRelocationPage: React.FC<EurekaRelocationPageProps> = ({
   return (
     <div className="min-h-screen bg-slate-50 text-slate-800 font-sans">
       {/* Standard Header */}
-      <EurekaHeader currentPage="office-relocation" onNavigate={onNavigate} onOpenCode={onOpenCode} />
+      <EurekaHeader currentPage="office-relocation" onNavigate={onNavigate}  />
 
       {/* 3. HERO SECTION */}
       <section className="relative bg-gradient-to-br from-[#06122c] via-[#0b1f4d] to-[#040c1e] text-white py-16 lg:py-20 border-b-4 border-blue-500 overflow-hidden">
@@ -1004,7 +1002,7 @@ export const EurekaRelocationPage: React.FC<EurekaRelocationPageProps> = ({
       </section>
 
       {/* 9. FOOTER */}
-      <EurekaFooter onNavigate={onNavigate} onOpenCode={onOpenCode} />
+      <EurekaFooter onNavigate={onNavigate}  />
     </div>
   );
 };

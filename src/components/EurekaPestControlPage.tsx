@@ -45,12 +45,10 @@ interface EurekaPestControlPageProps {
     page: 'home' | 'about' | 'solutions' | 'facilities-management' | 'commercial-cleaning' | 'pest-control' | 'pre-soil-treatment' | 'office-relocation' | 'pricing' | 'contact',
     subcategory?: SolutionSubcategory
   ) => void;
-  onOpenCode?: (tab: 'html' | 'css') => void;
 }
 
 export const EurekaPestControlPage: React.FC<EurekaPestControlPageProps> = ({
   onNavigate,
-  onOpenCode,
 }) => {
   const [solutionsDropdownOpen, setSolutionsDropdownOpen] = useState(false);
   const [activeTreatmentTab, setActiveTreatmentTab] = useState<'rodents' | 'insects' | 'termites' | 'birds' | 'fumigation'>('rodents');
@@ -100,7 +98,7 @@ export const EurekaPestControlPage: React.FC<EurekaPestControlPageProps> = ({
   return (
     <div className="min-h-screen bg-slate-50 text-slate-800 font-sans">
       {/* Standard Header */}
-      <EurekaHeader currentPage="pest-control" onNavigate={onNavigate} onOpenCode={onOpenCode} />
+      <EurekaHeader currentPage="pest-control" onNavigate={onNavigate}  />
 
       {/* 3. HERO SECTION */}
       <section className="relative bg-gradient-to-br from-[#04101e] via-[#081e36] to-[#030c17] text-white py-16 lg:py-20 border-b-4 border-emerald-500 overflow-hidden">
@@ -916,7 +914,7 @@ export const EurekaPestControlPage: React.FC<EurekaPestControlPageProps> = ({
       </section>
 
       {/* 9. CORPORATE FOOTER */}
-      <EurekaFooter onNavigate={onNavigate} onOpenCode={onOpenCode} />
+      <EurekaFooter onNavigate={onNavigate}  />
     </div>
   );
 };

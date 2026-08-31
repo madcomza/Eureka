@@ -84,12 +84,10 @@ interface EurekaDelayAnalysisPageProps {
       | 'contact',
     subcategory?: SolutionSubcategory
   ) => void;
-  onOpenCode?: (tab: 'html' | 'css') => void;
 }
 
 export const EurekaDelayAnalysisPage: React.FC<EurekaDelayAnalysisPageProps> = ({
   onNavigate,
-  onOpenCode,
 }) => {
   const [solutionsDropdownOpen, setSolutionsDropdownOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -219,7 +217,7 @@ export const EurekaDelayAnalysisPage: React.FC<EurekaDelayAnalysisPageProps> = (
       <EurekaHeader
         currentPage="delay-analysis"
         onNavigate={onNavigate}
-        onOpenCode={onOpenCode}
+        
       />
 
       {/* HERO SECTION */}
@@ -1529,7 +1527,7 @@ export const EurekaDelayAnalysisPage: React.FC<EurekaDelayAnalysisPageProps> = (
       <EurekaFooter
         currentPage="delay-analysis"
         onNavigate={onNavigate}
-        onOpenCode={onOpenCode}
+        
       />
     </div>
   );

@@ -62,12 +62,10 @@ interface EurekaProjectManagementPageProps {
       | 'contact',
     subcategory?: SolutionSubcategory
   ) => void;
-  onOpenCode?: (tab: 'html' | 'css') => void;
 }
 
 export const EurekaProjectManagementPage: React.FC<EurekaProjectManagementPageProps> = ({
   onNavigate,
-  onOpenCode,
 }) => {
   const [solutionsDropdownOpen, setSolutionsDropdownOpen] = useState(false);
 
@@ -404,7 +402,7 @@ export const EurekaProjectManagementPage: React.FC<EurekaProjectManagementPagePr
   return (
     <div className="w-full bg-slate-50 text-slate-800 font-sans">
       {/* Standard Header */}
-      <EurekaHeader currentPage="project-management" onNavigate={onNavigate} onOpenCode={onOpenCode} />
+      <EurekaHeader currentPage="project-management" onNavigate={onNavigate}  />
 
       {/* Hero Section */}
       <section className="relative bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-white py-16 md:py-24 overflow-hidden border-b border-slate-800">
@@ -1339,7 +1337,7 @@ export const EurekaProjectManagementPage: React.FC<EurekaProjectManagementPagePr
       </section>
 
       {/* Footer */}
-      <EurekaFooter onNavigate={onNavigate} onOpenCode={onOpenCode} />
+      <EurekaFooter onNavigate={onNavigate}  />
     </div>
   );
 };

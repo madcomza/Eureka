@@ -57,12 +57,10 @@ interface EurekaPreSoilTreatmentPageProps {
       | 'contact',
     subcategory?: SolutionSubcategory
   ) => void;
-  onOpenCode?: (tab: 'html' | 'css') => void;
 }
 
 export const EurekaPreSoilTreatmentPage: React.FC<EurekaPreSoilTreatmentPageProps> = ({
   onNavigate,
-  onOpenCode,
 }) => {
   const [solutionsDropdownOpen, setSolutionsDropdownOpen] = useState(false);
   
@@ -111,7 +109,7 @@ export const EurekaPreSoilTreatmentPage: React.FC<EurekaPreSoilTreatmentPageProp
   return (
     <div className="min-h-screen bg-slate-50 text-slate-800 font-sans">
       {/* Standard Header */}
-      <EurekaHeader currentPage="pre-soil-treatment" onNavigate={onNavigate} onOpenCode={onOpenCode} />
+      <EurekaHeader currentPage="pre-soil-treatment" onNavigate={onNavigate}  />
 
       {/* 3. HERO SECTION */}
       <section className="relative bg-gradient-to-br from-[#120e06] via-[#241a0b] to-[#0a0703] text-white py-16 lg:py-20 border-b-4 border-amber-500 overflow-hidden">
@@ -931,7 +929,7 @@ export const EurekaPreSoilTreatmentPage: React.FC<EurekaPreSoilTreatmentPageProp
       </section>
 
       {/* 9. FOOTER */}
-      <EurekaFooter onNavigate={onNavigate} onOpenCode={onOpenCode} />
+      <EurekaFooter onNavigate={onNavigate}  />
     </div>
   );
 };

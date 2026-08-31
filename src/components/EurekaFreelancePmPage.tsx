@@ -70,12 +70,10 @@ interface EurekaFreelancePmPageProps {
       | 'contact',
     subcategory?: SolutionSubcategory
   ) => void;
-  onOpenCode?: (tab: 'html' | 'css') => void;
 }
 
 export const EurekaFreelancePmPage: React.FC<EurekaFreelancePmPageProps> = ({
   onNavigate,
-  onOpenCode,
 }) => {
   const [solutionsDropdownOpen, setSolutionsDropdownOpen] = useState(false);
 
@@ -398,7 +396,7 @@ export const EurekaFreelancePmPage: React.FC<EurekaFreelancePmPageProps> = ({
   return (
     <div className="min-h-screen bg-slate-900 text-slate-100 font-sans selection:bg-red-600 selection:text-white pb-16">
       {/* Standard Header */}
-      <EurekaHeader currentPage="freelance-pm" onNavigate={onNavigate} onOpenCode={onOpenCode} />
+      <EurekaHeader currentPage="freelance-pm" onNavigate={onNavigate}  />
 
       {/* ------------------------------------------------------------------------- */}
       {/* HERO SECTION */}
@@ -1251,7 +1249,7 @@ export const EurekaFreelancePmPage: React.FC<EurekaFreelancePmPageProps> = ({
       {/* ------------------------------------------------------------------------- */}
       {/* FOOTER */}
       {/* ------------------------------------------------------------------------- */}
-      <EurekaFooter onNavigate={onNavigate} onOpenCode={onOpenCode} />
+      <EurekaFooter onNavigate={onNavigate}  />
     </div>
   );
 };

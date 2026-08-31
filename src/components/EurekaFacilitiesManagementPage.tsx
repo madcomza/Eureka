@@ -40,12 +40,10 @@ import { SolutionSubcategory } from './EurekaSolutionsPage';
 
 interface EurekaFacilitiesManagementPageProps {
   onNavigate?: (page: 'home' | 'about' | 'solutions' | 'pricing' | 'contact' | 'facilities-management' | 'commercial-cleaning' | 'pest-control' | 'pre-soil-treatment' | 'office-relocation', subcategory?: SolutionSubcategory) => void;
-  onOpenCode?: (tab: 'html' | 'css') => void;
 }
 
 export const EurekaFacilitiesManagementPage: React.FC<EurekaFacilitiesManagementPageProps> = ({
-  onNavigate,
-  onOpenCode
+  onNavigate
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [solutionsDropdownOpen, setSolutionsDropdownOpen] = useState(false);
@@ -110,7 +108,7 @@ export const EurekaFacilitiesManagementPage: React.FC<EurekaFacilitiesManagement
   return (
     <div id="eureka-fm-service-root" className="w-full bg-white text-slate-900 font-sans antialiased selection:bg-red-500 selection:text-white">
       {/* Standard Header */}
-      <EurekaHeader currentPage="facilities-management" onNavigate={onNavigate} onOpenCode={onOpenCode} />
+      <EurekaHeader currentPage="facilities-management" onNavigate={onNavigate}  />
 
       {/* 3. Hero Section (Centered Layout) */}
       <section className="relative bg-gradient-to-r from-[#050b1b] via-[#09132e] to-[#0d276b] text-white py-16 sm:py-24 px-4 sm:px-6 lg:px-8 border-b-4 border-red-600 overflow-hidden">
@@ -977,7 +975,7 @@ export const EurekaFacilitiesManagementPage: React.FC<EurekaFacilitiesManagement
       </section>
 
       {/* 12. Site Footer */}
-      <EurekaFooter onNavigate={onNavigate} onOpenCode={onOpenCode} />
+      <EurekaFooter onNavigate={onNavigate}  />
     </div>
   );
 };

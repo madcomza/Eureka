@@ -31,7 +31,6 @@ import {
 } from 'lucide-react';
 
 interface EurekaPricingPageProps {
-  onOpenCode?: (tab: 'html' | 'css') => void;
   onNavigate?: (page: 'home' | 'about' | 'solutions' | 'facilities-management' | 'commercial-cleaning' | 'pest-control' | 'pre-soil-treatment' | 'office-relocation' | 'pricing' | 'contact') => void;
 }
 
@@ -48,7 +47,6 @@ interface PriceItem {
 }
 
 export const EurekaPricingPage: React.FC<EurekaPricingPageProps> = ({
-  onOpenCode,
   onNavigate
 }) => {
   const [activeCategory, setActiveCategory] = useState<string>('all');
@@ -223,7 +221,7 @@ export const EurekaPricingPage: React.FC<EurekaPricingPageProps> = ({
   return (
     <div className="min-h-screen bg-slate-50 font-sans text-slate-800">
       {/* Top Utility Header */}
-      <EurekaHeader currentPage="pricing" onNavigate={onNavigate} onOpenCode={onOpenCode} />
+      <EurekaHeader currentPage="pricing" onNavigate={onNavigate}  />
 
       {/* Hero Banner */}
       <section className="relative bg-gradient-to-br from-[#050b1b] via-[#09132e] to-[#0c235c] text-white py-16 lg:py-20 overflow-hidden">
@@ -836,7 +834,7 @@ export const EurekaPricingPage: React.FC<EurekaPricingPageProps> = ({
       </section>
 
       {/* Footer Contact Strip */}
-      <EurekaFooter onNavigate={onNavigate} onOpenCode={onOpenCode} />
+      <EurekaFooter onNavigate={onNavigate}  />
     </div>
   );
 };

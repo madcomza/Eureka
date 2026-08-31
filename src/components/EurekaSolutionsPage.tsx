@@ -33,13 +33,11 @@ export type SolutionSubcategory = 'all' | 'facilities' | 'construction' | 'consu
 
 interface EurekaSolutionsPageProps {
   onNavigate?: (page: 'home' | 'about' | 'solutions' | 'facilities-management' | 'commercial-cleaning' | 'pest-control' | 'pre-soil-treatment' | 'office-relocation' | 'construction-management' | 'project-management' | 'freelance-pm' | 'construction-consultancy' | 'quantity-surveying' | 'construction-claims' | 'pricing' | 'contact', subcategory?: SolutionSubcategory) => void;
-  onOpenCode?: (tab: 'html' | 'css') => void;
   initialSubcategory?: SolutionSubcategory;
 }
 
 export const EurekaSolutionsPage: React.FC<EurekaSolutionsPageProps> = ({
   onNavigate,
-  onOpenCode,
   initialSubcategory = 'all'
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -74,7 +72,7 @@ export const EurekaSolutionsPage: React.FC<EurekaSolutionsPageProps> = ({
   return (
     <div className="w-full bg-white text-slate-900 font-sans selection:bg-red-500/20">
       {/* Top Header & Navigation */}
-      <EurekaHeader currentPage="solutions" onNavigate={onNavigate} onOpenCode={onOpenCode} />
+      <EurekaHeader currentPage="solutions" onNavigate={onNavigate}  />
 
       {/* Page Hero Banner */}
       <section className="relative bg-gradient-to-r from-[#050b1b] via-[#09132e] to-[#0d276b] text-white py-16 sm:py-20 px-4 sm:px-6 lg:px-8 border-b-4 border-red-600">
@@ -967,7 +965,7 @@ export const EurekaSolutionsPage: React.FC<EurekaSolutionsPageProps> = ({
       </section>
 
       {/* Footer */}
-      <EurekaFooter onNavigate={onNavigate} onOpenCode={onOpenCode} />
+      <EurekaFooter onNavigate={onNavigate}  />
     </div>
   );
 };

@@ -1,4 +1,6 @@
 import React from 'react';
+import monwabisiImg from '../assets/images/monwabisi-makinana.jpg';
+import aboutUsImg from '../assets/images/about_us.jpg';
 import { EurekaHeader, NavPage } from './EurekaHeader';
 import { EurekaFooter } from './EurekaFooter';
 import {
@@ -14,10 +16,9 @@ import { SolutionSubcategory } from './EurekaSolutionsPage';
 
 interface EurekaAboutPageProps {
   onNavigate?: (page: NavPage, subcategory?: SolutionSubcategory) => void;
-  onOpenCode?: (tab: 'html' | 'css') => void;
 }
 
-export const EurekaAboutPage: React.FC<EurekaAboutPageProps> = ({ onNavigate, onOpenCode }) => {
+export const EurekaAboutPage: React.FC<EurekaAboutPageProps> = ({ onNavigate }) => {
   const qualificationsList = [
     {
       title: 'MSc Construction Management',
@@ -59,7 +60,7 @@ export const EurekaAboutPage: React.FC<EurekaAboutPageProps> = ({ onNavigate, on
   return (
     <div className="w-full bg-white text-slate-900 font-sans selection:bg-red-500/20">
       {/* Top Header & Navigation */}
-      <EurekaHeader currentPage="about" onNavigate={onNavigate} onOpenCode={onOpenCode} />
+      <EurekaHeader currentPage="about" onNavigate={onNavigate}  />
 
       {/* Page Hero Banner */}
       <section className="relative bg-gradient-to-r from-[#050b1b] via-[#09132e] to-[#0d276b] text-white py-16 sm:py-20 px-4 sm:px-6 lg:px-8 border-b-4 border-red-600">
@@ -80,8 +81,8 @@ export const EurekaAboutPage: React.FC<EurekaAboutPageProps> = ({ onNavigate, on
           <div className="lg:col-span-5 relative">
             <div className="rounded-xl overflow-hidden shadow-2xl border border-slate-200 relative group">
               <img
-                src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80"
-                alt="Corporate Architecture"
+                src={aboutUsImg}
+                alt="Eureka Facilities Management Solutions - About Us"
                 className="w-full h-[420px] object-cover group-hover:scale-105 transition-transform duration-700"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-transparent to-transparent"></div>
@@ -172,7 +173,7 @@ export const EurekaAboutPage: React.FC<EurekaAboutPageProps> = ({ onNavigate, on
               <div className="bg-slate-900 border border-white/10 rounded-xl overflow-hidden shadow-2xl p-5 text-center">
                 <div className="relative w-full max-w-[280px] mx-auto aspect-[3/4] rounded-lg overflow-hidden border-2 border-red-600/80 shadow-2xl mb-5 group bg-slate-950">
                   <img
-                    src="/monwabisi-makinana.jpg"
+                    src={monwabisiImg}
                     alt="Monwabisi Makinana - Founder & Director"
                     className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
                     referrerPolicy="no-referrer"
@@ -352,7 +353,7 @@ export const EurekaAboutPage: React.FC<EurekaAboutPageProps> = ({ onNavigate, on
       </section>
 
       {/* 5. Standard Footer */}
-      <EurekaFooter onNavigate={onNavigate} onOpenCode={onOpenCode} />
+      <EurekaFooter onNavigate={onNavigate}  />
     </div>
   );
 };

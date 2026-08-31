@@ -79,12 +79,10 @@ interface EurekaConstructionClaimsPageProps {
       | 'contact',
     subcategory?: SolutionSubcategory
   ) => void;
-  onOpenCode?: (tab: 'html' | 'css') => void;
 }
 
 export const EurekaConstructionClaimsPage: React.FC<EurekaConstructionClaimsPageProps> = ({
   onNavigate,
-  onOpenCode,
 }) => {
   const [solutionsDropdownOpen, setSolutionsDropdownOpen] = useState(false);
 
@@ -459,7 +457,7 @@ export const EurekaConstructionClaimsPage: React.FC<EurekaConstructionClaimsPage
   return (
     <div className="min-h-screen bg-[#030813] text-slate-100 font-sans antialiased">
       {/* Top Header / Nav Bar */}
-      <EurekaHeader currentPage="construction-claims" onNavigate={onNavigate} onOpenCode={onOpenCode} />
+      <EurekaHeader currentPage="construction-claims" onNavigate={onNavigate}  />
 
       {/* Hero Section */}
       <section className="relative pt-12 pb-20 overflow-hidden bg-gradient-to-b from-[#060e20] via-[#09132e] to-[#030813] border-b border-slate-800">
@@ -1267,13 +1265,6 @@ export const EurekaConstructionClaimsPage: React.FC<EurekaConstructionClaimsPage
                 <Calendar className="w-4 h-4" />
                 <span>Schedule Confidential Claims Assessment</span>
               </button>
-              <button
-                onClick={() => onOpenCode?.('html')}
-                className="px-8 py-3.5 rounded-md bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs uppercase tracking-wider border border-slate-700 transition-colors flex items-center gap-2 cursor-pointer"
-              >
-                <FileText className="w-4 h-4 text-red-400" />
-                <span>View Elementor Pro Export</span>
-              </button>
             </div>
 
             <div className="mt-8 pt-8 border-t border-slate-800/80 flex flex-wrap justify-center items-center gap-6 text-xs text-slate-400">
@@ -1295,7 +1286,7 @@ export const EurekaConstructionClaimsPage: React.FC<EurekaConstructionClaimsPage
       </section>
 
       {/* Footer */}
-      <EurekaFooter onNavigate={onNavigate} onOpenCode={onOpenCode} />
+      <EurekaFooter onNavigate={onNavigate}  />
     </div>
   );
 };

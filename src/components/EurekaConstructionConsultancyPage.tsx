@@ -76,12 +76,10 @@ interface EurekaConstructionConsultancyPageProps {
       | 'contact',
     subcategory?: SolutionSubcategory
   ) => void;
-  onOpenCode?: (tab: 'html' | 'css') => void;
 }
 
 export const EurekaConstructionConsultancyPage: React.FC<EurekaConstructionConsultancyPageProps> = ({
   onNavigate,
-  onOpenCode,
 }) => {
   const [solutionsDropdownOpen, setSolutionsDropdownOpen] = useState(false);
 
@@ -451,7 +449,7 @@ export const EurekaConstructionConsultancyPage: React.FC<EurekaConstructionConsu
   return (
     <div className="min-h-screen bg-slate-900 text-slate-100 font-sans antialiased selection:bg-red-600 selection:text-white">
       {/* Standard Header */}
-      <EurekaHeader currentPage="construction-consultancy" onNavigate={onNavigate} onOpenCode={onOpenCode} />
+      <EurekaHeader currentPage="construction-consultancy" onNavigate={onNavigate}  />
 
       {/* Breadcrumb Bar */}
       <div className="bg-[#0b1638] border-b border-slate-800 text-xs py-2.5 px-4 sm:px-6 lg:px-8">
@@ -1499,7 +1497,7 @@ export const EurekaConstructionConsultancyPage: React.FC<EurekaConstructionConsu
       {/* ========================================================================= */}
       {/* FOOTER */}
       {/* ========================================================================= */}
-      <EurekaFooter onNavigate={onNavigate} onOpenCode={onOpenCode} />
+      <EurekaFooter onNavigate={onNavigate}  />
     </div>
   );
 };

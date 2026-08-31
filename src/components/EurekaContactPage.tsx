@@ -30,12 +30,10 @@ import {
 } from 'lucide-react';
 
 interface EurekaContactPageProps {
-  onOpenCode?: (tab: 'html' | 'css') => void;
   onNavigate?: (page: 'home' | 'about' | 'solutions' | 'facilities-management' | 'commercial-cleaning' | 'pest-control' | 'pre-soil-treatment' | 'office-relocation' | 'pricing' | 'contact') => void;
 }
 
 export const EurekaContactPage: React.FC<EurekaContactPageProps> = ({
-  onOpenCode,
   onNavigate,
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -151,7 +149,7 @@ export const EurekaContactPage: React.FC<EurekaContactPageProps> = ({
   return (
     <div id="eureka-contact-root" className="w-full bg-white text-slate-900 font-sans antialiased selection:bg-red-500 selection:text-white">
       {/* Standard Header */}
-      <EurekaHeader currentPage="contact" onNavigate={onNavigate} onOpenCode={onOpenCode} />
+      <EurekaHeader currentPage="contact" onNavigate={onNavigate}  />
 
       {/* 3. Hero Section (Centered Layout) */}
       <section className="relative bg-gradient-to-r from-[#050b1b] via-[#09132e] to-[#0d276b] text-white py-16 sm:py-20 px-4 sm:px-6 lg:px-8 border-b-4 border-red-600 overflow-hidden">
@@ -977,20 +975,12 @@ export const EurekaContactPage: React.FC<EurekaContactPageProps> = ({
               <Phone className="w-4 h-4 text-red-600" />
               <span>+27 74 518 7012</span>
             </a>
-
-            <button
-              onClick={() => onOpenCode?.('html')}
-              className="px-5 py-3 rounded-lg bg-red-900/60 hover:bg-red-900 text-white font-extrabold text-xs tracking-wider border border-red-400/40 transition-all flex items-center gap-2"
-            >
-              <FileText className="w-4 h-4" />
-              <span>Get Elementor Code</span>
-            </button>
           </div>
         </div>
       </section>
 
       {/* 9. Footer */}
-      <EurekaFooter onNavigate={onNavigate} onOpenCode={onOpenCode} />
+      <EurekaFooter onNavigate={onNavigate}  />
     </div>
   );
 };

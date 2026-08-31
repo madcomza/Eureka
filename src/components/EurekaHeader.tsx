@@ -48,13 +48,11 @@ export type NavPage =
 export interface EurekaHeaderProps {
   currentPage?: NavPage | string;
   onNavigate?: (page: NavPage, subcategory?: 'all' | 'facilities' | 'construction' | 'consultancy') => void;
-  onOpenCode?: (tab: 'html' | 'css') => void;
 }
 
 export const EurekaHeader: React.FC<EurekaHeaderProps> = ({
   currentPage = 'home',
-  onNavigate,
-  onOpenCode
+  onNavigate
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [solutionsDropdownOpen, setSolutionsDropdownOpen] = useState(false);
@@ -380,17 +378,6 @@ export const EurekaHeader: React.FC<EurekaHeaderProps> = ({
 
           {/* Right Action Buttons */}
           <div className="hidden lg:flex items-center gap-3">
-            {onOpenCode && (
-              <button
-                onClick={() => onOpenCode('html')}
-                className="px-3 py-2 rounded-lg text-xs font-bold text-slate-700 hover:bg-slate-100 transition-colors flex items-center gap-1.5 border border-slate-200"
-                title="View Elementor HTML & Scoped CSS"
-              >
-                <Code2 className="w-3.5 h-3.5 text-red-600" />
-                <span>Elementor Code</span>
-              </button>
-            )}
-
             <button
               onClick={() => handleNav('contact')}
               className="px-4 py-2.5 rounded-lg text-xs font-black tracking-wider uppercase bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white shadow-md hover:shadow-lg transition-all transform active:scale-95 flex items-center gap-1.5 cursor-pointer"

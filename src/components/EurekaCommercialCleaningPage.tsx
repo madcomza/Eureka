@@ -41,12 +41,10 @@ interface EurekaCommercialCleaningPageProps {
     page: 'home' | 'about' | 'solutions' | 'facilities-management' | 'commercial-cleaning' | 'pest-control' | 'pre-soil-treatment' | 'office-relocation' | 'pricing' | 'contact',
     subcategory?: SolutionSubcategory
   ) => void;
-  onOpenCode?: (tab: 'html' | 'css') => void;
 }
 
 export const EurekaCommercialCleaningPage: React.FC<EurekaCommercialCleaningPageProps> = ({
   onNavigate,
-  onOpenCode,
 }) => {
   const [solutionsDropdownOpen, setSolutionsDropdownOpen] = useState(false);
   const [activeFrequencyTab, setActiveFrequencyTab] = useState<'daily' | 'weekly' | 'monthly' | 'quarterly'>('daily');
@@ -103,7 +101,7 @@ export const EurekaCommercialCleaningPage: React.FC<EurekaCommercialCleaningPage
   return (
     <div className="min-h-screen bg-slate-50 text-slate-800 font-sans">
       {/* Standard Header */}
-      <EurekaHeader currentPage="commercial-cleaning" onNavigate={onNavigate} onOpenCode={onOpenCode} />
+      <EurekaHeader currentPage="commercial-cleaning" onNavigate={onNavigate}  />
 
       {/* 3. HERO SECTION */}
       <section className="relative bg-gradient-to-br from-[#050b1b] via-[#09153a] to-[#041029] text-white py-16 lg:py-20 border-b-4 border-red-600 overflow-hidden">
@@ -1173,7 +1171,7 @@ export const EurekaCommercialCleaningPage: React.FC<EurekaCommercialCleaningPage
       </section>
 
       {/* 10. CORPORATE FOOTER */}
-      <EurekaFooter onNavigate={onNavigate} onOpenCode={onOpenCode} />
+      <EurekaFooter onNavigate={onNavigate}  />
     </div>
   );
 };

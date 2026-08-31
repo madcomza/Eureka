@@ -20,13 +20,11 @@ import { NavPage } from './EurekaHeader';
 export interface EurekaFooterProps {
   currentPage?: NavPage | string;
   onNavigate?: (page: NavPage, subcategory?: 'all' | 'facilities' | 'construction' | 'consultancy') => void;
-  onOpenCode?: (tab: 'html' | 'css') => void;
 }
 
 export const EurekaFooter: React.FC<EurekaFooterProps> = ({
   currentPage = 'home',
-  onNavigate,
-  onOpenCode
+  onNavigate
 }) => {
   const handleNav = (page: NavPage, subcategory?: 'all' | 'facilities' | 'construction' | 'consultancy') => {
     onNavigate?.(page, subcategory);
@@ -257,29 +255,10 @@ export const EurekaFooter: React.FC<EurekaFooterProps> = ({
                 </a>
               </div>
 
-              <div className="flex items-center gap-2">
-                <Mail className="w-3.5 h-3.5 text-red-400 shrink-0" />
-                <a href="mailto:claims@eurekasolutions.co.za" className="hover:text-white transition-colors">
-                  claims@eurekasolutions.co.za
-                </a>
-              </div>
-
               <div className="pt-2 border-t border-slate-800/80 flex items-center gap-2 text-[11px] text-slate-400">
                 <Clock className="w-3 h-3 text-emerald-400" />
                 <span>Mon – Fri: 07:30 – 17:30 | 24/7 Response</span>
               </div>
-
-              {onOpenCode && (
-                <div className="pt-2">
-                  <button
-                    onClick={() => onOpenCode('html')}
-                    className="w-full px-3 py-2 rounded bg-slate-900 hover:bg-slate-800 border border-slate-700 text-[11px] text-slate-300 font-bold flex items-center justify-center gap-1.5 transition-colors"
-                  >
-                    <Code2 className="w-3.5 h-3.5 text-red-400" />
-                    <span>View Elementor Code</span>
-                  </button>
-                </div>
-              )}
             </div>
           </div>
         </div>
@@ -315,7 +294,15 @@ export const EurekaFooter: React.FC<EurekaFooterProps> = ({
         {/* 4. Bottom Copyright & Quick Legal */}
         <div className="mt-8 pt-6 border-t border-slate-800/80 flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] text-slate-400">
           <div>
-            &copy; 2026 Eureka Facilities Management Solutions (Pty) Ltd. All rights reserved.
+            &copy; 2026 Eureka Facilities Management Solutions (Pty) Ltd. All rights reserved. Design by{' '}
+            <a
+              href="https://madcom.co.za"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-slate-300 hover:text-emerald-400 font-medium underline underline-offset-2 transition-colors"
+            >
+              MadCom
+            </a>
           </div>
           <div className="flex items-center gap-4">
             <button onClick={() => handleNav('home')} className="hover:text-white transition-colors">

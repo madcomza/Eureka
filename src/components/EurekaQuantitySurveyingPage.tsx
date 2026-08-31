@@ -76,12 +76,10 @@ interface EurekaQuantitySurveyingPageProps {
       | 'contact',
     subcategory?: SolutionSubcategory
   ) => void;
-  onOpenCode?: (tab: 'html' | 'css') => void;
 }
 
 export const EurekaQuantitySurveyingPage: React.FC<EurekaQuantitySurveyingPageProps> = ({
   onNavigate,
-  onOpenCode,
 }) => {
   const [solutionsDropdownOpen, setSolutionsDropdownOpen] = useState(false);
 
@@ -409,7 +407,7 @@ Basis for Disallowance:
   return (
     <div className="min-h-screen bg-[#060d20] text-slate-100 font-sans antialiased selection:bg-red-600 selection:text-white">
       {/* Standard Header */}
-      <EurekaHeader currentPage="quantity-surveying" onNavigate={onNavigate} onOpenCode={onOpenCode} />
+      <EurekaHeader currentPage="quantity-surveying" onNavigate={onNavigate}  />
 
       {/* Hero Section */}
       <section className="relative pt-12 pb-20 overflow-hidden bg-gradient-to-b from-[#09132e] via-[#09132e] to-[#060d20]">
@@ -1248,7 +1246,7 @@ Basis for Disallowance:
       </section>
 
       {/* Global Footer */}
-      <EurekaFooter onNavigate={onNavigate} onOpenCode={onOpenCode} />
+      <EurekaFooter onNavigate={onNavigate}  />
     </div>
   );
 };

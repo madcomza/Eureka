@@ -1,5 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import monwabisiImg from '../assets/images/monwabisi-makinana.jpg';
+import facilitiesImg from '../assets/images/facilities_and_property_solutions.jpg';
+import constructionImg from '../assets/images/construction_delivery_solutions.jpg';
+import consultancyImg from '../assets/images/consultancy_solutions.jpg';
+import garankuwaMallImg from '../assets/images/garankuwa_city_mall.jpg';
+import garankuwaMallWebp from '../assets/images/garankuwa_city_mall.webp';
+import publicSectorImg from '../assets/images/public_sector_infrastructure_program.jpg';
+import constructionProjectImg from '../assets/images/construction_project.jpg';
+import constructionClaimDisputeImg from '../assets/images/construction_claim_dispute.jpg';
+import projectManagerImg from '../assets/images/project_manager.jpg';
+import publicSectorMunicipalitiesImg from '../assets/images/public_sector_municipalities.jpg';
+import unisaLibraryImg from '../assets/images/unisa-library.jpg';
+import officeRelocationImg from '../assets/images/office_relocation.jpg';
+import hospitalImg from '../assets/images/hospital.jpg';
 import { EurekaLogo } from './EurekaLogo';
 import { EurekaHeader } from './EurekaHeader';
 import { EurekaFooter } from './EurekaFooter';
@@ -46,11 +60,10 @@ import {
 import { SolutionSubcategory } from './EurekaSolutionsPage';
 
 interface EurekaWebsiteProps {
-  onOpenCode?: (tab: 'html' | 'css') => void;
   onNavigate?: (page: 'home' | 'about' | 'solutions' | 'facilities-management' | 'commercial-cleaning' | 'pest-control' | 'pre-soil-treatment' | 'office-relocation' | 'construction-management' | 'project-management' | 'freelance-pm' | 'construction-consultancy' | 'quantity-surveying' | 'construction-claims' | 'delay-analysis' | 'pricing' | 'contact', subcategory?: SolutionSubcategory) => void;
 }
 
-export const EurekaWebsite: React.FC<EurekaWebsiteProps> = ({ onOpenCode, onNavigate }) => {
+export const EurekaWebsite: React.FC<EurekaWebsiteProps> = ({ onNavigate }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [solutionsDropdownOpen, setSolutionsDropdownOpen] = useState(false);
   const [activeHeroSlide, setActiveHeroSlide] = useState(0);
@@ -66,7 +79,7 @@ export const EurekaWebsite: React.FC<EurekaWebsiteProps> = ({ onOpenCode, onNavi
       ctaText: 'Explore Facilities Solutions',
       subcat: 'facilities' as SolutionSubcategory,
       badge: 'Integrated Facility Management',
-      image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1600&q=80',
+      image: facilitiesImg,
     },
     {
       id: 2,
@@ -76,7 +89,7 @@ export const EurekaWebsite: React.FC<EurekaWebsiteProps> = ({ onOpenCode, onNavi
       ctaText: 'Discuss Construction Delivery',
       subcat: 'construction' as SolutionSubcategory,
       badge: 'Pr. CPM & PMP® Led Delivery',
-      image: 'https://images.unsplash.com/photo-1541888946425-d0fbb18086f6?auto=format&fit=crop&w=1600&q=80',
+      image: constructionImg,
     },
     {
       id: 3,
@@ -86,7 +99,7 @@ export const EurekaWebsite: React.FC<EurekaWebsiteProps> = ({ onOpenCode, onNavi
       ctaText: 'Speak to a Consultant',
       subcat: 'consultancy' as SolutionSubcategory,
       badge: 'Cost, Contracts & Claims Advisory',
-      image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1600&q=80',
+      image: consultancyImg,
     }
   ];
 
@@ -113,7 +126,7 @@ export const EurekaWebsite: React.FC<EurekaWebsiteProps> = ({ onOpenCode, onNavi
       title: 'Facilities & Property Solutions',
       subtitle: 'Professional Facilities Management That Keeps Your Business Moving',
       desc: 'Bringing essential services together under one reliable partner to ensure uninterrupted operations, regulatory compliance, and pristine workplace hygiene.',
-      image: 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=900&q=80',
+      image: facilitiesImg,
       badge: 'Operational Continuity',
       color: 'sky',
       services: [
@@ -130,7 +143,7 @@ export const EurekaWebsite: React.FC<EurekaWebsiteProps> = ({ onOpenCode, onNavi
       title: 'Construction Delivery Solutions',
       subtitle: 'Experienced Management for Better Construction Outcomes',
       desc: 'Structured construction supervision, procurement administration, contractor coordination, and quality control from inception to commissioning and close-out.',
-      image: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=900&q=80',
+      image: constructionImg,
       badge: 'Project Governance',
       color: 'red',
       services: [
@@ -147,7 +160,7 @@ export const EurekaWebsite: React.FC<EurekaWebsiteProps> = ({ onOpenCode, onNavi
       title: 'Consultancy Solutions',
       subtitle: 'Specialist Construction Expertise When You Need It',
       desc: 'Independent expert advice covering project budgeting, contractual disputes, delay forensics, and risk mitigation across all major contract forms.',
-      image: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=900&q=80',
+      image: consultancyImg,
       badge: 'Commercial Protection',
       color: 'navy',
       services: [
@@ -168,7 +181,7 @@ export const EurekaWebsite: React.FC<EurekaWebsiteProps> = ({ onOpenCode, onNavi
       value: 'R676M',
       location: 'Gauteng, South Africa',
       desc: 'High-density commercial precinct expansion, tenant fit-out coordination, and comprehensive civil infrastructure upgrades.',
-      image: 'https://images.unsplash.com/photo-1555636222-cae831e670b3?auto=format&fit=crop&w=800&q=80',
+      image: garankuwaMallImg,
       scope: 'Project Controls & Construction Management'
     },
     {
@@ -188,7 +201,7 @@ export const EurekaWebsite: React.FC<EurekaWebsiteProps> = ({ onOpenCode, onNavi
       value: 'R264.4M',
       location: 'South Africa',
       desc: 'Regional civic infrastructure delivery, municipal service reticulation, and structured contractor administration under GCC & NEC standards.',
-      image: 'https://images.unsplash.com/photo-1590486803833-1c5dc8ddd4c8?auto=format&fit=crop&w=800&q=80',
+      image: publicSectorImg,
       scope: 'Programme Management & Claims Mitigation'
     },
     {
@@ -198,7 +211,7 @@ export const EurekaWebsite: React.FC<EurekaWebsiteProps> = ({ onOpenCode, onNavi
       value: 'R97M',
       location: 'UNISA Campus, Pretoria',
       desc: 'Complex institutional refurbishment, high-spec acoustic fit-outs, precision HVAC upgrades, and heritage preservation.',
-      image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800&q=80',
+      image: unisaLibraryImg,
       scope: 'Principal Agent & Quality Assurance'
     }
   ];
@@ -261,14 +274,14 @@ export const EurekaWebsite: React.FC<EurekaWebsiteProps> = ({ onOpenCode, onNavi
       title: 'You Are Planning a Business Relocation',
       problem: 'Moving offices can disrupt employees and normal business operations. EFMS coordinates relocation requirements together with move-in, move-out, fit-outs, and deep cleaning.',
       benefit: 'A structured, organised move that protects company assets and minimizes downtime.',
-      image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=600&q=80'
+      image: officeRelocationImg
     },
     {
       scenario: 'Scenario 03',
       title: 'You Are Starting a Construction Project',
       problem: 'Poor upfront planning leads to budget blowouts, delays, coordination breakdowns, and costly rework. EFMS provides planning, procurement, quality control, and cost monitoring.',
       benefit: 'Stronger project controls, tight budget adherence, and proactive issue identification.',
-      image: 'https://images.unsplash.com/photo-1541888946425-d0fbb18086f6?auto=format&fit=crop&w=600&q=80'
+      image: constructionProjectImg
     },
     {
       scenario: 'Scenario 04',
@@ -282,23 +295,23 @@ export const EurekaWebsite: React.FC<EurekaWebsiteProps> = ({ onOpenCode, onNavi
       title: 'You Are Facing a Construction Claim or Dispute',
       problem: 'Contractual claims require deep expertise across standard contracts (NEC, FIDIC, GCC, JBCC), records, and quantum analysis. EFMS prepares rigorous claim evaluations and defense.',
       benefit: 'Direct access to specialist claims and contract advisory without hiring full-time internal legal counsel.',
-      image: 'https://images.unsplash.com/photo-1450133064473-71024230f91b?auto=format&fit=crop&w=600&q=80'
+      image: constructionClaimDisputeImg
     },
     {
       scenario: 'Scenario 06',
       title: 'You Need an Experienced Project Manager — Flexibly',
       problem: 'A high-stakes capital project requires experienced leadership, but your business does not have enough continuous volume to justify a permanent executive appointment.',
       benefit: 'Senior Pr. CPM and PMP® leadership on-demand, tailored precisely to project duration.',
-      image: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=600&q=80'
+      image: projectManagerImg
     }
   ];
 
   const whoWeServeCategories = [
     { title: 'Commercial & Workplaces', desc: 'Offices, corporate parks, multi-tenant headquarters', icon: Building2, img: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=400&q=80' },
     { title: 'Industrial & Warehouses', desc: 'Logistics hubs, manufacturing plants, workshops', icon: Factory, img: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=400&q=80' },
-    { title: 'Retail & Shopping Centres', desc: 'Retail malls, convenience centers, strip malls', icon: ShoppingCart, img: 'https://images.unsplash.com/photo-1555636222-cae831e670b3?auto=format&fit=crop&w=400&q=80' },
-    { title: 'Institutions & Healthcare', desc: 'Universities, schools, clinics, hospitals', icon: GraduationCap, img: 'https://images.unsplash.com/photo-1519452635265-7b1fbfd1e4e0?auto=format&fit=crop&w=400&q=80' },
-    { title: 'Public Sector & Municipalities', desc: 'Government agencies, state-owned enterprises', icon: Landmark, img: 'https://images.unsplash.com/photo-1577495508048-b635879837f1?auto=format&fit=crop&w=400&q=80' },
+    { title: 'Retail & Shopping Centres', desc: 'Retail malls, convenience centers, strip malls', icon: ShoppingCart, img: garankuwaMallWebp },
+    { title: 'Institutions & Healthcare', desc: 'Universities, schools, clinics, hospitals', icon: GraduationCap, img: hospitalImg },
+    { title: 'Public Sector & Municipalities', desc: 'Government agencies, state-owned enterprises', icon: Landmark, img: publicSectorMunicipalitiesImg },
     { title: 'Developers & Contractors', desc: 'Property developers, construction firms, project teams', icon: HardHat, img: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=400&q=80' },
     { title: 'SMEs & Growing Businesses', desc: 'Growing enterprises needing outsourced facilities', icon: Briefcase, img: 'https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&w=400&q=80' },
     { title: 'Residential & Estates', desc: 'Residential complexes, private estates, landlords', icon: Home, img: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=400&q=80' }
@@ -322,7 +335,6 @@ export const EurekaWebsite: React.FC<EurekaWebsiteProps> = ({ onOpenCode, onNavi
       <EurekaHeader
         currentPage="home"
         onNavigate={onNavigate}
-        onOpenCode={onOpenCode}
       />
 
       {/* 2. Hero Section (Animated Dynamic Slide Carousel with Floating Badges) */}
@@ -632,7 +644,7 @@ export const EurekaWebsite: React.FC<EurekaWebsiteProps> = ({ onOpenCode, onNavi
           >
             <div className="relative max-w-sm mx-auto rounded-2xl overflow-hidden border-2 border-red-600/80 shadow-2xl group bg-slate-950 aspect-[3/4]">
               <img
-                src="/monwabisi-makinana.jpg"
+                src={monwabisiImg}
                 alt="Monwabisi Makinana - Founder & Managing Director"
                 className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
                 referrerPolicy="no-referrer"
@@ -1054,7 +1066,7 @@ export const EurekaWebsite: React.FC<EurekaWebsiteProps> = ({ onOpenCode, onNavi
       </section>
 
       {/* 11. Standard Footer */}
-      <EurekaFooter onNavigate={onNavigate} onOpenCode={onOpenCode} />
+      <EurekaFooter onNavigate={onNavigate} />
     </div>
   );
 };
