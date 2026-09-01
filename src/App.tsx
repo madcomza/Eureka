@@ -16,6 +16,7 @@ import { EurekaConstructionClaimsPage } from './components/EurekaConstructionCla
 import { EurekaDelayAnalysisPage } from './components/EurekaDelayAnalysisPage';
 import { EurekaPricingPage } from './components/EurekaPricingPage';
 import { EurekaContactPage } from './components/EurekaContactPage';
+import { EurekaChatbot } from './components/EurekaChatbot';
 
 export type ActivePage =
   | 'home'
@@ -108,6 +109,9 @@ export default function App() {
       {currentPage === 'contact' && (
         <EurekaContactPage onNavigate={handleNavigate} />
       )}
+
+      {/* Global EFMS Consultant Chatbot with FAQ Knowledge & Email Escalation */}
+      <EurekaChatbot onNavigate={handleNavigate} currentPage={currentPage} />
     </div>
   );
 }
