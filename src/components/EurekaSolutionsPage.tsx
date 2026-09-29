@@ -75,8 +75,22 @@ export const EurekaSolutionsPage: React.FC<EurekaSolutionsPageProps> = ({
       <EurekaHeader currentPage="solutions" onNavigate={onNavigate}  />
 
       {/* Page Hero Banner */}
-      <section className="relative bg-gradient-to-r from-[#050b1b] via-[#09132e] to-[#0d276b] text-white py-16 sm:py-20 px-4 sm:px-6 lg:px-8 border-b-4 border-red-600">
-        <div className="max-w-4xl mx-auto text-center">
+      <section className="relative bg-[#050b1b] text-white py-16 sm:py-20 px-4 sm:px-6 lg:px-8 border-b-4 border-red-600 overflow-hidden">
+        {/* Background Video */}
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover object-center pointer-events-none"
+        >
+          <source src="./Services Hero Section BG.mp4" type="video/mp4" />
+        </video>
+
+        {/* Video Overlay: Darker on left, totally clear on right */}
+        <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/60 to-transparent pointer-events-none" />
+
+        <div className="max-w-4xl mx-auto text-center relative z-10">
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight mb-4 uppercase">
             OUR THREE SOLUTION AREAS
           </h1>

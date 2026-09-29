@@ -1,6 +1,8 @@
 import { EurekaHeader } from "./EurekaHeader";
 import { EurekaFooter } from "./EurekaFooter";
 import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
+import constructionMgmtImg from '../assets/images/Construction Management.jpeg';
 import {
   Briefcase,
   Building2,
@@ -37,19 +39,15 @@ import {
   Search,
   Flag,
   Percent,
-  SlidersHorizontal,
   FolderGit2,
   HardHat,
   UserCheck,
   Zap,
-  RotateCcw,
-  CheckSquare,
   FileSearch,
   ShieldAlert,
   ArrowUpRight,
   Gavel,
   FileCheck2,
-  Calculator,
   BookOpen,
   LineChart,
   Landmark
@@ -83,85 +81,15 @@ export const EurekaConstructionConsultancyPage: React.FC<EurekaConstructionConsu
 }) => {
   const [solutionsDropdownOpen, setSolutionsDropdownOpen] = useState(false);
 
-  // Diagnostic & Estimator State
-  const [serviceFocus, setServiceFocus] = useState<
-    'qs_cost' | 'contract_admin' | 'claims_quantum' | 'delay_analysis' | 'lender_tdd' | 'turnaround'
-  >('claims_quantum');
-  const [projectStage, setProjectStage] = useState<
-    'feasibility' | 'tender' | 'active_construction' | 'in_delay' | 'dispute_pending' | 'closeout'
-  >('in_delay');
-  const [contractType, setContractType] = useState<'jbcc' | 'fidic' | 'nec' | 'gcc' | 'bespoke'>('jbcc');
-  const [capexBand, setCapexBand] = useState<'under_15m' | '15m_50m' | '50m_150m' | 'above_150m'>('15m_50m');
-
-  // Specific add-on scopes
-  const [includeForensicAudit, setIncludeForensicAudit] = useState(true);
-  const [includeExpertWitness, setIncludeExpertWitness] = useState(true);
-  const [includeValuationAudit, setIncludeValuationAudit] = useState(true);
-  const [includeAdjudicationSupport, setIncludeAdjudicationSupport] = useState(false);
-
   // UI state
-  const [activePillarTab, setActivePillarTab] = useState<number>(0);
+  const [openPillarIndex, setOpenPillarIndex] = useState<number | null>(0);
   const [activeDelayMethodTab, setActiveDelayMethodTab] = useState<number>(1);
   const [activeContractTab, setActiveContractTab] = useState<'jbcc' | 'fidic' | 'nec' | 'gcc'>('jbcc');
   const [faqOpenIndex, setFaqOpenIndex] = useState<number | null>(0);
-  const [rfqSubmitted, setRfqSubmitted] = useState(false);
 
-  // Diagnostic Calculation Engine
-  const calculateDiagnostic = () => {
-    let baseEffortDays = '7 - 10 Business Days';
-    let riskMitigationZar = 'R1.2M - R3.5M';
-    let advisoryMode = 'Comprehensive Claims & Quantum Defense';
-    let primaryDeliverable = 'Forensic Delay & Quantum Statement of Claim / Defense';
-    let recommendedTier = 'Senior Construction Claims Consultant (Pr.CPM / Pr.QS)';
-
-    if (serviceFocus === 'qs_cost') {
-      advisoryMode = 'Quantity Surveying & Commercial Cost Engineering';
-      primaryDeliverable = 'Elemental Cost Plan, BOQ Review & Commercial Audit Register';
-      baseEffortDays = '5 - 7 Business Days';
-      riskMitigationZar = capexBand === 'under_15m' ? 'R450k - R950k' : capexBand === '15m_50m' ? 'R1.5M - R3.8M' : 'R4.5M - R12M';
-      recommendedTier = 'Principal Quantity Surveyor (Pr.QS / ASAQS)';
-    } else if (serviceFocus === 'contract_admin') {
-      advisoryMode = 'Contract Administration & Commercial Governance';
-      primaryDeliverable = 'Contract Review, Strict Notice Register & Risk Allocation Matrix';
-      baseEffortDays = '3 - 5 Business Days';
-      riskMitigationZar = capexBand === 'under_15m' ? 'R350k - R750k' : capexBand === '15m_50m' ? 'R1.1M - R2.5M' : 'R3.2M - R8M';
-      recommendedTier = 'Principal Agent & Contract Specialist (Pr.CPM)';
-    } else if (serviceFocus === 'claims_quantum') {
-      advisoryMode = 'Construction Claims Management & Quantum Assessment';
-      primaryDeliverable = 'EOT & Prolongation Cost Assessment with Contractual Substantiation';
-      baseEffortDays = '7 - 12 Business Days';
-      riskMitigationZar = capexBand === 'under_15m' ? 'R800k - R1.8M' : capexBand === '15m_50m' ? 'R2.4M - R6.5M' : 'R7M - R22M';
-      recommendedTier = 'Claims Director & Forensic Quantum Expert';
-    } else if (serviceFocus === 'delay_analysis') {
-      advisoryMode = 'Forensic Delay Analysis & SCL Protocol Programme Audit';
-      primaryDeliverable = 'Time Impact Analysis (TIA) & Critical Path Windows Report';
-      baseEffortDays = '8 - 14 Business Days';
-      riskMitigationZar = capexBand === 'under_15m' ? 'R600k - R1.5M' : capexBand === '15m_50m' ? 'R2.0M - R5.2M' : 'R6M - R18M';
-      recommendedTier = 'Forensic Delay Analyst & Primavera P6 Specialist';
-    } else if (serviceFocus === 'lender_tdd') {
-      advisoryMode = 'Lender / Investor Technical Due Diligence & Monitoring';
-      primaryDeliverable = 'Initial Project Due Diligence & Monthly Drawdown Audit Certificates';
-      baseEffortDays = '5 - 8 Business Days Initial';
-      riskMitigationZar = capexBand === 'under_15m' ? 'R500k - R1.2M' : capexBand === '15m_50m' ? 'R1.8M - R4.5M' : 'R5M - R15M';
-      recommendedTier = 'Independent Technical Advisor (ITA / Pr.QS)';
-    } else if (serviceFocus === 'turnaround') {
-      advisoryMode = 'Distressed Project Recovery & Turnaround Advisory';
-      primaryDeliverable = '360° Diagnostic Report, Revised Cost-to-Complete & Recovery Programme';
-      baseEffortDays = '48-72h Rapid Mobilisation';
-      riskMitigationZar = capexBand === 'under_15m' ? 'R1.5M - R3.5M' : capexBand === '15m_50m' ? 'R4.0M - R11M' : 'R12M - R35M';
-      recommendedTier = 'Turnaround Advisory Director & Dispute Board Practitioner';
-    }
-
-    return {
-      advisoryMode,
-      primaryDeliverable,
-      baseEffortDays,
-      riskMitigationZar,
-      recommendedTier
-    };
+  const togglePillar = (idx: number) => {
+    setOpenPillarIndex(prev => prev === idx ? null : idx);
   };
-
-  const diagnostic = calculateDiagnostic();
 
   // Pillars Data
   const pillars = [
@@ -381,43 +309,6 @@ export const EurekaConstructionConsultancyPage: React.FC<EurekaConstructionConsu
     }
   ];
 
-  // Case Studies
-  const caseStudies = [
-    {
-      title: 'R180M Regional Logistics Center',
-      category: 'Claims Defense & Quantum Settlement',
-      challenge:
-        'The main contractor submitted an Extension of Time (EOT) claim of 74 calendar days and a R14.2M prolongation cost claim citing adverse soil conditions and late design releases.',
-      intervention:
-        'EFMS conducted a forensic Time Impact Analysis (TIA) and detailed quantum audit, proving that 42 days were non-critical concurrent delays and that plant holding costs were inflated.',
-      outcome:
-        'Claim amicably settled in mediation for 22 days and R3.1M — saving the property developer over R11.1M in unjustified expenditure and eliminating protracted litigation.',
-      tags: ['JBCC PBA', 'TIA Delay Analysis', 'Quantum Audit', 'Mediation']
-    },
-    {
-      title: 'R95M Grade-A Commercial Office Fitout',
-      category: 'Project Turnaround & Independent Monitoring',
-      challenge:
-        'The anchor tenant relocation was threatened by a 9-week cumulative site delay and subcontractor strikes, triggering daily liquidated damages of R85,000/day.',
-      intervention:
-        'Deployed our Turnaround Consultancy team. Re-baselined the master schedule, instituted a multi-shift 24/7 accelerated work programme, and restructured trade handover protocols.',
-      outcome:
-        'Recovered 38 critical days within 6 weeks, allowing partial tenant beneficial occupation on schedule with zero liquidated damages levied.',
-      tags: ['Critical Path Recovery', 'Multi-Trade Coordination', 'Turnaround', 'Tenant Fitout']
-    },
-    {
-      title: 'R240M Residential Mixed-Use Estate',
-      category: 'Quantity Surveying & Final Account Reconciliation',
-      challenge:
-        'At 90% completion, the project faced a R18M budget overrun due to unapproved site variation instructions and disputed provisional sum adjustments.',
-      intervention:
-        'EFMS performed a forensic BOQ reconciliation, audited every site instruction against contractual specifications, and led structured bilateral commercial settlement sessions.',
-      outcome:
-        'Final account agreed and signed off with a net variance of just 1.8% over the original sanctioned budget, protecting developer equity and bank loan covenants.',
-      tags: ['ASAQS BOQ', 'Variation Auditing', 'Final Account Settlement', 'Bank Monitoring']
-    }
-  ];
-
   // FAQs
   const faqs = [
     {
@@ -472,9 +363,20 @@ export const EurekaConstructionConsultancyPage: React.FC<EurekaConstructionConsu
       {/* ========================================================================= */}
       {/* HERO SECTION */}
       {/* ========================================================================= */}
-      <section className="relative py-16 sm:py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-[#09132e] via-[#0b1638] to-slate-900 overflow-hidden">
-        {/* Subtle background tech grid */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#1e293b15_1px,transparent_1px),linear-gradient(to_bottom,#1e293b15_1px,transparent_1px)] bg-[size:4rem_4rem] pointer-events-none"></div>
+      <section className="relative py-16 sm:py-24 px-4 sm:px-6 lg:px-8 bg-[#09132e] overflow-hidden border-b border-slate-800">
+        {/* Background Video */}
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover object-center pointer-events-none"
+        >
+          <source src="./Services Hero Section BG.mp4" type="video/mp4" />
+        </video>
+
+        {/* Video Overlay: Darker on left, totally clear on right */}
+        <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/60 to-transparent pointer-events-none" />
 
         <div className="relative max-w-7xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
@@ -502,13 +404,14 @@ export const EurekaConstructionConsultancyPage: React.FC<EurekaConstructionConsu
 
               {/* Action Buttons */}
               <div className="flex flex-wrap items-center gap-4 mb-10">
-                <a
-                  href="#diagnostic-estimator"
-                  className="px-6 py-3.5 rounded bg-red-600 hover:bg-red-500 text-white font-bold text-xs uppercase tracking-wider transition-all shadow-xl shadow-red-900/50 flex items-center gap-2"
+                <button
+                  type="button"
+                  onClick={() => onNavigate?.('contact')}
+                  className="px-6 py-3.5 rounded bg-red-600 hover:bg-red-500 text-white font-bold text-xs uppercase tracking-wider transition-all shadow-xl shadow-red-900/50 flex items-center gap-2 cursor-pointer"
                 >
-                  <Calculator className="w-4 h-4" />
-                  <span>Scope &amp; Risk Diagnostic Tool</span>
-                </a>
+                  <Briefcase className="w-4 h-4" />
+                  <span>Request Advisory Consultation</span>
+                </button>
                 <a
                   href="#consultancy-pillars"
                   className="px-6 py-3.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs uppercase tracking-wider transition-all border border-slate-700 hover:border-slate-600 flex items-center gap-2"
@@ -538,455 +441,192 @@ export const EurekaConstructionConsultancyPage: React.FC<EurekaConstructionConsu
                 </div>
               </div>
             </div>
-
-            {/* Right Column: Key Commercial Protection Card */}
-            <div className="lg:col-span-5">
-              <div className="bg-gradient-to-br from-[#0c1840] to-slate-900 border border-slate-700 rounded-xl p-6 sm:p-8 shadow-2xl relative">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-red-600/10 rounded-full blur-3xl pointer-events-none"></div>
-
-                <div className="flex items-center justify-between mb-6 pb-4 border-b border-slate-800">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-lg bg-red-600/20 border border-red-500/40 text-red-400 flex items-center justify-center">
-                      <ShieldCheck className="w-5 h-5" />
-                    </div>
-                    <div>
-                      <h2 className="text-base font-bold text-white">Commercial Guardianship</h2>
-                      <p className="text-xs text-slate-400">Independent Expert Oversight</p>
-                    </div>
-                  </div>
-                  <span className="px-2.5 py-1 rounded bg-emerald-950 border border-emerald-800 text-emerald-300 text-[10px] font-black uppercase">
-                    Active Service
-                  </span>
-                </div>
-
-                <div className="space-y-4 mb-6">
-                  <div className="flex items-start gap-3 p-3 rounded-lg bg-slate-800/50 border border-slate-700/50">
-                    <CheckCircle2 className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
-                    <div>
-                      <h4 className="text-xs font-bold text-white">Zero Unjustified Claims or Variations</h4>
-                      <p className="text-[11px] text-slate-400 mt-0.5">
-                        Forensic verification of all contractor variation orders, rate build-ups, and time-related claims.
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-3 p-3 rounded-lg bg-slate-800/50 border border-slate-700/50">
-                    <CheckCircle2 className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
-                    <div>
-                      <h4 className="text-xs font-bold text-white">SCL Delay Protocol Compliance</h4>
-                      <p className="text-[11px] text-slate-400 mt-0.5">
-                        Primavera P6 Time Impact Analysis proving causation, critical path delay, and concurrent impacts.
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-3 p-3 rounded-lg bg-slate-800/50 border border-slate-700/50">
-                    <CheckCircle2 className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
-                    <div>
-                      <h4 className="text-xs font-bold text-white">JBCC, FIDIC, NEC &amp; GCC Mastery</h4>
-                      <p className="text-[11px] text-slate-400 mt-0.5">
-                        Strict notice management preventing rights forfeiture and structuring watertight Adjudication submissions.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="bg-[#09132e] rounded-lg p-4 border border-slate-800 mb-6">
-                  <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2">
-                    Primary Advisory Engagements:
-                  </div>
-                  <div className="flex flex-wrap gap-1.5">
-                    {[
-                      'Quantity Surveying',
-                      'Delay Analysis',
-                      'Claims Defense',
-                      'Principal Agent',
-                      'Lender TDD',
-                      'Dispute Mediation',
-                      'Turnaround PM'
-                    ].map((badge, idx) => (
-                      <span
-                        key={idx}
-                        className="px-2 py-0.5 rounded bg-slate-800 text-slate-300 text-[10px] font-medium border border-slate-700"
-                      >
-                        {badge}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-
-                <button
-                  onClick={() => onNavigate?.('contact')}
-                  className="w-full py-3 rounded bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white text-xs font-bold uppercase tracking-wider transition-all shadow-lg cursor-pointer flex items-center justify-center gap-2"
-                >
-                  <span>Request Specialist Advisory Consultation</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </button>
-              </div>
-            </div>
           </div>
         </div>
       </section>
 
-      {/* ========================================================================= */}
-      {/* INTERACTIVE CONSULTANCY DIAGNOSTIC & SCOPE ESTIMATOR */}
-      {/* ========================================================================= */}
-      <section id="diagnostic-estimator" className="py-16 sm:py-20 px-4 sm:px-6 lg:px-8 bg-slate-950 border-y border-slate-800">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center max-w-3xl mx-auto mb-12">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-950 border border-red-800 text-red-300 text-xs font-bold uppercase tracking-wider mb-3">
-              <SlidersHorizontal className="w-3.5 h-3.5 text-red-400" />
-              <span>Interactive Diagnostic Tool</span>
-            </div>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-white tracking-tight">
-              Construction Consultancy &amp; Risk Diagnostic
-            </h2>
-            <p className="text-sm text-slate-400 mt-3 leading-relaxed">
-              Select your primary challenge, project contract type, and capex band to generate a customized advisory intervention roadmap, deliverable scope, and risk mitigation estimate.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            {/* Left Inputs (7 Cols) */}
-            <div className="lg:col-span-7 space-y-6">
-              {/* 1. Consulting Focus */}
-              <div className="bg-[#0b1638] border border-slate-800 rounded-xl p-5">
-                <label className="block text-xs font-bold text-slate-200 uppercase tracking-wider mb-3 flex items-center gap-2">
-                  <Target className="w-4 h-4 text-red-400" />
-                  <span>1. Primary Consultancy Requirement</span>
-                </label>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                  {[
-                    { id: 'qs_cost', title: 'Quantity Surveying & Cost Control', desc: 'BOQ, Feasibility, Variations & Final Account' },
-                    { id: 'contract_admin', title: 'Contract Administration (PA)', desc: 'JBCC, FIDIC, NEC Governance & Notices' },
-                    { id: 'claims_quantum', title: 'Claims Management & Defense', desc: 'EOT Claims, Prolongation Costs & Disruption' },
-                    { id: 'delay_analysis', title: 'Forensic Delay Analysis (CPM)', desc: 'Time Impact Analysis & SCL Programme Audit' },
-                    { id: 'lender_tdd', title: 'Lender Technical Due Diligence', desc: 'Bank Drawdowns, Audits & Monitoring' },
-                    { id: 'turnaround', title: 'Distressed Project Recovery', desc: 'Turnaround, Rapid Diagnostics & Re-baselining' }
-                  ].map(option => (
-                    <button
-                      key={option.id}
-                      onClick={() => setServiceFocus(option.id as any)}
-                      className={`p-3 rounded-lg text-left transition-all border text-xs cursor-pointer ${
-                        serviceFocus === option.id
-                          ? 'bg-red-950/60 border-red-600 text-white ring-1 ring-red-600 shadow-sm'
-                          : 'bg-slate-900/80 border-slate-700/80 text-slate-300 hover:border-slate-600'
-                      }`}
-                    >
-                      <div className="font-bold flex items-center justify-between">
-                        <span>{option.title}</span>
-                        {serviceFocus === option.id && <Check className="w-3.5 h-3.5 text-red-400 shrink-0" />}
-                      </div>
-                      <div className="text-[11px] text-slate-400 mt-1">{option.desc}</div>
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* 2. Project Stage & Contract Form */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {/* Project Stage */}
-                <div className="bg-[#0b1638] border border-slate-800 rounded-xl p-5">
-                  <label className="block text-xs font-bold text-slate-200 uppercase tracking-wider mb-3 flex items-center gap-2">
-                    <Clock className="w-4 h-4 text-red-400" />
-                    <span>2. Current Project Status</span>
-                  </label>
-                  <select
-                    value={projectStage}
-                    onChange={e => setProjectStage(e.target.value as any)}
-                    className="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-xs text-slate-200 font-medium focus:ring-1 focus:ring-red-500 focus:border-red-500 outline-none"
-                  >
-                    <option value="feasibility">Pre-Construction / Feasibility Appraisal</option>
-                    <option value="tender">Tender Stage &amp; Procurement</option>
-                    <option value="active_construction">Active Construction (On Track)</option>
-                    <option value="in_delay">Active Project in Delay (&gt;10% variance)</option>
-                    <option value="dispute_pending">Dispute / Formal Claim Submitted</option>
-                    <option value="closeout">Practical Completion &amp; Final Account Closeout</option>
-                  </select>
-                </div>
-
-                {/* Contract Form */}
-                <div className="bg-[#0b1638] border border-slate-800 rounded-xl p-5">
-                  <label className="block text-xs font-bold text-slate-200 uppercase tracking-wider mb-3 flex items-center gap-2">
-                    <FileText className="w-4 h-4 text-red-400" />
-                    <span>3. Contract Framework</span>
-                  </label>
-                  <select
-                    value={contractType}
-                    onChange={e => setContractType(e.target.value as any)}
-                    className="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-xs text-slate-200 font-medium focus:ring-1 focus:ring-red-500 focus:border-red-500 outline-none"
-                  >
-                    <option value="jbcc">JBCC Principal Building Agreement (Edition 6.2)</option>
-                    <option value="fidic">FIDIC (Red / Yellow / Silver 2017)</option>
-                    <option value="nec">NEC3 / NEC4 Engineering Contract (ECC)</option>
-                    <option value="gcc">GCC 2015 (General Conditions of Contract)</option>
-                    <option value="bespoke">Bespoke Commercial Construction Contract</option>
-                  </select>
-                </div>
-              </div>
-
-              {/* 3. Capex Band */}
-              <div className="bg-[#0b1638] border border-slate-800 rounded-xl p-5">
-                <label className="block text-xs font-bold text-slate-200 uppercase tracking-wider mb-3 flex items-center gap-2">
-                  <DollarSign className="w-4 h-4 text-red-400" />
-                  <span>4. Estimated Project Value (Capex)</span>
-                </label>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                  {[
-                    { id: 'under_15m', label: 'Under R15M', sub: 'Light Commercial' },
-                    { id: '15m_50m', label: 'R15M - R50M', sub: 'Medium Scale' },
-                    { id: '50m_150m', label: 'R50M - R150M', sub: 'Major Development' },
-                    { id: 'above_150m', label: 'R150M+', sub: 'Flagship / Mega' }
-                  ].map(band => (
-                    <button
-                      key={band.id}
-                      onClick={() => setCapexBand(band.id as any)}
-                      className={`p-2.5 rounded text-center transition-all border text-xs cursor-pointer ${
-                        capexBand === band.id
-                          ? 'bg-red-950/80 border-red-500 text-white font-bold'
-                          : 'bg-slate-900 border-slate-700 text-slate-400 hover:text-slate-200'
-                      }`}
-                    >
-                      <div className="text-xs">{band.label}</div>
-                      <div className="text-[10px] text-slate-500">{band.sub}</div>
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* 4. Specialized Add-on Capabilities */}
-              <div className="bg-[#0b1638] border border-slate-800 rounded-xl p-5">
-                <label className="block text-xs font-bold text-slate-200 uppercase tracking-wider mb-3">
-                  Optional Specialized Modules:
-                </label>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <label className="flex items-center gap-2.5 p-2 rounded bg-slate-900 border border-slate-800 cursor-pointer hover:border-slate-700 text-xs text-slate-300">
-                    <input
-                      type="checkbox"
-                      checked={includeForensicAudit}
-                      onChange={e => setIncludeForensicAudit(e.target.checked)}
-                      className="rounded text-red-600 focus:ring-red-500 bg-slate-800 border-slate-700"
-                    />
-                    <span>Primavera P6 Logic Health Audit</span>
-                  </label>
-                  <label className="flex items-center gap-2.5 p-2 rounded bg-slate-900 border border-slate-800 cursor-pointer hover:border-slate-700 text-xs text-slate-300">
-                    <input
-                      type="checkbox"
-                      checked={includeExpertWitness}
-                      onChange={e => setIncludeExpertWitness(e.target.checked)}
-                      className="rounded text-red-600 focus:ring-red-500 bg-slate-800 border-slate-700"
-                    />
-                    <span>Expert Witness Quantum Dossier</span>
-                  </label>
-                  <label className="flex items-center gap-2.5 p-2 rounded bg-slate-900 border border-slate-800 cursor-pointer hover:border-slate-700 text-xs text-slate-300">
-                    <input
-                      type="checkbox"
-                      checked={includeValuationAudit}
-                      onChange={e => setIncludeValuationAudit(e.target.checked)}
-                      className="rounded text-red-600 focus:ring-red-500 bg-slate-800 border-slate-700"
-                    />
-                    <span>Variation &amp; Valuation Forensic Audit</span>
-                  </label>
-                  <label className="flex items-center gap-2.5 p-2 rounded bg-slate-900 border border-slate-800 cursor-pointer hover:border-slate-700 text-xs text-slate-300">
-                    <input
-                      type="checkbox"
-                      checked={includeAdjudicationSupport}
-                      onChange={e => setIncludeAdjudicationSupport(e.target.checked)}
-                      className="rounded text-red-600 focus:ring-red-500 bg-slate-800 border-slate-700"
-                    />
-                    <span>Adjudication Statement Submission</span>
-                  </label>
-                </div>
-              </div>
-            </div>
-
-            {/* Right Diagnostic Output (5 Cols) */}
-            <div className="lg:col-span-5">
-              <div className="bg-gradient-to-b from-[#0e1d4d] to-[#09132e] border-2 border-red-600/50 rounded-xl p-6 shadow-2xl sticky top-28">
-                <div className="flex items-center justify-between pb-4 border-b border-slate-700/80 mb-5">
-                  <div>
-                    <span className="text-[10px] font-black uppercase tracking-wider text-red-400">
-                      Tailored Diagnostic Strategy
-                    </span>
-                    <h3 className="text-base font-black text-white mt-0.5">
-                      {diagnostic.advisoryMode}
-                    </h3>
-                  </div>
-                  <div className="w-9 h-9 rounded-lg bg-red-600/30 border border-red-500/50 flex items-center justify-center text-red-400">
-                    <Sparkles className="w-4 h-4" />
-                  </div>
-                </div>
-
-                {/* Key Metrics Output */}
-                <div className="space-y-4 mb-6">
-                  <div className="p-3.5 rounded-lg bg-slate-900/90 border border-slate-700/80">
-                    <div className="text-[10px] uppercase font-bold text-slate-400">
-                      Estimated Financial Exposure Mitigation
-                    </div>
-                    <div className="text-xl font-black text-emerald-400 mt-0.5">
-                      {diagnostic.riskMitigationZar}
-                    </div>
-                    <div className="text-[10px] text-slate-400 mt-1">
-                      Potential direct savings via quantum substantiation &amp; dispute prevention.
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-3">
-                    <div className="p-3 rounded-lg bg-slate-900/80 border border-slate-800">
-                      <div className="text-[10px] uppercase font-bold text-slate-400">Mobilisation Speed</div>
-                      <div className="text-sm font-bold text-white mt-0.5">{diagnostic.baseEffortDays}</div>
-                    </div>
-                    <div className="p-3 rounded-lg bg-slate-900/80 border border-slate-800">
-                      <div className="text-[10px] uppercase font-bold text-slate-400">Contract Standard</div>
-                      <div className="text-sm font-bold text-red-400 uppercase mt-0.5">{contractType}</div>
-                    </div>
-                  </div>
-
-                  <div className="p-3 rounded-lg bg-slate-900/80 border border-slate-800">
-                    <div className="text-[10px] uppercase font-bold text-slate-400">Lead Consultant Profile</div>
-                    <div className="text-xs font-bold text-slate-200 mt-0.5">{diagnostic.recommendedTier}</div>
-                  </div>
-
-                  <div className="p-3.5 rounded-lg bg-slate-900/90 border border-slate-800">
-                    <div className="text-[10px] uppercase font-bold text-slate-400 mb-1.5">
-                      Core Strategic Deliverable:
-                    </div>
-                    <div className="text-xs font-semibold text-slate-200 flex items-start gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
-                      <span>{diagnostic.primaryDeliverable}</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Direct Action */}
-                <div className="space-y-3">
-                  <a
-                    href="#consultancy-rfq-form"
-                    className="w-full py-3.5 rounded bg-red-600 hover:bg-red-500 text-white text-xs font-bold uppercase tracking-wider transition-all shadow-lg shadow-red-900/40 flex items-center justify-center gap-2"
-                  >
-                    <span>Proceed With This Scope Brief</span>
-                    <ArrowRight className="w-4 h-4" />
-                  </a>
-
-                  <p className="text-[10px] text-center text-slate-400">
-                    Strict Confidentiality (NDA Guaranteed) • Free Initial 30-Min Diagnostic Call
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* ========================================================================= */}
-      {/* 6 CORE CONSULTANCY SERVICE PILLARS */}
+      {/* 6 CORE CONSULTANCY SERVICE PILLARS - 2 COLUMN (ACCORDION + IMAGE) */}
       {/* ========================================================================= */}
-      <section id="consultancy-pillars" className="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 bg-slate-900">
+      <section id="consultancy-pillars" className="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 bg-slate-50 border-b border-slate-200">
         <div className="max-w-7xl mx-auto">
           <div className="text-center max-w-3xl mx-auto mb-14">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-800 border border-slate-700 text-slate-300 text-xs font-bold uppercase tracking-wider mb-3">
-              <Layers className="w-3.5 h-3.5 text-red-400" />
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-100 border border-red-200 text-red-700 text-xs font-bold uppercase tracking-wider mb-3">
+              <Layers className="w-3.5 h-3.5 text-red-600" />
               <span>Full Service Spectrum</span>
             </div>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-white tracking-tight">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-slate-900 tracking-tight">
               The 6 Pillars of Construction Consultancy
             </h2>
-            <p className="text-sm text-slate-400 mt-3 leading-relaxed">
+            <p className="text-sm text-slate-600 mt-3 leading-relaxed">
               From pre-construction quantity surveying to high-stakes forensic delay arbitration, EFMS delivers end-to-end technical, commercial, and legal advisory support.
             </p>
           </div>
 
-          {/* Interactive Pillars Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {pillars.map((pillar, idx) => {
-              const IconComp = pillar.icon;
-              return (
-                <div
-                  key={pillar.id}
-                  className="bg-[#0b1638] border border-slate-800 rounded-xl p-6 flex flex-col justify-between hover:border-red-600/70 transition-all hover:shadow-xl hover:shadow-red-950/20 group"
-                >
-                  <div>
-                    {/* Top Row: Icon & Pillar Number */}
-                    <div className="flex items-center justify-between mb-5">
-                      <div className="w-12 h-12 rounded-lg bg-slate-900 border border-slate-700/80 text-red-400 flex items-center justify-center group-hover:bg-red-600 group-hover:text-white transition-all shadow-md">
-                        <IconComp className="w-6 h-6" />
-                      </div>
-                      <span className="text-xs font-black text-slate-500 font-mono tracking-wider">
-                        PILLAR {pillar.number}
-                      </span>
-                    </div>
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+            {/* Column 1: Accordion List (7 Cols) */}
+            <div className="lg:col-span-7 space-y-3">
+              {pillars.map((pillar, idx) => {
+                const IconComp = pillar.icon;
+                const isOpen = openPillarIndex === idx;
 
-                    <h3 className="text-lg font-black text-white group-hover:text-red-400 transition-colors mb-1">
-                      {pillar.title}
-                    </h3>
-                    <p className="text-xs font-bold text-slate-400 mb-3">{pillar.subtitle}</p>
-                    <p className="text-xs text-slate-300 leading-relaxed mb-5">{pillar.description}</p>
-
-                    {/* Deliverables List */}
-                    <div className="border-t border-slate-800/80 pt-4 mb-5">
-                      <div className="text-[10px] font-black text-slate-400 uppercase tracking-wider mb-2.5">
-                        Key Advisory Deliverables:
-                      </div>
-                      <ul className="space-y-1.5 text-xs text-slate-300">
-                        {pillar.deliverables.map((item, dIdx) => (
-                          <li key={dIdx} className="flex items-start gap-2">
-                            <Check className="w-3.5 h-3.5 text-red-500 shrink-0 mt-0.5" />
-                            <span className="text-[11px]">{item}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </div>
-
-                  {/* Standards & Direct CTA */}
-                  <div className="pt-4 border-t border-slate-800">
-                    <div className="text-[10px] text-slate-400 font-mono mb-3 flex items-center gap-1.5">
-                      <Award className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-                      <span className="truncate">{pillar.standards}</span>
-                    </div>
-
-                    <div className="p-2.5 rounded bg-slate-900/90 border border-slate-800 text-[10px] text-emerald-400 font-medium mb-4">
-                      💡 {pillar.roiHighlight}
-                    </div>
-
-                    <div className="flex flex-col gap-2">
-                      {idx === 0 && (
-                        <button
-                          onClick={() => onNavigate?.('quantity-surveying')}
-                          className="w-full py-2 rounded bg-red-600/20 hover:bg-red-600 border border-red-500/40 text-red-300 hover:text-white text-xs font-bold transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
+                return (
+                  <div
+                    key={pillar.id}
+                    className={`bg-white rounded-xl border transition-all duration-200 overflow-hidden shadow-sm ${
+                      isOpen
+                        ? 'border-red-600 shadow-xl ring-1 ring-red-500/20'
+                        : 'border-slate-200 hover:border-slate-300 hover:bg-slate-50/50'
+                    }`}
+                  >
+                    <button
+                      type="button"
+                      onClick={() => togglePillar(idx)}
+                      className="w-full text-left p-4 sm:p-5 flex items-center justify-between gap-4 cursor-pointer focus:outline-none"
+                    >
+                      <div className="flex items-center gap-3.5 min-w-0">
+                        <div
+                          className={`w-11 h-11 rounded-lg flex items-center justify-center flex-shrink-0 transition-colors ${
+                            isOpen
+                              ? 'bg-red-600 text-white'
+                              : 'bg-slate-100 border border-slate-200 text-red-600'
+                          }`}
                         >
-                          <Scale className="w-3.5 h-3.5" />
-                          <span>View Dedicated Quantity Surveying Page</span>
-                        </button>
-                      )}
-                      <button
-                        onClick={() => {
-                          setServiceFocus(
-                            idx === 0
-                              ? 'qs_cost'
-                              : idx === 1
-                              ? 'contract_admin'
-                              : idx === 2
-                              ? 'claims_quantum'
-                              : idx === 3
-                              ? 'delay_analysis'
-                              : idx === 4
-                              ? 'lender_tdd'
-                              : 'turnaround'
-                          );
-                          const el = document.getElementById('diagnostic-estimator');
-                          el?.scrollIntoView({ behavior: 'smooth' });
-                        }}
-                        className="w-full py-2.5 rounded bg-slate-800 hover:bg-red-600 text-slate-200 hover:text-white text-xs font-bold transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
+                          <IconComp className="w-5 h-5" />
+                        </div>
+                        <div className="min-w-0">
+                          <div className="flex items-center gap-2 mb-0.5">
+                            <span className="text-[10px] font-black text-slate-500 font-mono tracking-wider">
+                              PILLAR {pillar.number}
+                            </span>
+                            <span className="text-[10px] text-amber-700 hidden sm:inline truncate max-w-[220px]">
+                              • {pillar.standards.split('•')[0].trim()}
+                            </span>
+                          </div>
+                          <h3
+                            className={`text-sm sm:text-base font-extrabold transition-colors truncate ${
+                              isOpen ? 'text-red-600' : 'text-slate-900'
+                            }`}
+                          >
+                            {pillar.title}
+                          </h3>
+                        </div>
+                      </div>
+
+                      <div
+                        className={`w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 transition-transform duration-200 ${
+                          isOpen
+                            ? 'bg-red-50 text-red-600 rotate-180'
+                            : 'bg-slate-100 text-slate-500'
+                        }`}
                       >
-                        <span>Diagnose Pillar {pillar.number}</span>
-                        <ArrowRight className="w-3.5 h-3.5" />
-                      </button>
-                    </div>
+                        <ChevronDown className="w-4 h-4" />
+                      </div>
+                    </button>
+
+                    <AnimatePresence initial={false}>
+                      {isOpen && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: 'auto', opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{ duration: 0.25, ease: 'easeInOut' }}
+                          className="overflow-hidden"
+                        >
+                          <div className="px-5 pb-5 pt-1 border-t border-slate-100 space-y-4">
+                            <p className="text-xs font-bold text-slate-800">
+                              {pillar.subtitle}
+                            </p>
+
+                            <p className="text-xs text-slate-600 leading-relaxed">
+                              {pillar.description}
+                            </p>
+
+                            {/* Deliverables List */}
+                            <div className="bg-slate-50 rounded-lg p-3.5 border border-slate-200">
+                              <div className="text-[10px] font-black text-slate-700 uppercase tracking-wider mb-2">
+                                Key Advisory Deliverables:
+                              </div>
+                              <ul className="space-y-1.5 text-xs text-slate-700">
+                                {pillar.deliverables.map((item, dIdx) => (
+                                  <li key={dIdx} className="flex items-start gap-2">
+                                    <Check className="w-3.5 h-3.5 text-red-600 shrink-0 mt-0.5" />
+                                    <span className="text-[11px]">{item}</span>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+
+                            {/* Standards and ROI Highlights */}
+                            <div className="flex flex-wrap items-center justify-between gap-2 pt-1 text-[10px] text-slate-500 font-mono">
+                              <span className="flex items-center gap-1.5">
+                                <Award className="w-3.5 h-3.5 text-amber-600 shrink-0" />
+                                <span>{pillar.standards}</span>
+                              </span>
+                            </div>
+
+                            <div className="p-2.5 rounded bg-emerald-50/80 border border-emerald-200 text-[11px] text-emerald-800 font-medium">
+                              💡 {pillar.roiHighlight}
+                            </div>
+
+                            {/* Action Links */}
+                            <div className="flex flex-col sm:flex-row gap-2 pt-2 border-t border-slate-100">
+                              {idx === 0 && (
+                                <button
+                                  type="button"
+                                  onClick={() => onNavigate?.('quantity-surveying')}
+                                  className="flex-1 py-2 px-3 rounded bg-red-50 hover:bg-red-600 border border-red-200 text-red-700 hover:text-white text-xs font-bold transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
+                                >
+                                  <Scale className="w-3.5 h-3.5" />
+                                  <span>Quantity Surveying Overview</span>
+                                </button>
+                              )}
+                              <button
+                                type="button"
+                                onClick={() => onNavigate?.('contact')}
+                                className="flex-1 py-2 px-3 rounded bg-slate-900 hover:bg-red-600 text-white text-xs font-bold transition-colors flex items-center justify-center gap-1.5 cursor-pointer shadow-sm"
+                              >
+                                <span>Inquire On Pillar {pillar.number}</span>
+                                <ArrowRight className="w-3.5 h-3.5" />
+                              </button>
+                            </div>
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
                   </div>
+                );
+              })}
+            </div>
+
+            {/* Column 2: Sticky Image Showcase (5 Cols) */}
+            <div className="lg:col-span-5 lg:sticky lg:top-24 space-y-4">
+              <div className="relative rounded-2xl overflow-hidden shadow-xl border border-slate-200 bg-white group">
+                <img
+                  src={constructionMgmtImg}
+                  alt="Eureka Construction Consultancy and Professional Management Leadership on site"
+                  className="w-full h-auto max-h-[640px] object-cover object-center group-hover:scale-105 transition-transform duration-700"
+                  loading="lazy"
+                />
+              </div>
+
+              {/* Quick Key Highlights Bar */}
+              <div className="bg-[#0b1638] rounded-xl p-4 border border-slate-800 shadow-sm grid grid-cols-3 gap-2 text-center">
+                <div className="border-r border-slate-800 pr-2">
+                  <div className="text-base font-black text-white">6 Pillars</div>
+                  <div className="text-[10px] font-bold uppercase text-slate-400">Governance</div>
                 </div>
-              );
-            })}
+                <div className="border-r border-slate-800 pr-2">
+                  <div className="text-base font-black text-red-400">R180M+</div>
+                  <div className="text-[10px] font-bold uppercase text-slate-400">Claims Saved</div>
+                </div>
+                <div>
+                  <div className="text-base font-black text-emerald-400">100%</div>
+                  <div className="text-[10px] font-bold uppercase text-slate-400">JBCC / FIDIC</div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -1105,17 +745,17 @@ export const EurekaConstructionConsultancyPage: React.FC<EurekaConstructionConsu
       {/* ========================================================================= */}
       {/* FORENSIC DELAY ANALYSIS METHODOLOGIES GUIDE (SCL PROTOCOL) */}
       {/* ========================================================================= */}
-      <section className="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 bg-slate-900">
+      <section className="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 bg-white border-b border-slate-200">
         <div className="max-w-7xl mx-auto">
           <div className="text-center max-w-3xl mx-auto mb-14">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-800 border border-slate-700 text-slate-300 text-xs font-bold uppercase tracking-wider mb-3">
-              <Clock className="w-3.5 h-3.5 text-red-400" />
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-50 border border-red-200 text-red-700 text-xs font-bold uppercase tracking-wider mb-3">
+              <Clock className="w-3.5 h-3.5 text-red-600" />
               <span>SCL Protocol 2nd Edition Compliant</span>
             </div>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-white tracking-tight">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-slate-900 tracking-tight">
               Forensic Delay Analysis Methodologies
             </h2>
-            <p className="text-sm text-slate-400 mt-3 leading-relaxed">
+            <p className="text-sm text-slate-600 mt-3 leading-relaxed">
               When projects experience schedule slippage, selecting the correct delay analysis method is critical for tribunal acceptance. EFMS implements proven CPM delay methodologies under the Society of Construction Law Protocol.
             </p>
           </div>
@@ -1128,8 +768,8 @@ export const EurekaConstructionConsultancyPage: React.FC<EurekaConstructionConsu
                 onClick={() => setActiveDelayMethodTab(idx)}
                 className={`p-3 rounded-lg text-left transition-all border text-xs cursor-pointer ${
                   activeDelayMethodTab === idx
-                    ? 'bg-red-600 border-red-500 text-white font-bold shadow-lg shadow-red-950/40'
-                    : 'bg-[#0b1638] border-slate-800 text-slate-400 hover:text-white hover:border-slate-700'
+                    ? 'bg-red-600 border-red-600 text-white font-bold shadow-lg shadow-red-600/20'
+                    : 'bg-slate-50 border-slate-200 text-slate-700 hover:text-slate-900 hover:bg-slate-100 hover:border-slate-300'
                 }`}
               >
                 <div className="font-mono text-[10px] opacity-75">{method.type}</div>
@@ -1140,53 +780,53 @@ export const EurekaConstructionConsultancyPage: React.FC<EurekaConstructionConsu
 
           {/* Active Delay Detail Box */}
           {delayMethods[activeDelayMethodTab] && (
-            <div className="bg-[#0b1638] border border-slate-800 rounded-xl p-6 sm:p-8 max-w-4xl mx-auto">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-800 mb-6">
+            <div className="bg-slate-50 border border-slate-200 rounded-xl p-6 sm:p-8 max-w-4xl mx-auto shadow-sm">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200 mb-6">
                 <div>
-                  <span className="text-[10px] font-mono uppercase text-red-400 font-bold">
+                  <span className="text-[10px] font-mono uppercase text-red-600 font-bold">
                     {delayMethods[activeDelayMethodTab].type} Methodology
                   </span>
-                  <h3 className="text-xl font-black text-white mt-0.5">
+                  <h3 className="text-xl font-black text-slate-900 mt-0.5">
                     {delayMethods[activeDelayMethodTab].name}
                   </h3>
                 </div>
-                <div className="px-3 py-1.5 rounded bg-slate-900 border border-slate-700 text-xs font-mono text-emerald-400 flex items-center gap-1.5">
-                  <Award className="w-3.5 h-3.5 text-amber-400" />
+                <div className="px-3 py-1.5 rounded bg-white border border-slate-200 text-xs font-mono text-emerald-700 flex items-center gap-1.5 shadow-sm">
+                  <Award className="w-3.5 h-3.5 text-amber-600" />
                   <span>Tribunal Acceptance: {delayMethods[activeDelayMethodTab].tribunalScore}</span>
                 </div>
               </div>
 
               <div className="space-y-4 text-xs">
                 <div>
-                  <div className="text-[10px] font-black uppercase text-slate-400 tracking-wider mb-1">
+                  <div className="text-[10px] font-black uppercase text-slate-700 tracking-wider mb-1">
                     How it Works:
                   </div>
-                  <p className="text-slate-200 leading-relaxed bg-slate-900/80 p-3.5 rounded-lg border border-slate-800">
+                  <p className="text-slate-700 leading-relaxed bg-white p-3.5 rounded-lg border border-slate-200">
                     {delayMethods[activeDelayMethodTab].howItWorks}
                   </p>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="p-4 rounded-lg bg-emerald-950/30 border border-emerald-800/40">
-                    <div className="text-emerald-400 font-bold mb-1.5 flex items-center gap-1.5">
-                      <CheckCircle2 className="w-4 h-4" />
+                  <div className="p-4 rounded-lg bg-emerald-50/80 border border-emerald-200">
+                    <div className="text-emerald-800 font-bold mb-1.5 flex items-center gap-1.5">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-600" />
                       <span>Strengths / Advantages</span>
                     </div>
-                    <p className="text-slate-300">{delayMethods[activeDelayMethodTab].pros}</p>
+                    <p className="text-slate-700">{delayMethods[activeDelayMethodTab].pros}</p>
                   </div>
 
-                  <div className="p-4 rounded-lg bg-rose-950/30 border border-rose-800/40">
-                    <div className="text-rose-400 font-bold mb-1.5 flex items-center gap-1.5">
-                      <AlertTriangle className="w-4 h-4" />
+                  <div className="p-4 rounded-lg bg-rose-50/80 border border-rose-200">
+                    <div className="text-rose-800 font-bold mb-1.5 flex items-center gap-1.5">
+                      <AlertTriangle className="w-4 h-4 text-rose-600" />
                       <span>Limitations &amp; Data Requirements</span>
                     </div>
-                    <p className="text-slate-300">{delayMethods[activeDelayMethodTab].cons}</p>
+                    <p className="text-slate-700">{delayMethods[activeDelayMethodTab].cons}</p>
                   </div>
                 </div>
 
-                <div className="p-3.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 flex items-center justify-between">
+                <div className="p-3.5 rounded-lg bg-white border border-slate-200 text-slate-700 flex items-center justify-between shadow-sm">
                   <div className="flex items-center gap-2">
-                    <Check className="w-4 h-4 text-red-500 shrink-0" />
+                    <Check className="w-4 h-4 text-red-600 shrink-0" />
                     <span><strong>Ideal Application:</strong> {delayMethods[activeDelayMethodTab].bestFor}</span>
                   </div>
                 </div>
@@ -1197,269 +837,16 @@ export const EurekaConstructionConsultancyPage: React.FC<EurekaConstructionConsu
       </section>
 
       {/* ========================================================================= */}
-      {/* CASE STUDIES & QUANTIFIABLE ADVISORY OUTCOMES */}
-      {/* ========================================================================= */}
-      <section className="py-16 sm:py-20 px-4 sm:px-6 lg:px-8 bg-slate-950 border-t border-slate-800">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center max-w-3xl mx-auto mb-12">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900 border border-slate-700 text-slate-300 text-xs font-bold uppercase tracking-wider mb-3">
-              <Award className="w-3.5 h-3.5 text-amber-400" />
-              <span>Proven Track Record</span>
-            </div>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-white tracking-tight">
-              Real-World Advisory Case Studies
-            </h2>
-            <p className="text-sm text-slate-400 mt-3 leading-relaxed">
-              Explore how our quantity surveying, forensic delay analysis, and turnaround advisory prevented multi-million rand losses across major South African construction projects.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {caseStudies.map((cs, idx) => (
-              <div
-                key={idx}
-                className="bg-[#0b1638] border border-slate-800 rounded-xl p-6 flex flex-col justify-between hover:border-slate-700 transition-all shadow-xl"
-              >
-                <div>
-                  <div className="inline-block px-2.5 py-1 rounded bg-slate-900 border border-slate-700 text-red-400 text-[10px] font-bold uppercase tracking-wider mb-3">
-                    {cs.category}
-                  </div>
-                  <h3 className="text-lg font-black text-white mb-3">{cs.title}</h3>
-
-                  <div className="space-y-3 mb-6 text-xs">
-                    <div>
-                      <span className="font-bold text-rose-400 uppercase text-[10px] block mb-1">
-                        The Challenge:
-                      </span>
-                      <p className="text-slate-300 leading-relaxed bg-slate-900/60 p-3 rounded border border-slate-800/80">
-                        {cs.challenge}
-                      </p>
-                    </div>
-
-                    <div>
-                      <span className="font-bold text-amber-400 uppercase text-[10px] block mb-1">
-                        EFMS Strategic Intervention:
-                      </span>
-                      <p className="text-slate-300 leading-relaxed bg-slate-900/60 p-3 rounded border border-slate-800/80">
-                        {cs.intervention}
-                      </p>
-                    </div>
-
-                    <div>
-                      <span className="font-bold text-emerald-400 uppercase text-[10px] block mb-1">
-                        Quantified Outcome:
-                      </span>
-                      <p className="text-slate-100 font-semibold leading-relaxed bg-emerald-950/40 p-3 rounded border border-emerald-800/60">
-                        {cs.outcome}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="pt-4 border-t border-slate-800 flex flex-wrap gap-1.5">
-                  {cs.tags.map((tag, tIdx) => (
-                    <span
-                      key={tIdx}
-                      className="px-2 py-0.5 rounded bg-slate-900 text-slate-400 text-[10px] font-mono border border-slate-800"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ========================================================================= */}
-      {/* CONSULTANCY BRIEFING & RFQ FORM */}
-      {/* ========================================================================= */}
-      <section id="consultancy-rfq-form" className="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-slate-900 to-[#09132e] border-t border-slate-800">
-        <div className="max-w-4xl mx-auto">
-          <div className="bg-[#0b1638] border border-slate-700/80 rounded-2xl p-6 sm:p-10 shadow-2xl relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-red-600/10 rounded-full blur-3xl pointer-events-none"></div>
-
-            <div className="text-center max-w-2xl mx-auto mb-8">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-950 border border-red-800 text-red-300 text-xs font-bold uppercase tracking-wider mb-3">
-                <FileSearch className="w-3.5 h-3.5 text-red-400" />
-                <span>Confidential Advisory Request</span>
-              </div>
-              <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
-                Request a Construction Consultancy Consultation
-              </h2>
-              <p className="text-xs sm:text-sm text-slate-400 mt-2">
-                Submit project particulars for an initial confidential review by our Senior Construction Claims &amp; Quantity Surveying Directors.
-              </p>
-            </div>
-
-            {rfqSubmitted ? (
-              <div className="p-8 rounded-xl bg-emerald-950/60 border border-emerald-600 text-center animate-in fade-in">
-                <div className="w-14 h-14 rounded-full bg-emerald-600 text-white flex items-center justify-center mx-auto mb-4 shadow-lg shadow-emerald-900/40">
-                  <CheckCircle2 className="w-8 h-8" />
-                </div>
-                <h3 className="text-xl font-bold text-white mb-2">Advisory Brief Received Successfully</h3>
-                <p className="text-xs text-slate-300 max-w-md mx-auto mb-6">
-                  Thank you. A Senior Pr.CPM / Pr.QS Consultant from Eureka FM will review your project parameters and contact you within 24 hours under complete confidentiality.
-                </p>
-                <button
-                  onClick={() => setRfqSubmitted(false)}
-                  className="px-6 py-2.5 rounded bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold transition-all"
-                >
-                  Submit Another Brief
-                </button>
-              </div>
-            ) : (
-              <form
-                onSubmit={e => {
-                  e.preventDefault();
-                  setRfqSubmitted(true);
-                }}
-                className="space-y-4"
-              >
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">
-                      Full Name *
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      placeholder="e.g. David van der Merwe"
-                      className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3.5 py-2.5 text-xs text-slate-100 placeholder-slate-500 focus:ring-1 focus:ring-red-500 focus:border-red-500 outline-none"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">
-                      Organisation / Developer *
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      placeholder="e.g. Growthpoint Properties"
-                      className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3.5 py-2.5 text-xs text-slate-100 placeholder-slate-500 focus:ring-1 focus:ring-red-500 focus:border-red-500 outline-none"
-                    />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">
-                      Email Address *
-                    </label>
-                    <input
-                      type="email"
-                      required
-                      placeholder="david@company.co.za"
-                      className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3.5 py-2.5 text-xs text-slate-100 placeholder-slate-500 focus:ring-1 focus:ring-red-500 focus:border-red-500 outline-none"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">
-                      Direct Telephone *
-                    </label>
-                    <input
-                      type="tel"
-                      required
-                      placeholder="e.g. 082 123 4567"
-                      className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3.5 py-2.5 text-xs text-slate-100 placeholder-slate-500 focus:ring-1 focus:ring-red-500 focus:border-red-500 outline-none"
-                    />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                  <div>
-                    <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">
-                      Primary Service Focus
-                    </label>
-                    <select
-                      defaultValue={serviceFocus}
-                      className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2.5 text-xs text-slate-200 outline-none"
-                    >
-                      <option value="qs_cost">Quantity Surveying / Cost Control</option>
-                      <option value="contract_admin">Contract Administration (PA)</option>
-                      <option value="claims_quantum">Claims Management &amp; Defense</option>
-                      <option value="delay_analysis">Forensic Delay Analysis (CPM)</option>
-                      <option value="lender_tdd">Lender Due Diligence (TDD)</option>
-                      <option value="turnaround">Turnaround / Recovery PM</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">
-                      Contract Form
-                    </label>
-                    <select
-                      defaultValue={contractType}
-                      className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2.5 text-xs text-slate-200 outline-none"
-                    >
-                      <option value="jbcc">JBCC Principal Building Agreement</option>
-                      <option value="fidic">FIDIC (Red / Yellow / Silver)</option>
-                      <option value="nec">NEC3 / NEC4 ECC</option>
-                      <option value="gcc">GCC 2015</option>
-                      <option value="bespoke">Bespoke Contract</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">
-                      Estimated Capex Band
-                    </label>
-                    <select
-                      defaultValue={capexBand}
-                      className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2.5 text-xs text-slate-200 outline-none"
-                    >
-                      <option value="under_15m">Under R15 Million</option>
-                      <option value="15m_50m">R15M - R50 Million</option>
-                      <option value="50m_150m">R50M - R150 Million</option>
-                      <option value="above_150m">Above R150 Million</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">
-                    Project Summary &amp; Key Commercial Concerns *
-                  </label>
-                  <textarea
-                    rows={4}
-                    required
-                    placeholder="Briefly describe the project, location, current delays, contractor claims, or specific advisory deliverables needed..."
-                    className="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-xs text-slate-100 placeholder-slate-500 focus:ring-1 focus:ring-red-500 focus:border-red-500 outline-none"
-                  ></textarea>
-                </div>
-
-                <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2">
-                  <div className="text-[11px] text-slate-400 flex items-center gap-1.5">
-                    <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
-                    <span>Protected by Mutual Non-Disclosure Agreement (NDA)</span>
-                  </div>
-
-                  <button
-                    type="submit"
-                    className="w-full sm:w-auto px-8 py-3.5 rounded bg-red-600 hover:bg-red-500 text-white text-xs font-bold uppercase tracking-wider transition-all shadow-xl shadow-red-900/40 cursor-pointer flex items-center justify-center gap-2"
-                  >
-                    <span>Submit Consultancy Brief</span>
-                    <ArrowRight className="w-4 h-4" />
-                  </button>
-                </div>
-              </form>
-            )}
-          </div>
-        </div>
-      </section>
-
-      {/* ========================================================================= */}
       {/* FREQUENTLY ASKED QUESTIONS */}
       {/* ========================================================================= */}
-      <section className="py-16 sm:py-20 px-4 sm:px-6 lg:px-8 bg-slate-900 border-t border-slate-800">
+      <section className="py-16 sm:py-20 px-4 sm:px-6 lg:px-8 bg-[#f0faff] border-t border-sky-100">
         <div className="max-w-4xl mx-auto">
           <div className="text-center max-w-2xl mx-auto mb-12">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-800 border border-slate-700 text-slate-300 text-xs font-bold uppercase tracking-wider mb-3">
-              <HelpCircle className="w-3.5 h-3.5 text-red-400" />
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-100 border border-red-200 text-red-700 text-xs font-bold uppercase tracking-wider mb-3">
+              <HelpCircle className="w-3.5 h-3.5 text-red-600" />
               <span>Advisory Knowledge Base</span>
             </div>
-            <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
+            <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
               Frequently Asked Questions
             </h2>
           </div>
@@ -1468,23 +855,23 @@ export const EurekaConstructionConsultancyPage: React.FC<EurekaConstructionConsu
             {faqs.map((faq, idx) => (
               <div
                 key={idx}
-                className="bg-[#0b1638] border border-slate-800 rounded-xl overflow-hidden transition-colors"
+                className="bg-white border border-slate-200 rounded-xl overflow-hidden transition-colors shadow-sm"
               >
                 <button
                   onClick={() => setFaqOpenIndex(faqOpenIndex === idx ? null : idx)}
-                  className="w-full text-left p-4 sm:p-5 flex items-center justify-between gap-4 cursor-pointer hover:text-red-400 transition-colors"
+                  className="w-full text-left p-4 sm:p-5 flex items-center justify-between gap-4 cursor-pointer hover:text-red-600 transition-colors"
                 >
-                  <span className="text-xs sm:text-sm font-bold text-white">
+                  <span className="text-xs sm:text-sm font-bold text-slate-900">
                     {faq.q}
                   </span>
                   <ChevronDown
                     className={`w-4 h-4 text-slate-400 shrink-0 transition-transform duration-200 ${
-                      faqOpenIndex === idx ? 'rotate-180 text-red-400' : ''
+                      faqOpenIndex === idx ? 'rotate-180 text-red-600' : ''
                     }`}
                   />
                 </button>
                 {faqOpenIndex === idx && (
-                  <div className="px-4 sm:px-5 pb-5 pt-1 text-xs text-slate-300 leading-relaxed border-t border-slate-800/60 bg-slate-900/60">
+                  <div className="px-4 sm:px-5 pb-5 pt-1 text-xs text-slate-600 leading-relaxed border-t border-slate-100 bg-slate-50/70">
                     {faq.a}
                   </div>
                 )}

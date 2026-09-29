@@ -199,6 +199,15 @@ const KNOWLEDGE_BASE: FAQItem[] = [
     answer: 'Our core primary operations are based in Gauteng (Johannesburg, Pretoria, Midrand, Centurion, Ekurhuleni, and surrounds).\n\nFor major capital projects, forensic claims advisory, and multi-site facilities programs, we support clients nationwide across all 9 South African provinces as well as neighboring SADC countries.',
     actionPage: 'contact',
     actionLabel: 'Check Service Areas on Contact Page'
+  },
+  {
+    id: 'project-gallery',
+    keywords: ['project', 'projects', 'gallery', 'photos', 'track record', 'portfolio', 'completed projects', 'mall', 'hospital', 'unisa', 'pictures', 'case studies'],
+    question: 'Can I see photos and details of projects completed by EFMS?',
+    category: 'company',
+    answer: 'Yes! You can explore our dedicated **Projects Showcase** featuring photographic portfolios and case studies of completed projects, including:\n\n• **Ga-Rankuwa City Shopping Mall** (R280M+ Retail Hub)\n• **Regional Hospital Surgical & Clinical Wing** (R195M Healthcare Facility)\n• **UNISA Higher Education Library** (R120M Educational Archive)\n• **Commercial Undercover Parking & Transit Facility** (Pretoria CBD)\n• **Municipal Civil Works & Public Sector Revitalization Programs**\n• **Commercial Office Parks & Industrial Distribution Warehouses**\n• **Integrated Facilities Management, Commercial Cleaning & Pest Eradication Sites**',
+    actionPage: 'projects',
+    actionLabel: 'View Projects Showcase'
   }
 ];
 

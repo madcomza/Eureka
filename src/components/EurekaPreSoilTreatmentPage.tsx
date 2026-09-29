@@ -1,8 +1,9 @@
 import { EurekaHeader } from "./EurekaHeader";
 import { EurekaFooter } from "./EurekaFooter";
 import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
+import fumigationImg from '../assets/images/Fumigation.jpeg';
 import {
-  Shield,
   ShieldCheck,
   Building2,
   HardHat,
@@ -11,6 +12,7 @@ import {
   Mail,
   MapPin,
   Clock,
+  Check,
   CheckCircle2,
   ArrowRight,
   ChevronDown,
@@ -63,47 +65,11 @@ export const EurekaPreSoilTreatmentPage: React.FC<EurekaPreSoilTreatmentPageProp
   onNavigate,
 }) => {
   const [solutionsDropdownOpen, setSolutionsDropdownOpen] = useState(false);
-  
-  // Interactive Soil Poisoning Estimator State
-  const [projectStage, setProjectStage] = useState<'pre_construction_slab' | 'foundation_trench' | 'post_construction_retrofit' | 'conveyancing_clearance'>('pre_construction_slab');
-  const [siteFootprintArea, setSiteFootprintArea] = useState<number>(1200); // m²
-  const [perimeterLinearMeters, setPerimeterLinearMeters] = useState<number>(160); // linear meters
-  const [warrantyType, setWarrantyType] = useState<'5_year_standard' | '10_year_extended'>('10_year_extended');
-  const [includeMunicipalCertificate, setIncludeMunicipalCertificate] = useState<boolean>(true);
-  const [includePerimeterDrillInject, setIncludePerimeterDrillInject] = useState<boolean>(false);
-  const [includeTimberTrussSpray, setIncludeTimberTrussSpray] = useState<boolean>(false);
-
-  // Form submission state
-  const [quoteSubmitted, setQuoteSubmitted] = useState(false);
   const [faqOpenIndex, setFaqOpenIndex] = useState<number | null>(0);
+  const [openDisciplineIndex, setOpenDisciplineIndex] = useState<number | null>(0);
 
-  // Calculate estimated price
-  const calculateEstimatedPrice = () => {
-    let ratePerSqm = 24.50; // SANS 10124 termiticide flood application
-    if (projectStage === 'pre_construction_slab') ratePerSqm = 22.00;
-    if (projectStage === 'foundation_trench') ratePerSqm = 28.00;
-    if (projectStage === 'post_construction_retrofit') ratePerSqm = 42.00;
-    if (projectStage === 'conveyancing_clearance') ratePerSqm = 14.00;
-
-    let subtotal = siteFootprintArea * ratePerSqm;
-    
-    // Add perimeter trench / linear meter dosing
-    subtotal += perimeterLinearMeters * 35.00;
-
-    if (warrantyType === '10_year_extended') {
-      subtotal *= 1.18; // Extended high-durability polymer termiticide binder
-    }
-
-    if (includeMunicipalCertificate) subtotal += 850;
-    if (includePerimeterDrillInject) subtotal += 3200;
-    if (includeTimberTrussSpray) subtotal += 2400;
-
-    return Math.round(subtotal);
-  };
-
-  const handleFormSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setQuoteSubmitted(true);
+  const toggleDiscipline = (idx: number) => {
+    setOpenDisciplineIndex(openDisciplineIndex === idx ? null : idx);
   };
 
   return (
@@ -112,34 +78,48 @@ export const EurekaPreSoilTreatmentPage: React.FC<EurekaPreSoilTreatmentPageProp
       <EurekaHeader currentPage="pre-soil-treatment" onNavigate={onNavigate}  />
 
       {/* 3. HERO SECTION */}
-      <section className="relative bg-gradient-to-br from-[#120e06] via-[#241a0b] to-[#0a0703] text-white py-16 lg:py-20 border-b-4 border-amber-500 overflow-hidden">
-        <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#f59e0b_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none" />
+      <section className="relative bg-[#120e06] text-white py-16 lg:py-20 border-b-4 border-amber-500 overflow-hidden">
+        {/* Background Video */}
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover object-center pointer-events-none"
+        >
+          <source src="./Services Hero Section BG.mp4" type="video/mp4" />
+        </video>
+
+        {/* Video Overlay: Darker on left, totally clear on right */}
+        <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/60 to-transparent pointer-events-none" />
         
-        <div className="max-w-7xl mx-auto px-4 relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
-            {/* Left Col: Hero Copy */}
-            <div className="lg:col-span-7">
+        <div className="max-w-5xl mx-auto px-4 relative z-10">
+          <div>
+            {/* Hero Copy */}
+            <div>
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-400/30 text-xs font-bold uppercase tracking-wider mb-4">
                 <ShieldCheck className="w-3.5 h-3.5 text-amber-400" />
                 <span>SOLUTIONS • 1. FACILITIES &amp; PROPERTY • STRUCTURAL TERMITE DEFENSE</span>
               </div>
 
               <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white leading-tight tracking-tight mb-4">
-                PRE-CONSTRUCTION SOIL TREATMENT &amp; <span className="text-amber-400">SOIL POISONING</span>
+                PRE-CONSTRUCTION SOIL TREATMENT &amp; <br />
+                <span className="text-amber-400">SOIL POISONING</span>
               </h1>
 
-              <p className="text-slate-300 text-sm sm:text-base leading-relaxed mb-6 max-w-2xl">
+              <p className="text-slate-300 text-sm sm:text-base leading-relaxed mb-6 max-w-3xl">
                 SANS 10124 and SANS 10400-A certified subterranean termite chemical soil barriers, under-slab flood treatments prior to concrete casting, foundation trench barriers, and 5-to-10 year guarantee certificates for residential developments, industrial parks, and commercial construction.
               </p>
 
               <div className="flex flex-wrap items-center gap-3 mb-8">
-                <a
-                  href="#soil-treatment-quote"
-                  className="px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-black text-xs uppercase tracking-wider rounded-lg shadow-lg hover:shadow-red-600/30 transition-all flex items-center gap-2"
+                <button
+                  type="button"
+                  onClick={() => onNavigate?.('contact')}
+                  className="px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-black text-xs uppercase tracking-wider rounded-lg shadow-lg hover:shadow-red-600/30 transition-all flex items-center gap-2 cursor-pointer"
                 >
                   <span>REQUEST SLAB CERTIFICATION QUOTE</span>
                   <ArrowRight className="w-4 h-4" />
-                </a>
+                </button>
                 <a
                   href="#soil-disciplines"
                   className="px-5 py-3 bg-white/10 hover:bg-white/20 text-white font-bold text-xs uppercase tracking-wider rounded-lg border border-white/20 transition-all"
@@ -168,62 +148,13 @@ export const EurekaPreSoilTreatmentPage: React.FC<EurekaPreSoilTreatmentPageProp
                 </div>
               </div>
             </div>
-
-            {/* Right Col: Treatment Certificate Card */}
-            <div className="lg:col-span-5">
-              <div className="bg-slate-900/90 backdrop-blur-md p-6 sm:p-7 rounded-2xl border border-amber-500/40 shadow-2xl relative overflow-hidden">
-                <div className="absolute -right-8 -bottom-8 w-32 h-32 bg-amber-500/10 rounded-full blur-2xl pointer-events-none" />
-                
-                <div className="flex items-center justify-between pb-4 mb-4 border-b border-slate-800">
-                  <div className="flex items-center gap-2.5">
-                    <div className="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold">
-                      <Shield className="w-4 h-4" />
-                    </div>
-                    <div>
-                      <h2 className="text-sm font-bold text-white leading-tight">Certificate of Guarantee</h2>
-                      <span className="text-[11px] text-slate-400">SANS 10400-A Part L &amp; NHBRC</span>
-                    </div>
-                  </div>
-                  <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded bg-amber-500 text-slate-950">
-                    SABS 1165 / 1164
-                  </span>
-                </div>
-
-                <ul className="space-y-3 text-xs text-slate-300 mb-6">
-                  <li className="flex items-start gap-2.5">
-                    <CheckCircle2 className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
-                    <span><strong>Pre-Slab Compaction Flood:</strong> 5L/m² high-pressure termiticide barrier applied to leveled hard-core filling before plastic DPC placement.</span>
-                  </li>
-                  <li className="flex items-start gap-2.5">
-                    <CheckCircle2 className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
-                    <span><strong>Foundation Trench Flooding:</strong> 5L/linear metre saturation around inner &amp; outer perimeter load-bearing brick footings.</span>
-                  </li>
-                  <li className="flex items-start gap-2.5">
-                    <CheckCircle2 className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
-                    <span><strong>Service Pipe Penetration Collars:</strong> Heavy-duty emulsion seal around plumbing, conduit, and sewer risers to eliminate bypass gaps.</span>
-                  </li>
-                  <li className="flex items-start gap-2.5">
-                    <CheckCircle2 className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
-                    <span><strong>Municipal Inspector Sign-off:</strong> Official documentation issued for local building control and bond clearance sign-off.</span>
-                  </li>
-                </ul>
-
-                <div className="p-3 rounded-lg bg-slate-950/70 border border-slate-800 text-[11px] text-slate-400 flex items-center justify-between">
-                  <span className="flex items-center gap-1.5">
-                    <FileCheck className="w-4 h-4 text-amber-400" />
-                    <span>Includes 5 or 10-Year Certificate of Guarantee</span>
-                  </span>
-                  <span className="font-bold text-amber-400">100% Insured</span>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </section>
 
-      {/* 4. 6 CORE SOIL TREATMENT DISCIPLINES */}
+      {/* 4. 6 CORE SOIL TREATMENT DISCIPLINES - 2-COLUMN LAYOUT: ACCORDION + IMAGE */}
       <section id="soil-disciplines" className="py-16 bg-white border-b border-slate-200">
-        <div className="max-w-7xl mx-auto px-4">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-12">
             <span className="text-[11px] font-black tracking-widest text-amber-600 bg-amber-50 px-3 py-1 rounded-full uppercase border border-amber-200/60">
               STRUCTURAL BARRIER ENGINEERING
@@ -236,168 +167,254 @@ export const EurekaPreSoilTreatmentPage: React.FC<EurekaPreSoilTreatmentPageProp
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {/* Discipline 1: Pre-Slab Flood */}
-            <article className="p-6 rounded-xl border border-slate-200 bg-slate-50/50 hover:bg-white hover:border-amber-400 hover:shadow-lg transition-all duration-200 flex flex-col group">
-              <div className="w-12 h-12 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center font-black text-base mb-4 group-hover:bg-amber-600 group-hover:text-white transition-colors">
-                <Layers className="w-6 h-6" />
-              </div>
-              <h3 className="text-base font-bold text-slate-900 mb-2 leading-snug">
-                Pre-Construction Under-Slab Soil Barrier
-              </h3>
-              <p className="text-xs text-slate-600 leading-relaxed mb-4 flex-grow">
-                Application of SABS-approved non-repellent termiticide emulsion at standard 5L/m² directly across compacted earth / fill sand before the damp-proof membrane (USB green plastic) and concrete pour.
-              </p>
-              <ul className="text-xs text-slate-700 space-y-1.5 pt-3 border-t border-slate-200">
-                <li className="flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
-                  <span>Calibrated high-output motorized pump rigs</span>
-                </li>
-                <li className="flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
-                  <span>Pre-pour certificate provided for municipal engineers</span>
-                </li>
-                <li className="flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
-                  <span>Seamless continuous chemical barrier</span>
-                </li>
-              </ul>
-            </article>
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
+            {/* Column 1: Accordion Format (7 cols) */}
+            <div className="lg:col-span-7 space-y-3">
+              {[
+                {
+                  number: '01',
+                  icon: Layers,
+                  title: 'Pre-Construction Under-Slab Soil Barrier',
+                  subtitle: '5L/m² Sub-Slab Dosing Prior to DPM & Concrete Pour',
+                  description:
+                    'Application of SABS-approved non-repellent termiticide emulsion at standard 5L/m² directly across compacted earth / fill sand before the damp-proof membrane (USB green plastic) and concrete pour.',
+                  bullets: [
+                    'Calibrated high-output motorized pump rigs ensuring uniform chemical penetration',
+                    'Pre-pour completion certificate provided immediately for municipal engineers & NHBRC',
+                    'Seamless continuous chemical barrier bonded to soil sub-base',
+                    'Non-repellent lethal transfer active ingredient wipes out foraging satellite nests'
+                  ],
+                  highlight: 'Eliminates termite intrusion routes before structural foundations and floor slabs are permanently sealed.'
+                },
+                {
+                  number: '02',
+                  icon: Hammer,
+                  title: 'Foundation Trenching & Perimeter Backfill',
+                  subtitle: 'Vertical Foundation Wall & Trench Saturation',
+                  description:
+                    'Deep vertical saturation of foundation trenches and backfill soil adjacent to external foundation walls at 5 to 7.5 Litres per linear meter to intercept foraging worker termites tunneling upwards.',
+                  bullets: [
+                    'Envelops outer foundation perimeter walls and retaining brickwork',
+                    'Treated soil backfill resists water leaching and UV breakdown',
+                    'Protects weep holes, service pipe penetrations, and expansion joints',
+                    'Prevents subterranean access through masonry hairline shrinkage cracks'
+                  ],
+                  highlight: 'Forms an impenetrable continuous subterranean chemical envelope shielding sub-structure perimeter walls.'
+                },
+                {
+                  number: '03',
+                  icon: HardHat,
+                  title: 'Post-Construction Perimeter Drill & Pressure Injection',
+                  subtitle: 'Sub-Slab Masonry Injection for Existing Structures',
+                  description:
+                    'For existing structures experiencing active termite damage: precision masonry drilling at 300mm intervals along slab perimeters and patios, deep chemical sub-slab injection, and color-matched mortar resealing.',
+                  bullets: [
+                    'Zero structural damage to high-end floor tiling, pavers, or brickwork',
+                    'High-pressure multi-directional sub-slab dispersion rods (up to 30 Bar)',
+                    'Full colony eradication through non-repellent transfer toxicant',
+                    'Color-matched architectural mortar seal plugs each drilled penetration'
+                  ],
+                  highlight: 'Arrests active infestations underneath established commercial floors without disruptive concrete demolition.'
+                },
+                {
+                  number: '04',
+                  icon: Building2,
+                  title: 'Timber Roof Truss & Framing Wood Borer Defense',
+                  subtitle: 'Deep Penetrating Preservative Spray & Micro-Injection',
+                  description:
+                    'Deep penetrating preservative spray and micro-injection of timber roof trusses, purlins, and rafters to eradicate Italian Beetle (*Hylotrupes bajulus*), False Powder Post Beetle, and drywood termites.',
+                  bullets: [
+                    'Penetrates deep into pine and hardwood structural timbers (up to 12mm)',
+                    'Prevents structural roof truss deflection, dry rot, and catastrophic roof sag',
+                    'Official Wood Borer Clearance Certificates issued for property transfers',
+                    'Low-odor solvent-based insecticidal and fungicidal active formula'
+                  ],
+                  highlight: 'Preserves critical roof trusses and ceiling battens against wood-destroying insect decay.'
+                },
+                {
+                  number: '05',
+                  icon: FileCheck,
+                  title: 'NHBRC & Municipal Building Inspector Clearance',
+                  subtitle: 'SANS 10400-A Part L & SANS 10124 Compliance Sign-Off',
+                  description:
+                    'Immediate issuance of legally binding SANS 10400-A Part L soil treatment completion certificates required for NHBRC enrollment, structural engineer sign-off, and municipal occupation certificates.',
+                  bullets: [
+                    'Signed by SAPCA P-Registered Pest Control Officers with valid registration numbers',
+                    'Specifies exact chemical Act 36/1947 registration number and applied dosage rate',
+                    'Accepted by all major South African banking institutions, insurers, and municipalities',
+                    'Includes digital certificate copy emailed directly to principal contractors & QS'
+                  ],
+                  highlight: 'Fast-tracks municipal building occupation approvals and satisfies NHBRC warranty requirements.'
+                },
+                {
+                  number: '06',
+                  icon: Crosshair,
+                  title: 'Termite Nest Baiting & Queen Elimination',
+                  subtitle: 'In-Ground Monitoring Stations & Chitin Inhibitors',
+                  description:
+                    'Installation of in-ground perimeter termite bait stations containing insect growth regulators (chitin synthesis inhibitors). Foraging termites carry the bait back to the central subterranean queen.',
+                  bullets: [
+                    '100% elimination of the central subterranean queen and complete colony collapse',
+                    'Ideal for sensitive landscaped gardens, wine estates, and heritage properties',
+                    'Continuous 24/7 subterranean surveillance with barcode digital inspection logs',
+                    'Zero chemical leaching into groundwater or delicate garden root zones'
+                  ],
+                  highlight: 'Destroys underground termite super-colonies at their biological source without massive excavation.'
+                }
+              ].map((discipline, idx) => {
+                const IconComp = discipline.icon;
+                const isOpen = openDisciplineIndex === idx;
 
-            {/* Discipline 2: Foundation Trenching */}
-            <article className="p-6 rounded-xl border border-slate-200 bg-slate-50/50 hover:bg-white hover:border-amber-400 hover:shadow-lg transition-all duration-200 flex flex-col group">
-              <div className="w-12 h-12 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center font-black text-base mb-4 group-hover:bg-amber-600 group-hover:text-white transition-colors">
-                <Hammer className="w-6 h-6" />
-              </div>
-              <h3 className="text-base font-bold text-slate-900 mb-2 leading-snug">
-                Foundation Trenching &amp; Perimeter Backfill
-              </h3>
-              <p className="text-xs text-slate-600 leading-relaxed mb-4 flex-grow">
-                Deep vertical saturation of foundation trenches and backfill soil adjacent to external foundation walls at 5 to 7.5 Litres per linear meter to intercept foraging worker termites tunneling upwards.
-              </p>
-              <ul className="text-xs text-slate-700 space-y-1.5 pt-3 border-t border-slate-200">
-                <li className="flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
-                  <span>Envelops outer foundation perimeter walls</span>
-                </li>
-                <li className="flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
-                  <span>Treated soil backfill resists water leaching</span>
-                </li>
-                <li className="flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
-                  <span>Protects weep holes and foundation joints</span>
-                </li>
-              </ul>
-            </article>
+                return (
+                  <div
+                    key={idx}
+                    className={`rounded-xl border transition-all duration-200 overflow-hidden ${
+                      isOpen
+                        ? 'bg-amber-50/40 border-amber-500 shadow-md shadow-amber-900/10'
+                        : 'bg-slate-50/70 border-slate-200 hover:border-slate-300 hover:bg-white'
+                    }`}
+                  >
+                    <button
+                      type="button"
+                      onClick={() => toggleDiscipline(idx)}
+                      className="w-full p-4 sm:p-5 flex items-center justify-between text-left cursor-pointer transition-colors"
+                      aria-expanded={isOpen}
+                    >
+                      <div className="flex items-center gap-3 sm:gap-4 min-w-0">
+                        <div
+                          className={`w-9 h-9 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center flex-shrink-0 transition-colors ${
+                            isOpen
+                              ? 'bg-amber-600 text-white shadow-md shadow-amber-600/30'
+                              : 'bg-white text-amber-800 border border-slate-200'
+                          }`}
+                        >
+                          <IconComp className="w-5 h-5" />
+                        </div>
+                        <div className="min-w-0">
+                          <div className="flex items-center gap-2 mb-0.5">
+                            <span className="text-[10px] font-mono font-bold text-slate-400">
+                              DISCIPLINE {discipline.number}
+                            </span>
+                            <span className="text-[10px] font-semibold text-amber-700 hidden sm:inline truncate max-w-[260px]">
+                              • {discipline.subtitle}
+                            </span>
+                          </div>
+                          <h3
+                            className={`text-sm sm:text-base font-bold transition-colors truncate ${
+                              isOpen ? 'text-amber-950' : 'text-slate-900'
+                            }`}
+                          >
+                            {discipline.title}
+                          </h3>
+                        </div>
+                      </div>
 
-            {/* Discipline 3: Post-Construction Drill & Inject */}
-            <article className="p-6 rounded-xl border border-slate-200 bg-slate-50/50 hover:bg-white hover:border-amber-400 hover:shadow-lg transition-all duration-200 flex flex-col group">
-              <div className="w-12 h-12 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center font-black text-base mb-4 group-hover:bg-amber-600 group-hover:text-white transition-colors">
-                <HardHat className="w-6 h-6" />
-              </div>
-              <h3 className="text-base font-bold text-slate-900 mb-2 leading-snug">
-                Post-Construction Perimeter Drill &amp; Pressure Injection
-              </h3>
-              <p className="text-xs text-slate-600 leading-relaxed mb-4 flex-grow">
-                For existing structures experiencing active termite damage: precision masonry drilling at 300mm intervals along slab perimeters and patios, deep chemical sub-slab injection, and color-matched mortar resealing.
-              </p>
-              <ul className="text-xs text-slate-700 space-y-1.5 pt-3 border-t border-slate-200">
-                <li className="flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
-                  <span>Zero structural damage to tiling or brickwork</span>
-                </li>
-                <li className="flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
-                  <span>High-pressure sub-slab dispersion rods</span>
-                </li>
-                <li className="flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
-                  <span>Full colony eradication through transfer toxicant</span>
-                </li>
-              </ul>
-            </article>
+                      <div
+                        className={`w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 transition-transform duration-200 ${
+                          isOpen
+                            ? 'bg-amber-100 text-amber-800 rotate-180'
+                            : 'bg-slate-100 text-slate-500'
+                        }`}
+                      >
+                        <ChevronDown className="w-4 h-4" />
+                      </div>
+                    </button>
 
-            {/* Discipline 4: Timber Roof Truss Preservation */}
-            <article className="p-6 rounded-xl border border-slate-200 bg-slate-50/50 hover:bg-white hover:border-amber-400 hover:shadow-lg transition-all duration-200 flex flex-col group">
-              <div className="w-12 h-12 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center font-black text-base mb-4 group-hover:bg-amber-600 group-hover:text-white transition-colors">
-                <Building2 className="w-6 h-6" />
-              </div>
-              <h3 className="text-base font-bold text-slate-900 mb-2 leading-snug">
-                Timber Roof Truss &amp; Framing Wood Borer Defense
-              </h3>
-              <p className="text-xs text-slate-600 leading-relaxed mb-4 flex-grow">
-                Deep penetrating preservative spray and micro-injection of timber roof trusses, purlins, and rafters to eradicate Italian Beetle (*Hylotrupes bajulus*), False Powder Post Beetle, and drywood termites.
-              </p>
-              <ul className="text-xs text-slate-700 space-y-1.5 pt-3 border-t border-slate-200">
-                <li className="flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
-                  <span>Penetrates deep into pine and hardwood structural timbers</span>
-                </li>
-                <li className="flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
-                  <span>Prevents structural roof sag and catastrophic collapse</span>
-                </li>
-                <li className="flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
-                  <span>Official Wood Borer Clearance Certificates issued</span>
-                </li>
-              </ul>
-            </article>
+                    <AnimatePresence initial={false}>
+                      {isOpen && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: 'auto', opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{ duration: 0.22, ease: 'easeInOut' }}
+                          className="overflow-hidden"
+                        >
+                          <div className="px-5 pb-5 pt-1 border-t border-amber-100 space-y-3.5">
+                            <p className="text-xs font-semibold text-amber-700 sm:hidden">
+                              {discipline.subtitle}
+                            </p>
 
-            {/* Discipline 5: Municipal Clearance Certificates */}
-            <article className="p-6 rounded-xl border border-slate-200 bg-slate-50/50 hover:bg-white hover:border-amber-400 hover:shadow-lg transition-all duration-200 flex flex-col group">
-              <div className="w-12 h-12 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center font-black text-base mb-4 group-hover:bg-amber-600 group-hover:text-white transition-colors">
-                <FileCheck className="w-6 h-6" />
-              </div>
-              <h3 className="text-base font-bold text-slate-900 mb-2 leading-snug">
-                NHBRC &amp; Municipal Building Inspector Clearance
-              </h3>
-              <p className="text-xs text-slate-600 leading-relaxed mb-4 flex-grow">
-                Immediate issuance of legally binding SANS 10400-A Part L soil treatment completion certificates required for NHBRC enrollment, structural engineer sign-off, and municipal occupation certificates.
-              </p>
-              <ul className="text-xs text-slate-700 space-y-1.5 pt-3 border-t border-slate-200">
-                <li className="flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
-                  <span>Signed by SAPCA P-Registered Pest Control Officers</span>
-                </li>
-                <li className="flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
-                  <span>Specifies chemical registration number and dosage rate</span>
-                </li>
-                <li className="flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
-                  <span>Accepted by all major South African banking institutions</span>
-                </li>
-              </ul>
-            </article>
+                            <p className="text-xs text-slate-600 leading-relaxed">
+                              {discipline.description}
+                            </p>
 
-            {/* Discipline 6: Subterranean Termite Baiting */}
-            <article className="p-6 rounded-xl border border-slate-200 bg-slate-50/50 hover:bg-white hover:border-amber-400 hover:shadow-lg transition-all duration-200 flex flex-col group">
-              <div className="w-12 h-12 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center font-black text-base mb-4 group-hover:bg-amber-600 group-hover:text-white transition-colors">
-                <Crosshair className="w-6 h-6" />
+                            {/* Scope Deliverables */}
+                            <div className="bg-white rounded-lg p-3.5 border border-slate-200 shadow-xs">
+                              <div className="text-[10px] font-black uppercase text-slate-500 tracking-wider mb-2">
+                                Standard Execution Scope:
+                              </div>
+                              <ul className="space-y-1.5">
+                                {discipline.bullets.map((b, bIdx) => (
+                                  <li key={bIdx} className="text-xs text-slate-700 flex items-start gap-2">
+                                    <CheckCircle2 className="w-3.5 h-3.5 text-amber-600 shrink-0 mt-0.5" />
+                                    <span>{b}</span>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+
+                            {/* Strategic Benefit */}
+                            <div className="p-3 rounded-lg bg-amber-50/80 border border-amber-200/80 text-xs text-slate-700 flex items-start gap-2">
+                              <span className="text-amber-800 font-bold shrink-0">💡 Structural Protection:</span>
+                              <span className="text-slate-700">{discipline.highlight}</span>
+                            </div>
+
+                            {/* Action CTA */}
+                            <div className="flex items-center justify-between pt-2 border-t border-slate-200">
+                              <span className="text-xs font-semibold text-slate-500 flex items-center gap-1.5">
+                                <ShieldCheck className="w-3.5 h-3.5 text-amber-600" />
+                                <span className="truncate max-w-[220px]">SANS 10124 &amp; NHBRC Compliant</span>
+                              </span>
+                              <button
+                                type="button"
+                                onClick={() => onNavigate?.('contact')}
+                                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs uppercase tracking-wider rounded transition-colors cursor-pointer"
+                              >
+                                <span>Inquire on Discipline {discipline.number}</span>
+                                <ArrowRight className="w-3 h-3" />
+                              </button>
+                            </div>
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Column 2: Sticky Image Showcase (5 cols) */}
+            <div className="lg:col-span-5 lg:sticky lg:top-24 space-y-4">
+              <div className="relative rounded-2xl overflow-hidden shadow-xl border border-slate-200 bg-slate-900 group">
+                <img
+                  src={fumigationImg}
+                  alt="Pre-Construction Soil Poisoning and Termite Treatment"
+                  className="w-full h-auto max-h-[640px] object-cover object-center group-hover:scale-105 transition-transform duration-700"
+                  loading="lazy"
+                />
               </div>
-              <h3 className="text-base font-bold text-slate-900 mb-2 leading-snug">
-                Termite Nest Baiting &amp; Queen Elimination
-              </h3>
-              <p className="text-xs text-slate-600 leading-relaxed mb-4 flex-grow">
-                Installation of in-ground perimeter termite bait stations containing insect growth regulators (chitin synthesis inhibitors). Foraging termites carry the bait back to the central subterranean queen.
-              </p>
-              <ul className="text-xs text-slate-700 space-y-1.5 pt-3 border-t border-slate-200">
-                <li className="flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
-                  <span>100% elimination of queen and complete colony collapse</span>
-                </li>
-                <li className="flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
-                  <span>Ideal for sensitive landscaped gardens and estates</span>
-                </li>
-                <li className="flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
-                  <span>Continuous 24/7 subterranean surveillance</span>
-                </li>
-              </ul>
-            </article>
+
+              {/* Fast Consultation Callout Card */}
+              <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 flex items-center justify-between shadow-xs">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-lg bg-amber-100 text-amber-800 border border-amber-200 flex items-center justify-center font-black text-sm font-mono shrink-0">
+                    SANS
+                  </div>
+                  <div>
+                    <div className="text-xs font-bold text-slate-900">Need a Site Soil Poisoning Quote?</div>
+                    <div className="text-[11px] text-slate-500">Same-day contractor site visit &amp; m² rate</div>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => onNavigate?.('contact')}
+                  className="px-3 py-1.5 bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold uppercase tracking-wider rounded transition-colors flex items-center gap-1 cursor-pointer shrink-0 ml-2"
+                >
+                  <span>Book</span>
+                  <ArrowRight className="w-3 h-3" />
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -466,399 +483,6 @@ export const EurekaPreSoilTreatmentPage: React.FC<EurekaPreSoilTreatmentPageProp
               <p className="text-xs text-slate-300 leading-relaxed">
                 Official signed SANS 10400-A guarantee certificate delivered on the same day for building inspector sign-off.
               </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 6. INTERACTIVE SOIL POISONING ESTIMATOR */}
-      <section className="py-16 bg-slate-50 border-b border-slate-200">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="text-center max-w-2xl mx-auto mb-12">
-            <span className="text-[11px] font-black tracking-widest text-amber-700 bg-amber-100/80 px-3 py-1 rounded-full uppercase">
-              INSTANT BUDGET ESTIMATOR
-            </span>
-            <h2 className="text-2xl sm:text-3xl font-black text-slate-900 mt-2 mb-2">
-              Soil Treatment &amp; Slab Poisoning Cost Estimator
-            </h2>
-            <p className="text-xs sm:text-sm text-slate-600">
-              Calculate standard contract rates based on your site footprint, foundation perimeter, and guarantee requirements.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-            {/* Configuration Controls */}
-            <div className="lg:col-span-7 bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-sm space-y-6">
-              {/* Parameter 1: Construction Project Stage */}
-              <div>
-                <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-2">
-                  1. Construction Stage &amp; Scope
-                </label>
-                <div className="grid grid-cols-2 gap-2">
-                  {[
-                    { id: 'pre_construction_slab', label: 'Pre-Construction Slab', desc: 'Pre-pour 5L/m² flood' },
-                    { id: 'foundation_trench', label: 'Foundation Trenching', desc: 'Deep perimeter trenches' },
-                    { id: 'post_construction_retrofit', label: 'Post-Construction Drill & Inject', desc: 'Retrofit existing building' },
-                    { id: 'conveyancing_clearance', label: 'Conveyancing Clearance', desc: 'Inspection & certificate' },
-                  ].map((item) => (
-                    <button
-                      key={item.id}
-                      type="button"
-                      onClick={() => setProjectStage(item.id as any)}
-                      className={`p-3 rounded-lg border text-left transition-all ${
-                        projectStage === item.id
-                          ? 'border-amber-600 bg-amber-50 text-amber-950 font-bold shadow-sm'
-                          : 'border-slate-200 hover:border-slate-300 text-slate-700'
-                      }`}
-                    >
-                      <div className="text-xs font-bold leading-tight">{item.label}</div>
-                      <div className="text-[10px] text-slate-500 mt-0.5">{item.desc}</div>
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Parameter 2: Footprint Area Slider */}
-              <div>
-                <div className="flex justify-between items-center mb-2">
-                  <label className="text-xs font-bold text-slate-800 uppercase tracking-wider">
-                    2. Total Slab Under-Roof Footprint
-                  </label>
-                  <span className="text-xs font-black text-amber-800 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
-                    {siteFootprintArea.toLocaleString()} m²
-                  </span>
-                </div>
-                <input
-                  type="range"
-                  min={100}
-                  max={10000}
-                  step={50}
-                  value={siteFootprintArea}
-                  onChange={(e) => setSiteFootprintArea(Number(e.target.value))}
-                  className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-amber-600"
-                />
-                <div className="flex justify-between text-[10px] text-slate-400 mt-1">
-                  <span>Residential (100 m²)</span>
-                  <span>Commercial Complex (2,500 m²)</span>
-                  <span>Industrial Warehouse (10,000 m²+)</span>
-                </div>
-              </div>
-
-              {/* Parameter 3: Perimeter Linear Meters */}
-              <div>
-                <div className="flex justify-between items-center mb-2">
-                  <label className="text-xs font-bold text-slate-800 uppercase tracking-wider">
-                    3. Perimeter Foundation Trench Length
-                  </label>
-                  <span className="text-xs font-black text-amber-800 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
-                    {perimeterLinearMeters.toLocaleString()} Linear Metres
-                  </span>
-                </div>
-                <input
-                  type="range"
-                  min={20}
-                  max={1000}
-                  step={10}
-                  value={perimeterLinearMeters}
-                  onChange={(e) => setPerimeterLinearMeters(Number(e.target.value))}
-                  className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-amber-600"
-                />
-                <div className="flex justify-between text-[10px] text-slate-400 mt-1">
-                  <span>Small Home (20 lm)</span>
-                  <span>Medium Site (160 lm)</span>
-                  <span>Large Perimeter (1,000 lm)</span>
-                </div>
-              </div>
-
-              {/* Parameter 4: Guarantee Duration */}
-              <div>
-                <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-2">
-                  4. Written Guarantee Duration
-                </label>
-                <div className="grid grid-cols-2 gap-2">
-                  <button
-                    type="button"
-                    onClick={() => setWarrantyType('5_year_standard')}
-                    className={`p-3 rounded-lg border text-center transition-all ${
-                      warrantyType === '5_year_standard'
-                        ? 'border-amber-600 bg-amber-50 text-amber-950 font-bold'
-                        : 'border-slate-200 hover:border-slate-300 text-slate-700'
-                    }`}
-                  >
-                    <div className="text-xs font-bold">5-Year Standard Guarantee</div>
-                    <div className="text-[10px] text-slate-500 mt-0.5">SABS standard termiticide</div>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setWarrantyType('10_year_extended')}
-                    className={`p-3 rounded-lg border text-center transition-all ${
-                      warrantyType === '10_year_extended'
-                        ? 'border-amber-600 bg-amber-50 text-amber-950 font-bold'
-                        : 'border-slate-200 hover:border-slate-300 text-slate-700'
-                    }`}
-                  >
-                    <div className="text-xs font-bold">10-Year Extended Guarantee</div>
-                    <div className="text-[10px] text-slate-500 mt-0.5">Polymer-bound heavy-duty emulsion</div>
-                  </button>
-                </div>
-              </div>
-
-              {/* Parameter 5: Add-on services */}
-              <div>
-                <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-2">
-                  5. Additional Specialized Protection
-                </label>
-                <div className="space-y-2">
-                  <label className="flex items-center justify-between p-3 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer text-xs">
-                    <span className="flex items-center gap-2">
-                      <input
-                        type="checkbox"
-                        checked={includeMunicipalCertificate}
-                        onChange={(e) => setIncludeMunicipalCertificate(e.target.checked)}
-                        className="rounded text-amber-600 focus:ring-amber-500"
-                      />
-                      <span>Official SANS 10400-A Part L Certificate of Clearance</span>
-                    </span>
-                    <span className="font-bold text-slate-700">+R 850</span>
-                  </label>
-
-                  <label className="flex items-center justify-between p-3 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer text-xs">
-                    <span className="flex items-center gap-2">
-                      <input
-                        type="checkbox"
-                        checked={includePerimeterDrillInject}
-                        onChange={(e) => setIncludePerimeterDrillInject(e.target.checked)}
-                        className="rounded text-amber-600 focus:ring-amber-500"
-                      />
-                      <span>External Veranda / Patio Concrete Slab Sub-Drilling</span>
-                    </span>
-                    <span className="font-bold text-slate-700">+R 3,200</span>
-                  </label>
-
-                  <label className="flex items-center justify-between p-3 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer text-xs">
-                    <span className="flex items-center gap-2">
-                      <input
-                        type="checkbox"
-                        checked={includeTimberTrussSpray}
-                        onChange={(e) => setIncludeTimberTrussSpray(e.target.checked)}
-                        className="rounded text-amber-600 focus:ring-amber-500"
-                      />
-                      <span>Timber Roof Truss Wood Borer Preservative Treatment</span>
-                    </span>
-                    <span className="font-bold text-slate-700">+R 2,400</span>
-                  </label>
-                </div>
-              </div>
-            </div>
-
-            {/* Output Summary Card */}
-            <div className="lg:col-span-5 bg-[#0e0a05] text-white p-6 sm:p-8 rounded-2xl border border-amber-500/30 shadow-xl space-y-6">
-              <div className="flex items-center justify-between pb-4 border-b border-slate-800">
-                <div>
-                  <span className="text-[10px] font-black uppercase tracking-wider text-amber-400">
-                    ESTIMATED CONTRACT PROPOSAL
-                  </span>
-                  <h3 className="text-lg font-black text-white">Pre-Soil Treatment Quotation</h3>
-                </div>
-                <div className="p-2 rounded-lg bg-amber-500/20 text-amber-400">
-                  <DollarSign className="w-5 h-5" />
-                </div>
-              </div>
-
-              <div className="text-center py-4 bg-slate-900/80 rounded-xl border border-slate-800">
-                <span className="text-xs text-slate-400 block mb-1">Estimated Once-Off Treatment Cost (excl. VAT)</span>
-                <div className="text-4xl font-black text-amber-400">
-                  R {calculateEstimatedPrice().toLocaleString()}
-                </div>
-                <span className="text-[11px] text-slate-400 mt-1 block">
-                  Subject to on-site concrete casting schedule &amp; site access
-                </span>
-              </div>
-
-              <div className="space-y-2.5 text-xs text-slate-300">
-                <div className="flex justify-between py-1 border-b border-slate-800">
-                  <span className="text-slate-400">Treated Slab Footprint:</span>
-                  <span className="font-bold text-white">{siteFootprintArea.toLocaleString()} m²</span>
-                </div>
-                <div className="flex justify-between py-1 border-b border-slate-800">
-                  <span className="text-slate-400">Foundation Trenching:</span>
-                  <span className="font-bold text-white">{perimeterLinearMeters.toLocaleString()} linear meters</span>
-                </div>
-                <div className="flex justify-between py-1 border-b border-slate-800">
-                  <span className="text-slate-400">Guarantee Period:</span>
-                  <span className="font-bold text-amber-400">
-                    {warrantyType === '10_year_extended' ? '10-Year Written Guarantee' : '5-Year Written Guarantee'}
-                  </span>
-                </div>
-                <div className="flex justify-between py-1">
-                  <span className="text-slate-400">SANS 10124 Compliance:</span>
-                  <span className="font-bold text-emerald-400">Fully Certified</span>
-                </div>
-              </div>
-
-              <a
-                href="#soil-treatment-quote"
-                className="w-full py-3.5 bg-red-600 hover:bg-red-700 text-white font-black text-xs uppercase tracking-wider rounded-lg transition-all flex items-center justify-center gap-2 shadow-lg"
-              >
-                <span>BOOK THIS TREATMENT FOR CASTING DATE</span>
-                <ArrowRight className="w-4 h-4" />
-              </a>
-
-              <p className="text-[11px] text-slate-400 text-center leading-relaxed">
-                ⚡ We coordinate directly with your concrete supplier &amp; site foreman to treat immediately prior to plastic/pour.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 7. SITE AUDIT & PROPOSAL REQUEST FORM */}
-      <section id="soil-treatment-quote" className="py-16 bg-[#0a0703] text-white">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
-            {/* Left: Value Props */}
-            <div className="lg:col-span-5">
-              <span className="text-xs font-black tracking-widest text-amber-400 uppercase bg-amber-950/80 px-2.5 py-1 rounded border border-amber-800">
-                OFFICIAL SLAB DISPATCH
-              </span>
-              <h2 className="text-2xl sm:text-3xl font-black text-white mt-3 mb-4 leading-tight">
-                Schedule Your Soil Poisoning &amp; Slab Certification
-              </h2>
-              <p className="text-xs sm:text-sm text-slate-300 leading-relaxed mb-6">
-                Avoid costly construction delays. Our mobile soil treatment rigs are on standby to flood hard-core and foundations across Gauteng, Pretoria, Centurion, Johannesburg, and surrounding provinces.
-              </p>
-
-              <div className="space-y-3 text-xs text-slate-300 mb-6">
-                <div className="flex items-start gap-2.5">
-                  <CheckCircle2 className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
-                  <span><strong>Same-Day Certificate Issuance:</strong> We hand over the SANS 10400-A Part L certificate upon treatment completion.</span>
-                </div>
-                <div className="flex items-start gap-2.5">
-                  <CheckCircle2 className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
-                  <span><strong>SABS Approved Termiticides:</strong> We use registered chemicals (Imidacloprid / Fipronil / Bifenthrin) compliant with Act 36 of 1947.</span>
-                </div>
-                <div className="flex items-start gap-2.5">
-                  <CheckCircle2 className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
-                  <span><strong>NHBRC &amp; Bank Approved:</strong> Meets all pre-requisites for structural mortgage finance disbursements.</span>
-                </div>
-              </div>
-
-              <div className="p-4 rounded-xl bg-slate-900/80 border border-slate-800">
-                <span className="text-xs text-slate-400 block mb-1">Direct Contractor Booking Hotline</span>
-                <div className="flex items-center gap-2">
-                  <Phone className="w-4 h-4 text-red-500" />
-                  <a href="tel:+27745187012" className="text-base font-black text-white hover:text-red-400">
-                    +27 74 518 7012
-                  </a>
-                </div>
-              </div>
-            </div>
-
-            {/* Right: Booking Form */}
-            <div className="lg:col-span-7">
-              <div className="bg-white text-slate-900 p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-2xl">
-                {quoteSubmitted ? (
-                  <div className="text-center py-8">
-                    <div className="w-14 h-14 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center mx-auto mb-4">
-                      <CheckCircle2 className="w-8 h-8" />
-                    </div>
-                    <h3 className="text-xl font-bold text-slate-900 mb-2">Soil Treatment Request Received!</h3>
-                    <p className="text-xs text-slate-600 max-w-md mx-auto mb-6">
-                      Our certified pest control technical team will contact your site foreman within 2 hours to confirm site readiness and concrete pouring timing.
-                    </p>
-                    <button
-                      onClick={() => setQuoteSubmitted(false)}
-                      className="px-5 py-2 bg-amber-600 text-white text-xs font-bold rounded-lg hover:bg-amber-700"
-                    >
-                      Submit Another Site Request
-                    </button>
-                  </div>
-                ) : (
-                  <form onSubmit={handleFormSubmit} className="space-y-4">
-                    <div className="border-b border-slate-200 pb-3 mb-2">
-                      <h3 className="text-base font-black text-slate-900">Request Soil Poisoning Quotation &amp; Certificate</h3>
-                      <p className="text-xs text-slate-500">Coordinate treatment with your ready-mix casting schedule.</p>
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-xs font-bold text-slate-700 mb-1">Contractor / Client Name *</label>
-                        <input
-                          type="text"
-                          required
-                          placeholder="e.g. David Botha (Site Agent)"
-                          className="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:outline-none"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-xs font-bold text-slate-700 mb-1">Company / Development Name *</label>
-                        <input
-                          type="text"
-                          required
-                          placeholder="e.g. Apex Construction (Pty) Ltd"
-                          className="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:outline-none"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-xs font-bold text-slate-700 mb-1">Email Address *</label>
-                        <input
-                          type="email"
-                          required
-                          placeholder="david@apexconstruction.co.za"
-                          className="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:outline-none"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-xs font-bold text-slate-700 mb-1">Site Phone / Mobile *</label>
-                        <input
-                          type="tel"
-                          required
-                          placeholder="+27 83 456 7890"
-                          className="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:outline-none"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-xs font-bold text-slate-700 mb-1">Target Concrete Pour Date</label>
-                        <input
-                          type="date"
-                          className="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:outline-none"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-xs font-bold text-slate-700 mb-1">Site Physical Location / Erf</label>
-                        <input
-                          type="text"
-                          placeholder="e.g. Erf 412, Midstream Estate, Centurion"
-                          className="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:outline-none"
-                        />
-                      </div>
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-bold text-slate-700 mb-1">Estimated Footprint Size &amp; Site Notes</label>
-                      <textarea
-                        rows={2}
-                        placeholder="Detail slab area (e.g. 1,400 m² industrial floor), foundation trench depths, or existing termite activity..."
-                        className="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:outline-none"
-                      />
-                    </div>
-
-                    <button
-                      type="submit"
-                      className="w-full py-3 bg-red-600 hover:bg-red-700 text-white font-black text-xs uppercase tracking-wider rounded-lg transition-all shadow-md flex items-center justify-center gap-2"
-                    >
-                      <span>SUBMIT FOR SAME-DAY BOOKING</span>
-                      <ArrowRight className="w-4 h-4" />
-                    </button>
-                  </form>
-                )}
-              </div>
             </div>
           </div>
         </div>

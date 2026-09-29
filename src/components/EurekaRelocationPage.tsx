@@ -1,6 +1,8 @@
 import { EurekaHeader } from "./EurekaHeader";
 import { EurekaFooter } from "./EurekaFooter";
 import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
+import officeRelocationImg from '../assets/images/Office Relocation.jpeg';
 import {
   Truck,
   Building2,
@@ -27,7 +29,6 @@ import {
   FileText,
   BadgeAlert,
   ShieldCheck,
-  Shield,
   HelpCircle,
   ChevronRight,
   Hammer,
@@ -62,61 +63,11 @@ export const EurekaRelocationPage: React.FC<EurekaRelocationPageProps> = ({
 }) => {
   const [solutionsDropdownOpen, setSolutionsDropdownOpen] = useState(false);
 
-  // Interactive Office Relocation Cost & Logistics Estimator State
-  const [workstationCount, setWorkstationCount] = useState<number>(35);
-  const [moveDistanceKm, setMoveDistanceKm] = useState<number>(18);
-  const [serverRackCount, setServerRackCount] = useState<number>(2);
-  const [moveWindow, setMoveWindow] = useState<'weekend_zero_downtime' | 'after_hours_weekday' | 'standard_business_hours'>('weekend_zero_downtime');
-  const [includeCrateRental, setIncludeCrateRental] = useState<boolean>(true);
-  const [includeItRecommission, setIncludeItRecommission] = useState<boolean>(true);
-  const [includeLandlordMakeGood, setIncludeLandlordMakeGood] = useState<boolean>(false);
-  const [includeHeavySafeMove, setIncludeHeavySafeMove] = useState<boolean>(false);
-
-  // Form submission state
-  const [quoteSubmitted, setQuoteSubmitted] = useState(false);
   const [faqOpenIndex, setFaqOpenIndex] = useState<number | null>(0);
+  const [openDisciplineIndex, setOpenDisciplineIndex] = useState<number | null>(0);
 
-  // Calculate estimated move cost
-  const calculateEstimatedPrice = () => {
-    // Base cost per workstation (disassembly, transit, reassembly, crate handling)
-    let ratePerWorkstation = 780; // ZAR
-    if (moveWindow === 'weekend_zero_downtime') ratePerWorkstation = 890;
-    if (moveWindow === 'after_hours_weekday') ratePerWorkstation = 840;
-
-    let subtotal = workstationCount * ratePerWorkstation;
-
-    // Mileage & fleet logistics (closed body furniture trucks with hydraulic tail-lifts)
-    subtotal += moveDistanceKm * 45 + 2800;
-
-    // Server rack migration (anti-static flight cases & IT specialists)
-    subtotal += serverRackCount * 3200;
-
-    if (includeCrateRental) {
-      // 3 crates per workstation + security seals
-      subtotal += workstationCount * 3 * 35;
-    }
-
-    if (includeItRecommission) {
-      // Dual-screen, docking station & cable management re-commissioning per desk
-      subtotal += workstationCount * 220;
-    }
-
-    if (includeLandlordMakeGood) {
-      // Dilapidation restoration, white-boxing, deep cleaning of old premises
-      subtotal += Math.max(7500, workstationCount * 380);
-    }
-
-    if (includeHeavySafeMove) {
-      // Specialized crane / hydraulic stair-climber rigging for bank safes / fire cabinets
-      subtotal += 4500;
-    }
-
-    return Math.round(subtotal);
-  };
-
-  const handleFormSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setQuoteSubmitted(true);
+  const toggleDiscipline = (idx: number) => {
+    setOpenDisciplineIndex(openDisciplineIndex === idx ? null : idx);
   };
 
   return (
@@ -125,34 +76,48 @@ export const EurekaRelocationPage: React.FC<EurekaRelocationPageProps> = ({
       <EurekaHeader currentPage="office-relocation" onNavigate={onNavigate}  />
 
       {/* 3. HERO SECTION */}
-      <section className="relative bg-gradient-to-br from-[#06122c] via-[#0b1f4d] to-[#040c1e] text-white py-16 lg:py-20 border-b-4 border-blue-500 overflow-hidden">
-        <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#3b82f6_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none" />
+      <section className="relative bg-[#06122c] text-white py-16 lg:py-20 border-b-4 border-blue-500 overflow-hidden">
+        {/* Background Video */}
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover object-center pointer-events-none"
+        >
+          <source src="./Services Hero Section BG.mp4" type="video/mp4" />
+        </video>
+
+        {/* Video Overlay: Darker on left, totally clear on right */}
+        <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/60 to-transparent pointer-events-none" />
         
-        <div className="max-w-7xl mx-auto px-4 relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
-            {/* Left Col: Hero Copy */}
-            <div className="lg:col-span-7">
+        <div className="max-w-5xl mx-auto px-4 relative z-10">
+          <div>
+            {/* Hero Copy */}
+            <div>
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/20 text-blue-300 border border-blue-400/30 text-xs font-bold uppercase tracking-wider mb-4">
                 <Truck className="w-3.5 h-3.5 text-blue-400" />
                 <span>SOLUTIONS • 1. FACILITIES &amp; PROPERTY • SEAMLESS COMMERCIAL RELOCATION</span>
               </div>
 
               <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white leading-tight tracking-tight mb-4">
-                COMMERCIAL OFFICE &amp; <span className="text-blue-400">BUSINESS RELOCATION</span> SERVICES
+                COMMERCIAL OFFICE &amp; <br />
+                <span className="text-blue-400">BUSINESS RELOCATION</span> SERVICES
               </h1>
 
-              <p className="text-slate-300 text-sm sm:text-base leading-relaxed mb-6 max-w-2xl">
+              <p className="text-slate-300 text-sm sm:text-base leading-relaxed mb-6 max-w-3xl">
                 Turnkey corporate moves, weekend zero-downtime migrations, secure IT server rack decommissioning, modular workstation reconfiguration, heavy safe rigging, and end-of-lease dilapidation make-good services across South Africa.
               </p>
 
               <div className="flex flex-wrap items-center gap-3 mb-8">
-                <a
-                  href="#relocation-quote"
+                <button
+                  type="button"
+                  onClick={() => onNavigate?.('contact')}
                   className="px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-black text-xs uppercase tracking-wider rounded-lg shadow-lg hover:shadow-red-600/30 transition-all flex items-center gap-2"
                 >
                   <span>REQUEST ON-SITE MOVE SURVEY</span>
                   <ArrowRight className="w-4 h-4" />
-                </a>
+                </button>
                 <a
                   href="#relocation-disciplines"
                   className="px-5 py-3 bg-white/10 hover:bg-white/20 text-white font-bold text-xs uppercase tracking-wider rounded-lg border border-white/20 transition-all"
@@ -181,236 +146,320 @@ export const EurekaRelocationPage: React.FC<EurekaRelocationPageProps> = ({
                 </div>
               </div>
             </div>
-
-            {/* Right Col: Move Protocol Feature Card */}
-            <div className="lg:col-span-5">
-              <div className="bg-slate-900/90 backdrop-blur-md p-6 sm:p-7 rounded-2xl border border-blue-500/40 shadow-2xl relative overflow-hidden">
-                <div className="absolute -right-8 -bottom-8 w-32 h-32 bg-blue-500/10 rounded-full blur-2xl pointer-events-none" />
-                
-                <div className="flex items-center justify-between pb-4 mb-4 border-b border-slate-800">
-                  <div className="flex items-center gap-2.5">
-                    <div className="w-8 h-8 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold">
-                      <ShieldCheck className="w-4 h-4" />
-                    </div>
-                    <div>
-                      <h2 className="text-sm font-bold text-white leading-tight">Corporate Relocation SLA</h2>
-                      <span className="text-[11px] text-slate-400">End-to-End Project Managed</span>
-                    </div>
-                  </div>
-                  <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded bg-blue-600 text-white">
-                    SLA GUARANTEED
-                  </span>
-                </div>
-
-                <ul className="space-y-3 text-xs text-slate-300 mb-6">
-                  <li className="flex items-start gap-2.5">
-                    <CheckCircle2 className="w-4 h-4 text-blue-400 shrink-0 mt-0.5" />
-                    <span><strong>Color-Coded Department Tagging:</strong> Numbered crates, desks, and IT peripherals mapped directly to target architectural CAD floor plans.</span>
-                  </li>
-                  <li className="flex items-start gap-2.5">
-                    <CheckCircle2 className="w-4 h-4 text-blue-400 shrink-0 mt-0.5" />
-                    <span><strong>Server Rack Anti-Static Transport:</strong> Dedicated climate-buffered vans, padded flight cases, and certified technician reconnects.</span>
-                  </li>
-                  <li className="flex items-start gap-2.5">
-                    <CheckCircle2 className="w-4 h-4 text-blue-400 shrink-0 mt-0.5" />
-                    <span><strong>Modular Systems Furniture Rigging:</strong> Certified joiners dismantle, flat-pack, re-cable, and level benching, pods, and boardroom tables.</span>
-                  </li>
-                  <li className="flex items-start gap-2.5">
-                    <CheckCircle2 className="w-4 h-4 text-blue-400 shrink-0 mt-0.5" />
-                    <span><strong>Day-One Handshake Support:</strong> On-site floor marshals on Monday morning to assist staff with chair adjustments, cables, and unboxing.</span>
-                  </li>
-                </ul>
-
-                <div className="p-3 rounded-lg bg-slate-950/70 border border-slate-800 text-[11px] text-slate-400 flex items-center justify-between">
-                  <span className="flex items-center gap-1.5">
-                    <Shield className="w-4 h-4 text-blue-400" />
-                    <span>Full Public Liability &amp; Comprehensive Transit Cover</span>
-                  </span>
-                  <span className="font-bold text-blue-400">100% Bonded</span>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </section>
 
-      {/* 4. 6 CORE RELOCATION DISCIPLINES */}
-      <section id="relocation-disciplines" className="py-16 bg-white border-b border-slate-200">
-        <div className="max-w-7xl mx-auto px-4">
+      {/* 4. 6 CORE RELOCATION DISCIPLINES - 2-COLUMN ACCORDION & SHOWCASE */}
+      <section id="relocation-disciplines" className="py-16 bg-slate-50 border-b border-slate-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-12">
-            <span className="text-[11px] font-black tracking-widest text-blue-600 bg-blue-50 px-3 py-1 rounded-full uppercase border border-blue-200/60">
+            <span className="text-[11px] font-black tracking-widest text-blue-700 bg-blue-100/80 px-3 py-1 rounded-full uppercase border border-blue-300/60">
               LOGISTICAL MOBILITY &amp; RIGGING
             </span>
-            <h2 className="text-2xl sm:text-3xl font-black text-slate-900 mt-3 mb-3">
+            <h2 className="text-2xl sm:text-4xl font-black text-slate-900 mt-3 mb-2 tracking-tight">
               Comprehensive Corporate Moving Disciplines
             </h2>
-            <p className="text-sm text-slate-600 leading-relaxed">
-              Moving your business should never compromise your billing cycles or customer support. We deliver precision-timed commercial logistics handled exclusively by permanent, vetted, uniformed rigging crews.
+            <p className="text-xs sm:text-sm text-slate-600">
+              Moving your enterprise should never compromise your billing cycles or customer support. We deliver precision-timed commercial logistics handled exclusively by permanent, vetted, uniformed rigging crews.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {/* Discipline 1: Corporate & Commercial Moves */}
-            <article className="p-6 rounded-xl border border-slate-200 bg-slate-50/50 hover:bg-white hover:border-blue-400 hover:shadow-lg transition-all duration-200 flex flex-col group">
-              <div className="w-12 h-12 rounded-xl bg-blue-100 text-blue-800 flex items-center justify-center font-black text-base mb-4 group-hover:bg-blue-600 group-hover:text-white transition-colors">
-                <Building2 className="w-6 h-6" />
-              </div>
-              <h3 className="text-base font-bold text-slate-900 mb-2 leading-snug">
-                Turnkey Office &amp; Commercial Relocation
-              </h3>
-              <p className="text-xs text-slate-600 leading-relaxed mb-4 flex-grow">
-                Complete project management for single-office to multi-story corporate headquarters. Coordinated after-hours or over weekends to ensure your staff leave on Friday and start working seamlessly Monday morning.
-              </p>
-              <ul className="text-xs text-slate-700 space-y-1.5 pt-3 border-t border-slate-200">
-                <li className="flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
-                  <span>Floor plan space-mapping &amp; color labeling</span>
-                </li>
-                <li className="flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
-                  <span>Dedicated Move Master project coordinator</span>
-                </li>
-                <li className="flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
-                  <span>Zero disruption to core business operations</span>
-                </li>
-              </ul>
-            </article>
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            {/* Column 1: Interactive Accordion (7 Columns) */}
+            <div className="lg:col-span-7 space-y-3.5">
+              {[
+                {
+                  id: 0,
+                  num: '01',
+                  icon: Building2,
+                  title: 'Turnkey Office & Commercial Relocation',
+                  subtitle: 'Full HQ moves with dedicated Move Master oversight',
+                  desc: 'Complete project management for single-office to multi-story corporate headquarters. Coordinated after-hours or over weekends to ensure your staff leave on Friday and start working seamlessly Monday morning.',
+                  scope: [
+                    'Floor plan space-mapping & color-coded tagging',
+                    'Dedicated Move Master project manager on-site',
+                    'Zero disruption to live core business operations',
+                    'Closed-body furniture trucks with hydraulic tail-lifts',
+                  ],
+                  benefits: [
+                    'Guaranteed Monday 08:00 resumption target',
+                    'Goods-in-transit (GIT) insurance up to R 5,000,000',
+                    'Uniformed, background-checked rigging crews',
+                  ],
+                },
+                {
+                  id: 1,
+                  num: '02',
+                  icon: Server,
+                  title: 'IT Server Rack & Infrastructure Migration',
+                  subtitle: 'ESD anti-static flight cases & specialist IT recommissioning',
+                  desc: 'Specialized decommissioning, anti-static bubble packaging, custom foam flight cases, and precision transit for blade servers, SAN storage arrays, routers, patch panels, and desktop PC suites.',
+                  scope: [
+                    'Anti-static ESD protective handling & wrapping',
+                    'Cable bundling, tagging & port re-patching',
+                    'Dual-monitor desk setup & docking alignment',
+                    'Dedicated climate-cushioned server transit fleet',
+                  ],
+                  benefits: [
+                    'Data center downtime minimized to tight maintenance windows',
+                    'Hardware serial inventory verification before & after move',
+                    'Direct collaboration with internal IT sysadmins',
+                  ],
+                },
+                {
+                  id: 2,
+                  num: '03',
+                  icon: Hammer,
+                  title: 'Systems Furniture Assembly & Reconfiguration',
+                  subtitle: 'Modular cluster desks, electric risers & bulk filers',
+                  desc: 'Disassembly, transport, and expert re-erection of modular cluster desks, sit-stand electric risers, executive suites, acoustic privacy screens, and high-density archive mobile bulk-filing units.',
+                  scope: [
+                    'Full hardware auditing and screw/fitting sorting',
+                    'Space layout adaptation to new tenancy architectural plans',
+                    'Integrated under-desk power and data reticulation',
+                    'Ergonomic adjustment of sit-stand electric workstations',
+                  ],
+                  benefits: [
+                    'Preservation of manufacturer warranty integrity',
+                    'Zero lost parts or scratched veneer surfaces',
+                    'Custom carpentry adaptations for awkward corner spaces',
+                  ],
+                },
+                {
+                  id: 3,
+                  num: '04',
+                  icon: Boxes,
+                  title: 'Security Crate Hire & Confidential Packing',
+                  subtitle: 'POPIA-compliant heavy-duty tamper-sealed plastic crates',
+                  desc: 'Supply of heavy-duty recyclable plastic lidded crates with numbered security zip-lock seals for HR, legal, finance, and confidential file archives, eliminating cardboard waste and ensuring POPIA compliance.',
+                  scope: [
+                    'Tamper-evident numbered security zip seals',
+                    'Drop-off & collection schedule management',
+                    'Specialist monitor anti-scratch protective sleeves',
+                    'Sequential filing system archive migration',
+                  ],
+                  benefits: [
+                    '100% POPIA and regulatory file chain-of-custody compliance',
+                    'Waterproof and crushproof container protection',
+                    'Zero cardboard disposal waste footprint',
+                  ],
+                },
+                {
+                  id: 4,
+                  num: '05',
+                  icon: Zap,
+                  title: 'Heavy Machinery, Fire Safes & Lab Rigging',
+                  subtitle: 'Hydraulic dollies, stair-climbers & floor load distribution',
+                  desc: 'Specialized hydraulic rigging equipment, powered stair-climbers, crane hoists, and floor-load protection plates to safely transport heavy walk-in safes, precision medical/lab gear, and large production printers.',
+                  scope: [
+                    'Engineered floor-load calculations and spreader plates',
+                    'Pneumatic heavy-duty lifting dollies & machine skates',
+                    'Full OHSA rigging certified crane operators',
+                    'Stairway crawler systems for restricted access routes',
+                  ],
+                  benefits: [
+                    'Protection of marble, raised access tiles & epoxy floors',
+                    'Zero strain injuries with mechanized hydraulic jacks',
+                    'Engineered risk assessment & method statements (RAMS)',
+                  ],
+                },
+                {
+                  id: 5,
+                  num: '06',
+                  icon: RotateCcw,
+                  title: 'Tenancy De-Fit & Landlord Make-Good (White Box)',
+                  subtitle: 'Lease restoration, partition removal & dilapidation sign-off',
+                  desc: 'Complete restoration of your vacated tenancy to original lease conditions: partition removal, ceiling grid repair, carpet replacement/deep-clean, electrical termination, wall repainting, and final landlord sign-off.',
+                  scope: [
+                    'Drywall partition removal & skim-coat repainting',
+                    'Ceiling tile replacement and lighting grid restoration',
+                    'Certified electrical termination & DB board sign-off',
+                    'End-of-lease commercial hygiene deep carpet extraction',
+                  ],
+                  benefits: [
+                    'Guaranteed 100% tenancy deposit refund compliance',
+                    'Single-contractor accountability for move and make-good',
+                    'Certified e-waste recycling and compliant rubble disposal',
+                  ],
+                },
+              ].map((discipline) => {
+                const isOpen = openDisciplineIndex === discipline.id;
+                const IconComponent = discipline.icon;
 
-            {/* Discipline 2: IT & Server Room Decommissioning */}
-            <article className="p-6 rounded-xl border border-slate-200 bg-slate-50/50 hover:bg-white hover:border-blue-400 hover:shadow-lg transition-all duration-200 flex flex-col group">
-              <div className="w-12 h-12 rounded-xl bg-blue-100 text-blue-800 flex items-center justify-center font-black text-base mb-4 group-hover:bg-blue-600 group-hover:text-white transition-colors">
-                <Server className="w-6 h-6" />
-              </div>
-              <h3 className="text-base font-bold text-slate-900 mb-2 leading-snug">
-                IT Server Rack &amp; Infrastructure Migration
-              </h3>
-              <p className="text-xs text-slate-600 leading-relaxed mb-4 flex-grow">
-                Specialized decommissioning, anti-static bubble packaging, custom foam flight cases, and precision transit for blade servers, SAN storage arrays, routers, patch panels, and desktop PC suites.
-              </p>
-              <ul className="text-xs text-slate-700 space-y-1.5 pt-3 border-t border-slate-200">
-                <li className="flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
-                  <span>Anti-static ESD protective handling</span>
-                </li>
-                <li className="flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
-                  <span>Cable bundling, tagging &amp; port re-patching</span>
-                </li>
-                <li className="flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
-                  <span>Dual-monitor desk setup &amp; dock alignment</span>
-                </li>
-              </ul>
-            </article>
+                return (
+                  <div
+                    key={discipline.id}
+                    className="border border-slate-200 bg-white rounded-xl shadow-xs overflow-hidden transition-all duration-200 hover:border-blue-300"
+                  >
+                    <button
+                      type="button"
+                      onClick={() => toggleDiscipline(discipline.id)}
+                      className="w-full flex items-center justify-between p-4 sm:p-5 text-left cursor-pointer transition-colors hover:bg-slate-50/80"
+                      aria-expanded={isOpen}
+                    >
+                      <div className="flex items-center gap-3.5 sm:gap-4 min-w-0 pr-2">
+                        <div
+                          className={`w-10 h-10 sm:w-11 sm:h-11 rounded-lg flex items-center justify-center shrink-0 font-black transition-colors ${
+                            isOpen
+                              ? 'bg-blue-600 text-white shadow-md shadow-blue-600/30'
+                              : 'bg-blue-50 text-blue-700 border border-blue-200/60'
+                          }`}
+                        >
+                          <IconComponent className="w-5 h-5 sm:w-6 sm:h-6" />
+                        </div>
+                        <div className="min-w-0">
+                          <div className="flex items-center gap-2">
+                            <span className="text-[10px] font-black uppercase tracking-wider text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded border border-blue-200/60">
+                              DISCIPLINE {discipline.num}
+                            </span>
+                            <span className="text-[11px] text-slate-500 hidden sm:inline truncate">
+                              {discipline.subtitle}
+                            </span>
+                          </div>
+                          <h3 className="text-sm sm:text-base font-bold text-slate-900 mt-0.5 leading-snug truncate">
+                            {discipline.title}
+                          </h3>
+                        </div>
+                      </div>
 
-            {/* Discipline 3: Systems Furniture & Workstations */}
-            <article className="p-6 rounded-xl border border-slate-200 bg-slate-50/50 hover:bg-white hover:border-blue-400 hover:shadow-lg transition-all duration-200 flex flex-col group">
-              <div className="w-12 h-12 rounded-xl bg-blue-100 text-blue-800 flex items-center justify-center font-black text-base mb-4 group-hover:bg-blue-600 group-hover:text-white transition-colors">
-                <Hammer className="w-6 h-6" />
-              </div>
-              <h3 className="text-base font-bold text-slate-900 mb-2 leading-snug">
-                Systems Furniture Assembly &amp; Reconfiguration
-              </h3>
-              <p className="text-xs text-slate-600 leading-relaxed mb-4 flex-grow">
-                Disassembly, transport, and expert re-erection of modular cluster desks, sit-stand electric risers, executive suites, acoustic privacy screens, and high-density archive mobile bulk-filing units.
-              </p>
-              <ul className="text-xs text-slate-700 space-y-1.5 pt-3 border-t border-slate-200">
-                <li className="flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
-                  <span>Full hardware auditing and screw sorting</span>
-                </li>
-                <li className="flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
-                  <span>Space layout adaptation to new tenancy plans</span>
-                </li>
-                <li className="flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
-                  <span>Integrated under-desk power reticulation</span>
-                </li>
-              </ul>
-            </article>
+                      <div
+                        className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 transition-transform duration-300 ${
+                          isOpen
+                            ? 'bg-blue-600 text-white rotate-180'
+                            : 'bg-slate-100 text-slate-500 hover:bg-slate-200'
+                        }`}
+                      >
+                        <ChevronDown className="w-4 h-4" />
+                      </div>
+                    </button>
 
-            {/* Discipline 4: Crate Hire & Security Packing */}
-            <article className="p-6 rounded-xl border border-slate-200 bg-slate-50/50 hover:bg-white hover:border-blue-400 hover:shadow-lg transition-all duration-200 flex flex-col group">
-              <div className="w-12 h-12 rounded-xl bg-blue-100 text-blue-800 flex items-center justify-center font-black text-base mb-4 group-hover:bg-blue-600 group-hover:text-white transition-colors">
-                <Boxes className="w-6 h-6" />
-              </div>
-              <h3 className="text-base font-bold text-slate-900 mb-2 leading-snug">
-                Security Crate Hire &amp; Confidential Packing
-              </h3>
-              <p className="text-xs text-slate-600 leading-relaxed mb-4 flex-grow">
-                Supply of heavy-duty recyclable plastic lidded crates with numbered security zip-lock seals for HR, legal, finance, and confidential file archives, eliminating cardboard waste and ensuring POPIA compliance.
-              </p>
-              <ul className="text-xs text-slate-700 space-y-1.5 pt-3 border-t border-slate-200">
-                <li className="flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
-                  <span>Tamper-evident numbered security seals</span>
-                </li>
-                <li className="flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
-                  <span>Drop-off &amp; collection schedule management</span>
-                </li>
-                <li className="flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
-                  <span>Specialist monitor anti-scratch sleeves</span>
-                </li>
-              </ul>
-            </article>
+                    <AnimatePresence initial={false}>
+                      {isOpen && (
+                        <motion.div
+                          key={`content-${discipline.id}`}
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: 'auto', opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{ duration: 0.3, ease: 'easeInOut' }}
+                          className="overflow-hidden"
+                        >
+                          <div className="p-4 sm:p-5 pt-0 border-t border-slate-100 bg-slate-50/50 space-y-4 text-xs sm:text-sm">
+                            <p className="text-slate-600 leading-relaxed pt-3">
+                              {discipline.desc}
+                            </p>
 
-            {/* Discipline 5: Heavy Rigging & Safes */}
-            <article className="p-6 rounded-xl border border-slate-200 bg-slate-50/50 hover:bg-white hover:border-blue-400 hover:shadow-lg transition-all duration-200 flex flex-col group">
-              <div className="w-12 h-12 rounded-xl bg-blue-100 text-blue-800 flex items-center justify-center font-black text-base mb-4 group-hover:bg-blue-600 group-hover:text-white transition-colors">
-                <Zap className="w-6 h-6" />
-              </div>
-              <h3 className="text-base font-bold text-slate-900 mb-2 leading-snug">
-                Heavy Machinery, Fire Safes &amp; Lab Rigging
-              </h3>
-              <p className="text-xs text-slate-600 leading-relaxed mb-4 flex-grow">
-                Specialized hydraulic rigging equipment, powered stair-climbers, crane hoists, and floor-load protection plates to safely transport heavy walk-in safes, precision medical/lab gear, and large production printers.
-              </p>
-              <ul className="text-xs text-slate-700 space-y-1.5 pt-3 border-t border-slate-200">
-                <li className="flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
-                  <span>Engineered floor-load calculations</span>
-                </li>
-                <li className="flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
-                  <span>Pneumatic heavy-duty lifting dollies</span>
-                </li>
-                <li className="flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
-                  <span>Full OHSA rigging certified crane operators</span>
-                </li>
-              </ul>
-            </article>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-1">
+                              {/* Standard Execution Scope */}
+                              <div className="bg-white p-3.5 rounded-lg border border-slate-200/90 shadow-2xs space-y-2">
+                                <span className="text-[11px] font-bold text-blue-900 uppercase tracking-wider flex items-center gap-1.5">
+                                  <CheckCircle2 className="w-3.5 h-3.5 text-blue-600" />
+                                  <span>Standard Execution Scope</span>
+                                </span>
+                                <ul className="space-y-1.5 text-xs text-slate-700">
+                                  {discipline.scope.map((item, sIdx) => (
+                                    <li key={sIdx} className="flex items-start gap-1.5">
+                                      <span className="w-1.5 h-1.5 rounded-full bg-blue-500 mt-1.5 shrink-0" />
+                                      <span>{item}</span>
+                                    </li>
+                                  ))}
+                                </ul>
+                              </div>
 
-            {/* Discipline 6: De-Fit & Landlord Dilapidation Make-Good */}
-            <article className="p-6 rounded-xl border border-slate-200 bg-slate-50/50 hover:bg-white hover:border-blue-400 hover:shadow-lg transition-all duration-200 flex flex-col group">
-              <div className="w-12 h-12 rounded-xl bg-blue-100 text-blue-800 flex items-center justify-center font-black text-base mb-4 group-hover:bg-blue-600 group-hover:text-white transition-colors">
-                <RotateCcw className="w-6 h-6" />
+                              {/* Operational Benefits & Compliance */}
+                              <div className="bg-white p-3.5 rounded-lg border border-slate-200/90 shadow-2xs space-y-2">
+                                <span className="text-[11px] font-bold text-slate-800 uppercase tracking-wider flex items-center gap-1.5">
+                                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+                                  <span>Guarantees &amp; Value</span>
+                                </span>
+                                <ul className="space-y-1.5 text-xs text-slate-700">
+                                  {discipline.benefits.map((benefit, bIdx) => (
+                                    <li key={bIdx} className="flex items-start gap-1.5">
+                                      <Check className="w-3.5 h-3.5 text-emerald-600 mt-0.5 shrink-0" />
+                                      <span>{benefit}</span>
+                                    </li>
+                                  ))}
+                                </ul>
+                              </div>
+                            </div>
+
+                            {/* Action Footer */}
+                            <div className="flex flex-wrap items-center justify-between gap-2 pt-2">
+                              <span className="text-[11px] text-slate-500 font-medium">
+                                Available for standalone contracting or turnkey relocation packages.
+                              </span>
+                              <a
+                                href="#quote-calculator"
+                                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-lg shadow-xs transition-colors"
+                              >
+                                <span>Inquire for this Discipline</span>
+                                <ArrowRight className="w-3.5 h-3.5" />
+                              </a>
+                            </div>
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Column 2: Visual Showcase with Office Relocation Image (5 Columns) */}
+            <div className="lg:col-span-5 lg:sticky lg:top-24 space-y-4">
+              <div className="relative rounded-2xl overflow-hidden shadow-xl border border-slate-200 bg-slate-900 group">
+                <img
+                  src={officeRelocationImg}
+                  alt="Corporate Office Relocation and Commercial Rigging"
+                  className="w-full h-auto max-h-[640px] object-cover object-center group-hover:scale-105 transition-transform duration-700"
+                  loading="lazy"
+                />
               </div>
-              <h3 className="text-base font-bold text-slate-900 mb-2 leading-snug">
-                Tenancy De-Fit &amp; Landlord Make-Good (White Box)
-              </h3>
-              <p className="text-xs text-slate-600 leading-relaxed mb-4 flex-grow">
-                Complete restoration of your vacated tenancy to original lease conditions: partition removal, ceiling grid repair, carpet replacement/deep-clean, electrical termination, wall repainting, and final landlord sign-off.
-              </p>
-              <ul className="text-xs text-slate-700 space-y-1.5 pt-3 border-t border-slate-200">
-                <li className="flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
-                  <span>Guaranteed deposit refund compliance</span>
-                </li>
-                <li className="flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
-                  <span>E-waste recycling and eco-disposal</span>
-                </li>
-                <li className="flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
-                  <span>End-of-lease commercial hygiene deep scrub</span>
-                </li>
-              </ul>
-            </article>
+
+              {/* Accreditations & Key Specs Card */}
+              <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-xs space-y-2.5">
+                <div className="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
+                  <Award className="w-4 h-4 text-blue-600" />
+                  <span>Relocation Standards &amp; Accreditations</span>
+                </div>
+                <div className="grid grid-cols-2 gap-2 text-xs">
+                  <div className="bg-slate-50 p-2 rounded-lg border border-slate-100">
+                    <div className="text-[10px] text-slate-500 font-medium">GIT Insurance Cover</div>
+                    <div className="font-bold text-blue-900 mt-0.5">R 5,000,000 Included</div>
+                  </div>
+                  <div className="bg-slate-50 p-2 rounded-lg border border-slate-100">
+                    <div className="text-[10px] text-slate-500 font-medium">Workstation Capacity</div>
+                    <div className="font-bold text-blue-900 mt-0.5">500+ Desks/Weekend</div>
+                  </div>
+                  <div className="bg-slate-50 p-2 rounded-lg border border-slate-100">
+                    <div className="text-[10px] text-slate-500 font-medium">Rigging Compliance</div>
+                    <div className="font-bold text-blue-900 mt-0.5">OHSA &amp; SABS Certified</div>
+                  </div>
+                  <div className="bg-slate-50 p-2 rounded-lg border border-slate-100">
+                    <div className="text-[10px] text-slate-500 font-medium">Moving Crews</div>
+                    <div className="font-bold text-blue-900 mt-0.5">100% Vetted &amp; Permanent</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Quick Consultation Booking Card */}
+              <div className="bg-gradient-to-r from-blue-950 to-slate-900 text-white p-4 rounded-xl border border-blue-800/40 shadow-sm flex items-center justify-between gap-3">
+                <div className="min-w-0">
+                  <div className="text-[10px] font-bold text-blue-400 uppercase tracking-wider">
+                    Need an Office Relocation Assessment?
+                  </div>
+                  <div className="text-xs font-bold text-white mt-0.5 truncate">
+                    Same-day site survey &amp; inventory audit
+                  </div>
+                </div>
+                <a
+                  href="#quote-calculator"
+                  className="px-3.5 py-2 bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs rounded-lg whitespace-nowrap shadow-sm transition-colors shrink-0"
+                >
+                  Book Assessment
+                </a>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -479,456 +528,6 @@ export const EurekaRelocationPage: React.FC<EurekaRelocationPageProps> = ({
               <p className="text-xs text-slate-300 leading-relaxed">
                 Network testing, printer connectivity confirmation, and Monday morning on-site floor marshals ensuring 100% staff uptime.
               </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 6. INTERACTIVE RELOCATION ESTIMATOR */}
-      <section className="py-16 bg-slate-50 border-b border-slate-200">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="text-center max-w-2xl mx-auto mb-12">
-            <span className="text-[11px] font-black tracking-widest text-blue-700 bg-blue-100/80 px-3 py-1 rounded-full uppercase">
-              INSTANT BUDGET ESTIMATOR
-            </span>
-            <h2 className="text-2xl sm:text-3xl font-black text-slate-900 mt-2 mb-2">
-              Corporate Office Relocation Cost Estimator
-            </h2>
-            <p className="text-xs sm:text-sm text-slate-600">
-              Calculate realistic logistical budget ranges based on workstation count, transit distance, server infrastructure, and make-good options.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-            {/* Configuration Controls */}
-            <div className="lg:col-span-7 bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-sm space-y-6">
-              {/* Parameter 1: Headcount / Workstations */}
-              <div>
-                <div className="flex justify-between items-center mb-2">
-                  <label className="text-xs font-bold text-slate-800 uppercase tracking-wider">
-                    1. Number of Desks / Staff Workstations
-                  </label>
-                  <span className="text-xs font-black text-blue-800 bg-blue-50 px-2.5 py-0.5 rounded border border-blue-200">
-                    {workstationCount} Workstations
-                  </span>
-                </div>
-                <input
-                  type="range"
-                  min={5}
-                  max={300}
-                  step={5}
-                  value={workstationCount}
-                  onChange={(e) => setWorkstationCount(Number(e.target.value))}
-                  className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
-                />
-                <div className="flex justify-between text-[10px] text-slate-400 mt-1">
-                  <span>Small Branch (5-15)</span>
-                  <span>Corporate Office (30-80)</span>
-                  <span>Large Headquarters (100-300+)</span>
-                </div>
-              </div>
-
-              {/* Parameter 2: Transit Distance */}
-              <div>
-                <div className="flex justify-between items-center mb-2">
-                  <label className="text-xs font-bold text-slate-800 uppercase tracking-wider">
-                    2. Transit Distance Between Premises
-                  </label>
-                  <span className="text-xs font-black text-blue-800 bg-blue-50 px-2.5 py-0.5 rounded border border-blue-200">
-                    {moveDistanceKm} Kilometres
-                  </span>
-                </div>
-                <input
-                  type="range"
-                  min={2}
-                  max={120}
-                  step={2}
-                  value={moveDistanceKm}
-                  onChange={(e) => setMoveDistanceKm(Number(e.target.value))}
-                  className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
-                />
-                <div className="flex justify-between text-[10px] text-slate-400 mt-1">
-                  <span>Same Business Park (2 km)</span>
-                  <span>Cross-City (20-40 km)</span>
-                  <span>Inter-City / Regional (100+ km)</span>
-                </div>
-              </div>
-
-              {/* Parameter 3: IT Server Racks */}
-              <div>
-                <div className="flex justify-between items-center mb-2">
-                  <label className="text-xs font-bold text-slate-800 uppercase tracking-wider">
-                    3. Server Racks / Data Cabinets
-                  </label>
-                  <span className="text-xs font-black text-blue-800 bg-blue-50 px-2.5 py-0.5 rounded border border-blue-200">
-                    {serverRackCount} Server Racks
-                  </span>
-                </div>
-                <input
-                  type="range"
-                  min={0}
-                  max={10}
-                  step={1}
-                  value={serverRackCount}
-                  onChange={(e) => setServerRackCount(Number(e.target.value))}
-                  className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
-                />
-                <div className="flex justify-between text-[10px] text-slate-400 mt-1">
-                  <span>Cloud Only (0 Racks)</span>
-                  <span>Standard Data Room (1-3 Racks)</span>
-                  <span>Heavy Enterprise (4-10 Racks)</span>
-                </div>
-              </div>
-
-              {/* Parameter 4: Move Window */}
-              <div>
-                <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-2">
-                  4. Move Execution Window
-                </label>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
-                  {[
-                    { id: 'weekend_zero_downtime', label: 'Weekend Zero Downtime', desc: 'Fri 17:00 to Mon 07:00' },
-                    { id: 'after_hours_weekday', label: 'After-Hours Weekday', desc: 'Evenings 18:00 - 23:00' },
-                    { id: 'standard_business_hours', label: 'Standard Hours', desc: 'Mon-Fri 08:00 - 17:00' },
-                  ].map((item) => (
-                    <button
-                      key={item.id}
-                      type="button"
-                      onClick={() => setMoveWindow(item.id as any)}
-                      className={`p-3 rounded-lg border text-left transition-all ${
-                        moveWindow === item.id
-                          ? 'border-blue-600 bg-blue-50 text-blue-950 font-bold shadow-sm'
-                          : 'border-slate-200 hover:border-slate-300 text-slate-700'
-                      }`}
-                    >
-                      <div className="text-xs font-bold leading-tight">{item.label}</div>
-                      <div className="text-[10px] text-slate-500 mt-0.5">{item.desc}</div>
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Parameter 5: Additional Value-Add Add-ons */}
-              <div>
-                <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-2">
-                  5. Specialized Service Modules
-                </label>
-                <div className="space-y-2">
-                  <label className="flex items-center justify-between p-3 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer text-xs">
-                    <span className="flex items-center gap-2">
-                      <input
-                        type="checkbox"
-                        checked={includeCrateRental}
-                        onChange={(e) => setIncludeCrateRental(e.target.checked)}
-                        className="rounded text-blue-600 focus:ring-blue-500"
-                      />
-                      <span>Plastic Security Crate Hire (3 crates/staff + security zip seals)</span>
-                    </span>
-                    <span className="font-bold text-slate-700">Included</span>
-                  </label>
-
-                  <label className="flex items-center justify-between p-3 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer text-xs">
-                    <span className="flex items-center gap-2">
-                      <input
-                        type="checkbox"
-                        checked={includeItRecommission}
-                        onChange={(e) => setIncludeItRecommission(e.target.checked)}
-                        className="rounded text-blue-600 focus:ring-blue-500"
-                      />
-                      <span>Desktop IT Recommissioning (Monitor arms, docks, cable looms)</span>
-                    </span>
-                    <span className="font-bold text-slate-700">+R 220/desk</span>
-                  </label>
-
-                  <label className="flex items-center justify-between p-3 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer text-xs">
-                    <span className="flex items-center gap-2">
-                      <input
-                        type="checkbox"
-                        checked={includeLandlordMakeGood}
-                        onChange={(e) => setIncludeLandlordMakeGood(e.target.checked)}
-                        className="rounded text-blue-600 focus:ring-blue-500"
-                      />
-                      <span>Old Tenancy De-Fit &amp; Landlord Dilapidation Make-Good</span>
-                    </span>
-                    <span className="font-bold text-slate-700">Optional</span>
-                  </label>
-
-                  <label className="flex items-center justify-between p-3 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer text-xs">
-                    <span className="flex items-center gap-2">
-                      <input
-                        type="checkbox"
-                        checked={includeHeavySafeMove}
-                        onChange={(e) => setIncludeHeavySafeMove(e.target.checked)}
-                        className="rounded text-blue-600 focus:ring-blue-500"
-                      />
-                      <span>Heavy Fire-Proof Document Vault / Banker Safe Rigging</span>
-                    </span>
-                    <span className="font-bold text-slate-700">+R 4,500</span>
-                  </label>
-                </div>
-              </div>
-            </div>
-
-            {/* Output Summary Card */}
-            <div className="lg:col-span-5 bg-[#071330] text-white p-6 sm:p-8 rounded-2xl border border-blue-500/30 shadow-xl space-y-6">
-              <div className="flex items-center justify-between pb-4 border-b border-slate-800">
-                <div>
-                  <span className="text-[10px] font-black uppercase tracking-wider text-blue-400">
-                    ESTIMATED COMMERCIAL PROPOSAL
-                  </span>
-                  <h3 className="text-lg font-black text-white">Office Relocation Quotation</h3>
-                </div>
-                <div className="p-2 rounded-lg bg-blue-500/20 text-blue-400">
-                  <DollarSign className="w-5 h-5" />
-                </div>
-              </div>
-
-              <div className="text-center py-4 bg-slate-900/80 rounded-xl border border-slate-800">
-                <span className="text-xs text-slate-400 block mb-1">Estimated Relocation Investment (excl. VAT)</span>
-                <div className="text-4xl font-black text-blue-400">
-                  R {calculateEstimatedPrice().toLocaleString()}
-                </div>
-                <span className="text-[11px] text-slate-400 mt-1 block">
-                  Includes R10M Goods-in-Transit (GIT) full replacement insurance
-                </span>
-              </div>
-
-              <div className="space-y-2.5 text-xs text-slate-300">
-                <div className="flex justify-between py-1 border-b border-slate-800">
-                  <span className="text-slate-400">Staff Workstations:</span>
-                  <span className="font-bold text-white">{workstationCount} Units</span>
-                </div>
-                <div className="flex justify-between py-1 border-b border-slate-800">
-                  <span className="text-slate-400">Transit Distance:</span>
-                  <span className="font-bold text-white">{moveDistanceKm} km</span>
-                </div>
-                <div className="flex justify-between py-1 border-b border-slate-800">
-                  <span className="text-slate-400">Server Racks Transported:</span>
-                  <span className="font-bold text-white">{serverRackCount} Racks (Anti-Static)</span>
-                </div>
-                <div className="flex justify-between py-1 border-b border-slate-800">
-                  <span className="text-slate-400">Execution Window:</span>
-                  <span className="font-bold text-blue-400">
-                    {moveWindow === 'weekend_zero_downtime'
-                      ? 'Weekend Zero Downtime'
-                      : moveWindow === 'after_hours_weekday'
-                      ? 'After-Hours Weekday'
-                      : 'Standard Business Hours'}
-                  </span>
-                </div>
-                <div className="flex justify-between py-1 border-b border-slate-800">
-                  <span className="text-slate-400">Security Crates Provided:</span>
-                  <span className="font-bold text-white">{includeCrateRental ? workstationCount * 3 : 0} Crates</span>
-                </div>
-                <div className="flex justify-between py-1 border-b border-slate-800">
-                  <span className="text-slate-400">Make-Good / Dilapidation:</span>
-                  <span className="font-bold text-white">{includeLandlordMakeGood ? 'Included' : 'Not Selected'}</span>
-                </div>
-              </div>
-
-              <div className="p-3 bg-blue-950/60 rounded-lg border border-blue-800/60 text-xs text-blue-200 flex items-start gap-2">
-                <ShieldCheck className="w-4 h-4 text-blue-400 shrink-0 mt-0.5" />
-                <span>
-                  <strong>Guaranteed SLA:</strong> We commit to the agreed weekend timeline so your team is 100% operational by 07:30 Monday morning.
-                </span>
-              </div>
-
-              <a
-                href="#relocation-quote"
-                className="w-full py-3 bg-red-600 hover:bg-red-700 text-white font-black text-xs uppercase tracking-wider rounded-lg shadow-lg hover:shadow-red-600/30 transition-all flex items-center justify-center gap-2"
-              >
-                <span>LOCK IN YOUR MOVE DATE &amp; PROPOSAL</span>
-                <ArrowRight className="w-4 h-4" />
-              </a>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 7. FAST ON-SITE AUDIT & DISPATCH FORM */}
-      <section id="relocation-quote" className="py-16 bg-[#04091a] text-white border-b border-slate-900">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
-            {/* Left: Value proposition */}
-            <div className="lg:col-span-6 space-y-6">
-              <span className="text-[11px] font-black tracking-widest text-blue-400 uppercase bg-blue-950/80 px-2.5 py-1 rounded border border-blue-800">
-                OFFICIAL RELOCATION SURVEY DISPATCH
-              </span>
-              <h2 className="text-2xl sm:text-3xl font-black text-white leading-tight">
-                Schedule an On-Site Move Survey &amp; Asset Assessment
-              </h2>
-              <p className="text-sm text-slate-300 leading-relaxed">
-                Avoid last-minute moving chaos. Our Move Master project consultants will visit your premises in Pretoria, Johannesburg, Midrand, Sandton, Centurion, or nationally to calculate physical volume, elevator access constraints, and IT infrastructure requirements.
-              </p>
-
-              <div className="space-y-3 text-xs text-slate-300">
-                <div className="flex items-start gap-3">
-                  <div className="w-5 h-5 rounded bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold shrink-0 mt-0.5">
-                    1
-                  </div>
-                  <div>
-                    <strong className="text-white">Free Detailed Inventory Cataloging:</strong> Comprehensive line-by-line furniture, crate, and IT asset count.
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <div className="w-5 h-5 rounded bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold shrink-0 mt-0.5">
-                    2
-                  </div>
-                  <div>
-                    <strong className="text-white">Floor Plan Tagging Strategy:</strong> Numbered color labeling matching destination office layout blueprints.
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <div className="w-5 h-5 rounded bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold shrink-0 mt-0.5">
-                    3
-                  </div>
-                  <div>
-                    <strong className="text-white">All-Inclusive Firm Price Quotation:</strong> Zero hidden surprise surcharges on packing, mileage, or weekend hours.
-                  </div>
-                </div>
-              </div>
-
-              <div className="p-4 bg-slate-900/80 rounded-xl border border-slate-800 flex items-center justify-between">
-                <div>
-                  <span className="text-[11px] text-slate-400 block">Direct Contractor Booking Line</span>
-                  <a href="tel:+27745187012" className="text-base font-black text-red-400 hover:underline">
-                    +27 74 518 7012
-                  </a>
-                </div>
-                <a
-                  href="mailto:info@eurekafms.co.za"
-                  className="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded text-xs font-bold transition-colors"
-                >
-                  Email Move Specs
-                </a>
-              </div>
-            </div>
-
-            {/* Right: Booking Form */}
-            <div className="lg:col-span-6 bg-white text-slate-900 p-6 sm:p-8 rounded-2xl shadow-2xl border border-slate-200">
-              {quoteSubmitted ? (
-                <div className="text-center py-10 space-y-4">
-                  <div className="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto">
-                    <Check className="w-8 h-8 stroke-[3]" />
-                  </div>
-                  <h3 className="text-xl font-black text-slate-900">Relocation Survey Request Received!</h3>
-                  <p className="text-xs text-slate-600 max-w-md mx-auto leading-relaxed">
-                    Thank you. Our Corporate Move Project Manager has received your site specifications and will contact you within 2 hours to confirm your on-site survey and delivery of moving crates.
-                  </p>
-                  <button
-                    onClick={() => setQuoteSubmitted(false)}
-                    className="px-5 py-2 bg-blue-600 text-white text-xs font-bold rounded hover:bg-blue-700 transition-colors"
-                  >
-                    Submit Another Request
-                  </button>
-                </div>
-              ) : (
-                <form onSubmit={handleFormSubmit} className="space-y-4">
-                  <div className="border-b border-slate-200 pb-3 mb-2">
-                    <h3 className="text-lg font-black text-slate-900">Request Commercial Relocation Quote</h3>
-                    <p className="text-xs text-slate-500">Provide move locations to receive your customized proposal within 24 hours.</p>
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div>
-                      <label className="block text-[11px] font-bold text-slate-700 mb-1">Company / Organization *</label>
-                      <input
-                        type="text"
-                        required
-                        placeholder="e.g. Acme Financial Services"
-                        className="w-full px-3 py-2 text-xs border border-slate-300 rounded focus:border-blue-500 focus:outline-none bg-slate-50"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-[11px] font-bold text-slate-700 mb-1">Contact Person &amp; Designation *</label>
-                      <input
-                        type="text"
-                        required
-                        placeholder="e.g. Johan van der Merwe (FM)"
-                        className="w-full px-3 py-2 text-xs border border-slate-300 rounded focus:border-blue-500 focus:outline-none bg-slate-50"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div>
-                      <label className="block text-[11px] font-bold text-slate-700 mb-1">Work Email Address *</label>
-                      <input
-                        type="email"
-                        required
-                        placeholder="johan@acme.co.za"
-                        className="w-full px-3 py-2 text-xs border border-slate-300 rounded focus:border-blue-500 focus:outline-none bg-slate-50"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-[11px] font-bold text-slate-700 mb-1">Mobile / Direct Phone *</label>
-                      <input
-                        type="tel"
-                        required
-                        placeholder="+27 82 123 4567"
-                        className="w-full px-3 py-2 text-xs border border-slate-300 rounded focus:border-blue-500 focus:outline-none bg-slate-50"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div>
-                      <label className="block text-[11px] font-bold text-slate-700 mb-1">Current Origin Address / City *</label>
-                      <input
-                        type="text"
-                        required
-                        placeholder="e.g. Brooklyn Bridge Office Park, Pretoria"
-                        className="w-full px-3 py-2 text-xs border border-slate-300 rounded focus:border-blue-500 focus:outline-none bg-slate-50"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-[11px] font-bold text-slate-700 mb-1">New Destination Address / City *</label>
-                      <input
-                        type="text"
-                        required
-                        placeholder="e.g. Waterfall City, Midrand"
-                        className="w-full px-3 py-2 text-xs border border-slate-300 rounded focus:border-blue-500 focus:outline-none bg-slate-50"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div>
-                      <label className="block text-[11px] font-bold text-slate-700 mb-1">Estimated Move Date</label>
-                      <input
-                        type="date"
-                        className="w-full px-3 py-2 text-xs border border-slate-300 rounded focus:border-blue-500 focus:outline-none bg-slate-50"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-[11px] font-bold text-slate-700 mb-1">Approximate Desk Count</label>
-                      <select defaultValue="16-50" className="w-full px-3 py-2 text-xs border border-slate-300 rounded focus:border-blue-500 focus:outline-none bg-slate-50">
-                        <option value="1-15">1 to 15 Desks (Small Office)</option>
-                        <option value="16-50">16 to 50 Desks (Medium)</option>
-                        <option value="51-120">51 to 120 Desks (Large Corporate)</option>
-                        <option value="121+">120+ Desks (Enterprise Headquarters)</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-[11px] font-bold text-slate-700 mb-1">Special Handling Instructions &amp; Requirements</label>
-                    <textarea
-                      rows={2}
-                      placeholder="e.g. Server rack migration required, 2 executive heavy fire safes, weekend zero-downtime execution needed..."
-                      className="w-full px-3 py-2 text-xs border border-slate-300 rounded focus:border-blue-500 focus:outline-none bg-slate-50"
-                    />
-                  </div>
-
-                  <button
-                    type="submit"
-                    className="w-full py-3 bg-red-600 hover:bg-red-700 text-white font-black text-xs uppercase tracking-wider rounded shadow hover:shadow-red-600/30 transition-all flex items-center justify-center gap-2"
-                  >
-                    <span>SUBMIT FOR SAME-DAY RELOCATION AUDIT</span>
-                    <ArrowRight className="w-4 h-4" />
-                  </button>
-                </form>
-              )}
             </div>
           </div>
         </div>

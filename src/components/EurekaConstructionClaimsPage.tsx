@@ -1,6 +1,8 @@
 import { EurekaHeader } from "./EurekaHeader";
 import { EurekaFooter } from "./EurekaFooter";
 import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
+import contractAdvisoryImg from '../assets/images/Construction Contract Advisory.jpg';
 import {
   Scale,
   Building2,
@@ -86,63 +88,18 @@ export const EurekaConstructionClaimsPage: React.FC<EurekaConstructionClaimsPage
 }) => {
   const [solutionsDropdownOpen, setSolutionsDropdownOpen] = useState(false);
 
-  // Diagnostic Claim Calculator State
-  const [contractFramework, setContractFramework] = useState<'jbcc' | 'nec4' | 'fidic' | 'gcc'>('jbcc');
-  const [claimType, setClaimType] = useState<
-    'eot_delay' | 'disruption_productivity' | 'prolongation_overheads' | 'variations_rate' | 'adverse_ground' | 'acceleration_mitigation'
-  >('eot_delay');
-  const [claimQuantumValue, setClaimQuantumValue] = useState<number>(14500000); // ZAR
-  const [noticeComplianceStatus, setNoticeComplianceStatus] = useState<'compliant_notice' | 'disputed_notice' | 'no_notice_yet'>('compliant_notice');
-  const [delayMethodology, setDelayMethodology] = useState<'tia' | 'windows' | 'as_planned_impacted' | 'collapsed_as_built'>('tia');
-  const [partyRole, setPartyRole] = useState<'contractor_claimant' | 'employer_defense' | 'subcontractor' | 'funder_adviser'>('contractor_claimant');
-
   // Interactive Contract Matrix Tab
   const [activeContractTab, setActiveContractTab] = useState<'jbcc' | 'nec4' | 'fidic' | 'gcc'>('jbcc');
 
-  // Case Study Selector
-  const [selectedCaseIndex, setSelectedCaseIndex] = useState<number>(0);
+  // Pillars Accordion State
+  const [openPillarIndex, setOpenPillarIndex] = useState<number | null>(0);
+
+  const togglePillar = (idx: number) => {
+    setOpenPillarIndex(prev => prev === idx ? null : idx);
+  };
 
   // FAQ Accordion State
   const [expandedFaq, setExpandedFaq] = useState<number | null>(0);
-
-  // Calculated Risk & Entitlement Metrics
-  const calculateEntitlementScore = () => {
-    let baseScore = 65;
-
-    // Notice compliance factor
-    if (noticeComplianceStatus === 'compliant_notice') baseScore += 22;
-    else if (noticeComplianceStatus === 'disputed_notice') baseScore += 5;
-    else baseScore -= 28;
-
-    // Delay methodology factor
-    if (delayMethodology === 'tia') baseScore += 10;
-    else if (delayMethodology === 'windows') baseScore += 8;
-    else if (delayMethodology === 'as_planned_impacted') baseScore += 2;
-    else baseScore += 4;
-
-    // Contract Framework nuance
-    if (contractFramework === 'nec4') {
-      if (noticeComplianceStatus === 'no_notice_yet') baseScore -= 15; // Strict 8-week time bar
-    } else if (contractFramework === 'jbcc') {
-      if (noticeComplianceStatus === 'compliant_notice') baseScore += 3; // Clause 23.4.2 adherence
-    }
-
-    return Math.min(Math.max(baseScore, 18), 96);
-  };
-
-  const entitlementScore = calculateEntitlementScore();
-
-  const estimatedRecoveryQuantum = (claimQuantumValue * (entitlementScore / 100)).toFixed(0);
-  const potentialLdExposure = (claimQuantumValue * 0.18).toFixed(0);
-
-  const formatZAR = (val: number | string) => {
-    const num = typeof val === 'string' ? parseFloat(val) : val;
-    return new Intl.NumberFormat('en-ZA', {
-      style: 'currency',
-      currency: 'ZAR',
-      maximumFractionDigits: 0
-    }).format(num);
-  };
 
   const corePillars = [
     {
@@ -382,45 +339,6 @@ export const EurekaConstructionClaimsPage: React.FC<EurekaConstructionClaimsPage
     }
   };
 
-  const caseStudies = [
-    {
-      sector: 'Heavy Industrial & Mining Facility',
-      title: 'R42.5M NEC4 ECC Disputed Compensation Events & Ground Conditions',
-      contract: 'NEC4 Engineering & Construction Contract (ECC) Option B',
-      challenge:
-        'The main contractor was facing a R42.5M loss due to encountering unexpected dolomite bedrock fissures and 14 disputed Project Manager instructions. The Employer issued an 8-week time-bar defense rejecting 90% of the claims.',
-      intervention:
-        'EFMS performed a forensic CPM Time Impact Analysis (TIA), reconstructed early warning register timelines, and demonstrated that the Employer had constructively waived notice periods through contemporaneous technical site minutes. We substantiated plant idling and specialist drilling re-sequencing costs.',
-      outcome:
-        'Negotiated a R36.8M settlement and 68-day Extension of Time prior to Adjudication hearing, saving both parties over 14 months of formal legal proceedings.',
-      statHighlight: '86.5% Quantum Recovery • Zero Litigation Costs'
-    },
-    {
-      sector: 'Commercial High-Rise Development',
-      title: 'R19.8M JBCC 6.2 Delay & Liquidated Damages Defense',
-      contract: 'JBCC Principal Building Agreement Edition 6.2',
-      challenge:
-        'The Employer attempted to deduct R11.2M in Liquidated Damages (Penalties) following a 110-day handover delay, alleging poor contractor site management and subcontractor defaults.',
-      intervention:
-        'EFMS acted on behalf of the Principal Contractor, conducting a retrospective Windows Delay Analysis. We proved that 84 days of critical path delay were directly caused by late structural engineering revisions, facade redesigns, and municipal electrical energization holdups, with only 12 days of contractor concurrency.',
-      outcome:
-        'Secured an approved 84-day EOT, fully expunging the R11.2M LD threat and recovering R8.6M in proven time-related Preliminary & General (P&G) prolongation costs.',
-      statHighlight: '100% LDs Cancelled • R8.6M Prolongation Awarded'
-    },
-    {
-      sector: 'Renewable Energy Solar PV Infrastructure',
-      title: 'R64.0M FIDIC Yellow Book Grid Connection & Force Majeure Dispute',
-      contract: 'FIDIC Yellow Book (Plant & Design-Build)',
-      challenge:
-        'An international EPC contractor suffered severe shipping port strikes and utility substation transmission line delays, resulting in commercial off-taker delay liquidated damages threats of R350,000 per day.',
-      intervention:
-        'EFMS drafted a comprehensive FIDIC Clause 20.1 & Clause 19 Force Majeure claim dossier, deploying Earned Value Productivity Modeling to quantify acceleration measures undertaken to bring grid synchronization forward.',
-      outcome:
-        'DAAB (Dispute Adjudication Board) issued a unanimous determination upholding 100% of the force majeure time extension and awarding R48.2M in acceleration and standby plant costs.',
-      statHighlight: 'Unanimous DAAB Determination • Full Tariff Protection'
-    }
-  ];
-
   const faqs = [
     {
       question: 'What is the fundamental difference between a Delay Claim and a Disruption Claim?',
@@ -460,10 +378,20 @@ export const EurekaConstructionClaimsPage: React.FC<EurekaConstructionClaimsPage
       <EurekaHeader currentPage="construction-claims" onNavigate={onNavigate}  />
 
       {/* Hero Section */}
-      <section className="relative pt-12 pb-20 overflow-hidden bg-gradient-to-b from-[#060e20] via-[#09132e] to-[#030813] border-b border-slate-800">
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#1e293b10_1px,transparent_1px),linear-gradient(to_bottom,#1e293b10_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none" />
-        <div className="absolute top-1/4 right-0 w-96 h-96 bg-red-600/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-10 left-10 w-80 h-80 bg-blue-600/10 rounded-full blur-3xl pointer-events-none" />
+      <section className="relative pt-12 pb-20 overflow-hidden bg-[#030813] border-b border-slate-800">
+        {/* Background Video */}
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover object-center pointer-events-none"
+        >
+          <source src="./Services Hero Section BG.mp4" type="video/mp4" />
+        </video>
+
+        {/* Video Overlay: Darker on left, totally clear on right */}
+        <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/60 to-transparent pointer-events-none" />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="grid lg:grid-cols-12 gap-12 items-center">
@@ -506,14 +434,11 @@ export const EurekaConstructionClaimsPage: React.FC<EurekaConstructionClaimsPage
 
               <div className="flex flex-wrap items-center gap-4 pt-2">
                 <button
-                  onClick={() => {
-                    const el = document.getElementById('claim-diagnostic-calculator');
-                    el?.scrollIntoView({ behavior: 'smooth' });
-                  }}
+                  onClick={() => onNavigate?.('contact')}
                   className="px-6 py-3 rounded-md bg-red-600 hover:bg-red-700 text-white font-bold text-xs uppercase tracking-wider transition-all shadow-lg hover:shadow-red-600/30 flex items-center gap-2 cursor-pointer"
                 >
-                  <SlidersHorizontal className="w-4 h-4" />
-                  <span>Launch Claims Analyzer</span>
+                  <FileSpreadsheet className="w-4 h-4" />
+                  <span>Request Forensic Claim Audit</span>
                 </button>
                 <button
                   onClick={() => {
@@ -527,442 +452,176 @@ export const EurekaConstructionClaimsPage: React.FC<EurekaConstructionClaimsPage
                 </button>
               </div>
             </div>
-
-            {/* Right Card / Interactive Preview */}
-            <div className="lg:col-span-5">
-              <div className="bg-gradient-to-br from-[#0c1833] to-[#060e20] border border-slate-700/80 rounded-xl p-6 shadow-2xl relative overflow-hidden">
-                <div className="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
-                  <div className="flex items-center gap-2">
-                    <Shield className="w-4 h-4 text-red-500" />
-                    <span className="text-xs font-bold uppercase tracking-wider text-slate-200">
-                      Contractual Triage Engine
-                    </span>
-                  </div>
-                  <span className="text-[10px] px-2 py-0.5 rounded bg-emerald-950 border border-emerald-500/40 text-emerald-300 font-mono font-bold">
-                    ACTIVE TRIAGE
-                  </span>
-                </div>
-
-                <div className="space-y-3.5">
-                  <div className="flex items-center justify-between text-xs p-2.5 rounded bg-slate-900/90 border border-slate-800">
-                    <span className="text-slate-400">Primary Standard Form:</span>
-                    <span className="font-bold text-white uppercase">{contractFramework.toUpperCase()} Principal Contract</span>
-                  </div>
-                  <div className="flex items-center justify-between text-xs p-2.5 rounded bg-slate-900/90 border border-slate-800">
-                    <span className="text-slate-400">Claim Entitlement Score:</span>
-                    <span className="font-mono font-black text-red-400 text-sm">{entitlementScore}% Viability</span>
-                  </div>
-                  <div className="flex items-center justify-between text-xs p-2.5 rounded bg-slate-900/90 border border-slate-800">
-                    <span className="text-slate-400">Delay Methodology:</span>
-                    <span className="font-bold text-slate-200">Time Impact Analysis (TIA)</span>
-                  </div>
-                  <div className="flex items-center justify-between text-xs p-2.5 rounded bg-slate-900/90 border border-slate-800">
-                    <span className="text-slate-400">Quantum Recovery Index:</span>
-                    <span className="font-mono font-bold text-emerald-400">{formatZAR(estimatedRecoveryQuantum)}</span>
-                  </div>
-                </div>
-
-                <div className="mt-5 p-3 rounded bg-red-950/40 border border-red-500/30 text-[11px] text-red-200 flex items-start gap-2">
-                  <AlertTriangle className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
-                  <div>
-                    <strong>Critical Notice Window:</strong> Over 70% of valid construction claims in SA fail solely due to non-compliance with strict 20-day (JBCC) or 8-week (NEC4) time bars.
-                  </div>
-                </div>
-
-                <button
-                  onClick={() => {
-                    const el = document.getElementById('claim-diagnostic-calculator');
-                    el?.scrollIntoView({ behavior: 'smooth' });
-                  }}
-                  className="w-full mt-4 py-2.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
-                >
-                  <span>Customize Analysis Parameters</span>
-                  <ChevronRight className="w-3.5 h-3.5 text-red-400" />
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Interactive Claims & Entitlement Diagnostic Calculator */}
-      <section id="claim-diagnostic-calculator" className="py-16 bg-[#040a17] border-b border-slate-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-12">
-            <span className="text-red-500 text-xs font-black uppercase tracking-widest">
-              INTERACTIVE FEASIBILITY &amp; RISK SIMULATOR
-            </span>
-            <h2 className="text-2xl sm:text-3xl font-black text-white mt-1">
-              Claims Entitlement &amp; Quantum Risk Diagnostic
-            </h2>
-            <p className="text-xs sm:text-sm text-slate-400 mt-2">
-              Evaluate contractual notice validity, delay methodology strength, and quantum recovery potential under standard South African and international conditions of contract.
-            </p>
-          </div>
-
-          <div className="grid lg:grid-cols-12 gap-8">
-            {/* Input Form Column */}
-            <div className="lg:col-span-7 bg-[#081226] border border-slate-800 rounded-xl p-6 space-y-6">
-              {/* Party Representation */}
-              <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">
-                  1. Advisory Role &amp; Client Position
-                </label>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                  {[
-                    { id: 'contractor_claimant', label: 'Main Contractor', desc: 'Claim Preparation' },
-                    { id: 'employer_defense', label: 'Employer / Client', desc: 'Claims Defense / LDs' },
-                    { id: 'subcontractor', label: 'Subcontractor', desc: 'Pass-Through Claim' },
-                    { id: 'funder_adviser', label: 'Funder / Lender', desc: 'Quantum Exposure Audit' }
-                  ].map((role) => (
-                    <button
-                      key={role.id}
-                      onClick={() => setPartyRole(role.id as any)}
-                      className={`p-2.5 rounded text-left border transition-all cursor-pointer ${
-                        partyRole === role.id
-                          ? 'bg-red-950/70 border-red-500 text-white shadow-sm'
-                          : 'bg-slate-900/90 border-slate-800 text-slate-400 hover:border-slate-700'
-                      }`}
-                    >
-                      <div className="text-xs font-bold leading-tight">{role.label}</div>
-                      <div className="text-[10px] text-slate-400 mt-0.5">{role.desc}</div>
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Standard Form of Contract */}
-              <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">
-                  2. Standard Form of Contract Framework
-                </label>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                  {[
-                    { id: 'jbcc', label: 'JBCC 6.2 / 5.0', desc: 'Clause 23 & 24 EOT' },
-                    { id: 'nec4', label: 'NEC4 / NEC3 ECC', desc: 'Clause 60-65 CEs' },
-                    { id: 'fidic', label: 'FIDIC Red/Yellow', desc: 'Clause 8.4 & 20.1' },
-                    { id: 'gcc', label: 'GCC 2015 / 2010', desc: 'Clause 5.12 & 10' }
-                  ].map((item) => (
-                    <button
-                      key={item.id}
-                      onClick={() => setContractFramework(item.id as any)}
-                      className={`p-2.5 rounded text-left border transition-all cursor-pointer ${
-                        contractFramework === item.id
-                          ? 'bg-red-950/70 border-red-500 text-white shadow-sm'
-                          : 'bg-slate-900/90 border-slate-800 text-slate-400 hover:border-slate-700'
-                      }`}
-                    >
-                      <div className="text-xs font-bold">{item.label}</div>
-                      <div className="text-[10px] text-slate-400 mt-0.5">{item.desc}</div>
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Claim Nature */}
-              <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">
-                  3. Nature of Primary Dispute / Claim Event
-                </label>
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                  {[
-                    { id: 'eot_delay', label: 'EOT & Critical Delay', desc: 'Schedule Extension' },
-                    { id: 'disruption_productivity', label: 'Disruption & Inefficiency', desc: 'Measured Mile Loss' },
-                    { id: 'prolongation_overheads', label: 'Prolongation & Prelims', desc: 'Site & Head Office' },
-                    { id: 'variations_rate', label: 'Disputed Variations', desc: 'Rate Fixation' },
-                    { id: 'adverse_ground', label: 'Adverse Ground Conditions', desc: 'Latent Physical Site' },
-                    { id: 'acceleration_mitigation', label: 'Acceleration & Mitigation', desc: 'Constructive Hurrying' }
-                  ].map((type) => (
-                    <button
-                      key={type.id}
-                      onClick={() => setClaimType(type.id as any)}
-                      className={`p-2.5 rounded text-left border transition-all cursor-pointer ${
-                        claimType === type.id
-                          ? 'bg-red-950/70 border-red-500 text-white shadow-sm'
-                          : 'bg-slate-900/90 border-slate-800 text-slate-400 hover:border-slate-700'
-                      }`}
-                    >
-                      <div className="text-xs font-bold">{type.label}</div>
-                      <div className="text-[10px] text-slate-400 mt-0.5">{type.desc}</div>
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Claim Quantum Slider */}
-              <div>
-                <div className="flex justify-between items-center mb-2">
-                  <label className="text-xs font-bold uppercase tracking-wider text-slate-300">
-                    4. Disputed Claim Quantum / Value (ZAR)
-                  </label>
-                  <span className="text-sm font-mono font-bold text-red-400">
-                    {formatZAR(claimQuantumValue)}
-                  </span>
-                </div>
-                <input
-                  type="range"
-                  min={1000000}
-                  max={80000000}
-                  step={500000}
-                  value={claimQuantumValue}
-                  onChange={(e) => setClaimQuantumValue(Number(e.target.value))}
-                  className="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-red-600"
-                />
-                <div className="flex justify-between text-[10px] text-slate-500 mt-1">
-                  <span>R1.0M</span>
-                  <span>R20M</span>
-                  <span>R40M</span>
-                  <span>R60M</span>
-                  <span>R80M+</span>
-                </div>
-              </div>
-
-              {/* Notice Compliance Status */}
-              <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">
-                  5. Contractual Notice &amp; Time-Bar Status
-                </label>
-                <div className="grid sm:grid-cols-3 gap-2">
-                  {[
-                    { id: 'compliant_notice', label: 'Notice Served In Time', badge: 'High Strength', color: 'text-emerald-400' },
-                    { id: 'disputed_notice', label: 'Notice Disputed / Late', badge: 'Waiver Defense Needed', color: 'text-amber-400' },
-                    { id: 'no_notice_yet', label: 'No Notice Yet Submitted', badge: 'Urgent Action Required', color: 'text-red-400' }
-                  ].map((status) => (
-                    <button
-                      key={status.id}
-                      onClick={() => setNoticeComplianceStatus(status.id as any)}
-                      className={`p-2.5 rounded text-left border transition-all cursor-pointer ${
-                        noticeComplianceStatus === status.id
-                          ? 'bg-red-950/70 border-red-500 text-white'
-                          : 'bg-slate-900/90 border-slate-800 text-slate-400 hover:border-slate-700'
-                      }`}
-                    >
-                      <div className="text-xs font-bold">{status.label}</div>
-                      <div className={`text-[10px] font-semibold mt-0.5 ${status.color}`}>{status.badge}</div>
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Delay Analysis Methodology */}
-              <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">
-                  6. Recommended Forensic Delay Methodology
-                </label>
-                <div className="grid sm:grid-cols-2 gap-2">
-                  {[
-                    { id: 'tia', name: 'Time Impact Analysis (TIA)', desc: 'Prospective SCL Preferred Method' },
-                    { id: 'windows', name: 'Time-Slice / Windows Analysis', desc: 'Retrospective Dynamic CPM' },
-                    { id: 'as_planned_impacted', name: 'Impacted As-Planned', desc: 'Simpler Baseline Modeling' },
-                    { id: 'collapsed_as_built', name: 'Collapsed As-Built ("But-For")', desc: 'Historical Exclusions' }
-                  ].map((meth) => (
-                    <button
-                      key={meth.id}
-                      onClick={() => setDelayMethodology(meth.id as any)}
-                      className={`p-2.5 rounded text-left border transition-all cursor-pointer ${
-                        delayMethodology === meth.id
-                          ? 'bg-red-950/70 border-red-500 text-white'
-                          : 'bg-slate-900/90 border-slate-800 text-slate-400 hover:border-slate-700'
-                      }`}
-                    >
-                      <div className="text-xs font-bold">{meth.name}</div>
-                      <div className="text-[10px] text-slate-400 mt-0.5">{meth.desc}</div>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Output Analysis Column */}
-            <div className="lg:col-span-5 flex flex-col justify-between space-y-6">
-              <div className="bg-gradient-to-br from-[#0c1833] via-[#081226] to-[#040a17] border-2 border-red-500/40 rounded-xl p-6 shadow-2xl relative">
-                <div className="flex items-center justify-between border-b border-slate-800 pb-3 mb-5">
-                  <div className="flex items-center gap-2">
-                    <Gavel className="w-5 h-5 text-red-500" />
-                    <h3 className="font-extrabold text-sm text-white uppercase tracking-wider">
-                      Forensic Entitlement Assessment
-                    </h3>
-                  </div>
-                  <span className="text-[10px] px-2 py-0.5 rounded bg-red-900/60 border border-red-500/40 text-red-300 font-mono font-bold">
-                    SCL 2nd ED AUDIT
-                  </span>
-                </div>
-
-                {/* Score Dial */}
-                <div className="bg-slate-900/90 border border-slate-800 rounded-lg p-4 mb-4">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs font-bold text-slate-300">Entitlement Strength Index:</span>
-                    <span
-                      className={`text-lg font-black font-mono ${
-                        entitlementScore >= 75 ? 'text-emerald-400' : entitlementScore >= 50 ? 'text-amber-400' : 'text-red-400'
-                      }`}
-                    >
-                      {entitlementScore}% Viability
-                    </span>
-                  </div>
-                  <div className="w-full bg-slate-800 h-2.5 rounded-full overflow-hidden">
-                    <div
-                      className={`h-full transition-all duration-500 ${
-                        entitlementScore >= 75
-                          ? 'bg-emerald-500'
-                          : entitlementScore >= 50
-                          ? 'bg-amber-500'
-                          : 'bg-red-500'
-                      }`}
-                      style={{ width: `${entitlementScore}%` }}
-                    />
-                  </div>
-                  <div className="flex justify-between text-[10px] text-slate-500 mt-1">
-                    <span>Weak (0-40%)</span>
-                    <span>Moderate (41-70%)</span>
-                    <span>Robust (71-100%)</span>
-                  </div>
-                </div>
-
-                {/* Quantum Breakdown */}
-                <div className="space-y-3 mb-6">
-                  <div className="flex justify-between items-center text-xs p-2.5 rounded bg-slate-900/60 border border-slate-800">
-                    <span className="text-slate-400">Claim Total Submitted:</span>
-                    <span className="font-mono font-bold text-white">{formatZAR(claimQuantumValue)}</span>
-                  </div>
-                  <div className="flex justify-between items-center text-xs p-2.5 rounded bg-slate-900/60 border border-slate-800">
-                    <span className="text-slate-400">Forensic Recovery Potential:</span>
-                    <span className="font-mono font-bold text-emerald-400">{formatZAR(estimatedRecoveryQuantum)}</span>
-                  </div>
-                  <div className="flex justify-between items-center text-xs p-2.5 rounded bg-slate-900/60 border border-slate-800">
-                    <span className="text-slate-400">Potential LDs Risk Exposure:</span>
-                    <span className="font-mono font-bold text-red-400">{formatZAR(potentialLdExposure)}</span>
-                  </div>
-                  <div className="flex justify-between items-center text-xs p-2.5 rounded bg-slate-900/60 border border-slate-800">
-                    <span className="text-slate-400">Procedural Dispute Escalation:</span>
-                    <span className="font-bold text-slate-200">
-                      {contractFramework === 'jbcc'
-                        ? 'Clause 30 Adjudication'
-                        : contractFramework === 'nec4'
-                        ? 'Option W2 Adjudication'
-                        : contractFramework === 'fidic'
-                        ? 'Clause 21 DAAB Referral'
-                        : 'GCC Clause 10.5 Adjudication'}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Strategic Recommendations */}
-                <div className="bg-slate-900/90 border border-slate-800 rounded-lg p-4 mb-5">
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-slate-200 mb-2 flex items-center gap-1.5">
-                    <ShieldCheck className="w-3.5 h-3.5 text-red-400" />
-                    <span>EFMS Strategic Action Plan:</span>
-                  </h4>
-                  <ul className="space-y-1.5 text-xs text-slate-300">
-                    <li className="flex items-start gap-1.5">
-                      <span className="text-red-400 font-bold">&bull;</span>
-                      <span>
-                        {noticeComplianceStatus === 'compliant_notice'
-                          ? 'Audit contemporary daily site logs, weather records, and engineer instructions to support the full quantum.'
-                          : noticeComplianceStatus === 'disputed_notice'
-                          ? 'Construct an equitable waiver / estoppel argument demonstrating employer awareness and lack of prejudice.'
-                          : 'Issue an immediate emergency formal notice preserving secondary entitlement under variation mechanisms.'}
-                      </span>
-                    </li>
-                    <li className="flex items-start gap-1.5">
-                      <span className="text-red-400 font-bold">&bull;</span>
-                      <span>
-                        Deploy {delayMethodology === 'tia' ? 'Time Impact Analysis (TIA)' : 'Windows Analysis'} on native Primavera P6 / MS Project schedules to demonstrate unassailable critical path impact.
-                      </span>
-                    </li>
-                    <li className="flex items-start gap-1.5">
-                      <span className="text-red-400 font-bold">&bull;</span>
-                      <span>
-                        Substantiate time-related P&amp;Gs and off-site overheads using audited Hudson/Eichleay formula calculations.
-                      </span>
-                    </li>
-                  </ul>
-                </div>
-
-                <button
-                  onClick={() => onNavigate?.('contact')}
-                  className="w-full py-3 rounded-md bg-red-600 hover:bg-red-700 text-white font-bold text-xs uppercase tracking-wider transition-all shadow-lg flex items-center justify-center gap-2 cursor-pointer"
-                >
-                  <FileSpreadsheet className="w-4 h-4" />
-                  <span>Request Full Forensic Claim Audit</span>
-                </button>
-              </div>
-            </div>
           </div>
         </div>
       </section>
 
       {/* Core 6 Pillars of Claims & Contract Consultancy */}
-      <section className="py-20 bg-[#030813] border-b border-slate-800">
+      <section className="py-20 bg-slate-50 border-b border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-16">
-            <span className="text-red-500 text-xs font-black uppercase tracking-widest">
+          <div className="text-center max-w-3xl mx-auto mb-14">
+            <span className="text-red-600 text-xs font-black uppercase tracking-widest">
               END-TO-END COMMERCIAL &amp; CLAIMS CAPABILITIES
             </span>
-            <h2 className="text-3xl font-black text-white mt-1">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-900 mt-1 tracking-tight">
               Six Core Pillars of Construction Contract Advisory
             </h2>
-            <p className="text-sm text-slate-400 mt-2">
+            <p className="text-sm text-slate-600 mt-3">
               From pre-award contract risk auditing to statutory dispute adjudication and high-court expert witness representation.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {corePillars.map((pillar, idx) => {
-              const IconComp = pillar.icon;
-              return (
-                <div
-                  key={idx}
-                  className="bg-[#081226] border border-slate-800 rounded-xl p-6 flex flex-col justify-between hover:border-red-500/60 transition-all hover:shadow-xl group relative overflow-hidden"
-                >
-                  <div className="absolute top-0 right-0 w-24 h-24 bg-red-600/5 rounded-bl-full pointer-events-none group-hover:bg-red-600/10 transition-colors" />
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
+            {/* Column 1: Accordion Format (7 Cols) */}
+            <div className="lg:col-span-7 space-y-3">
+              {corePillars.map((pillar, idx) => {
+                const IconComp = pillar.icon;
+                const isOpen = openPillarIndex === idx;
 
-                  <div>
-                    <div className="flex items-center justify-between mb-4">
-                      <div className="w-10 h-10 rounded-lg bg-red-600/10 border border-red-500/30 text-red-400 flex items-center justify-center">
-                        <IconComp className="w-5 h-5" />
+                return (
+                  <div
+                    key={idx}
+                    className={`rounded-xl border transition-all duration-200 overflow-hidden ${
+                      isOpen
+                        ? 'bg-white border-red-500 shadow-lg shadow-red-500/10 ring-1 ring-red-500/20'
+                        : 'bg-white border-slate-200 hover:border-slate-300 shadow-sm'
+                    }`}
+                  >
+                    <button
+                      type="button"
+                      onClick={() => togglePillar(idx)}
+                      className="w-full p-4 sm:p-5 flex items-center justify-between text-left cursor-pointer transition-colors"
+                      aria-expanded={isOpen}
+                    >
+                      <div className="flex items-center gap-3 sm:gap-4 min-w-0">
+                        <div
+                          className={`w-9 h-9 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center flex-shrink-0 transition-colors ${
+                            isOpen
+                              ? 'bg-red-600 text-white shadow-md shadow-red-600/20'
+                              : 'bg-slate-100 text-red-600 border border-slate-200'
+                          }`}
+                        >
+                          <IconComp className="w-5 h-5" />
+                        </div>
+                        <div className="min-w-0">
+                          <div className="flex items-center gap-2 mb-0.5">
+                            <span className="text-[10px] font-mono font-black text-slate-500">
+                              PILLAR {pillar.number}
+                            </span>
+                            <span className="text-[10px] font-semibold text-emerald-700 hidden sm:inline truncate max-w-[240px]">
+                              • {pillar.standardReference}
+                            </span>
+                          </div>
+                          <h3
+                            className={`text-sm sm:text-base font-extrabold transition-colors truncate ${
+                              isOpen ? 'text-red-600' : 'text-slate-900'
+                            }`}
+                          >
+                            {pillar.title}
+                          </h3>
+                        </div>
                       </div>
-                      <span className="text-2xl font-black font-mono text-slate-700 group-hover:text-red-400/40 transition-colors">
-                        {pillar.number}
-                      </span>
-                    </div>
 
-                    <h3 className="text-lg font-bold text-white mb-1 group-hover:text-red-400 transition-colors">
-                      {pillar.title}
-                    </h3>
-                    <p className="text-xs font-semibold text-slate-400 mb-3">
-                      {pillar.subtitle}
-                    </p>
-                    <p className="text-xs text-slate-300 leading-relaxed mb-4">
-                      {pillar.description}
-                    </p>
-
-                    <div className="border-t border-slate-800/80 pt-3 mb-4">
-                      <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2">
-                        Key Service Deliverables:
+                      <div
+                        className={`w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 transition-transform duration-200 ${
+                          isOpen
+                            ? 'bg-red-50 text-red-600 rotate-180'
+                            : 'bg-slate-100 text-slate-500'
+                        }`}
+                      >
+                        <ChevronDown className="w-4 h-4" />
                       </div>
-                      <ul className="space-y-1.5 text-xs text-slate-300">
-                        {pillar.deliverables.map((del, dIdx) => (
-                          <li key={dIdx} className="flex items-start gap-2">
-                            <Check className="w-3.5 h-3.5 text-red-500 shrink-0 mt-0.5" />
-                            <span>{del}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </div>
+                    </button>
 
-                  <div className="pt-3 border-t border-slate-800/80 mt-2">
-                    <div className="text-[10px] text-slate-400 font-mono mb-2">
-                      <strong>Standard:</strong> {pillar.standardReference}
-                    </div>
-                    <div className="p-2.5 rounded bg-slate-900 border border-slate-800 text-[11px] text-red-200">
-                      💡 {pillar.roiHighlight}
-                    </div>
+                    <AnimatePresence initial={false}>
+                      {isOpen && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: 'auto', opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{ duration: 0.25, ease: 'easeInOut' }}
+                          className="overflow-hidden"
+                        >
+                          <div className="px-5 pb-5 pt-1 border-t border-slate-100 space-y-4">
+                            <p className="text-xs font-bold text-red-600">
+                              {pillar.subtitle}
+                            </p>
+
+                            <p className="text-xs text-slate-600 leading-relaxed">
+                              {pillar.description}
+                            </p>
+
+                            {/* Key Deliverables */}
+                            <div className="bg-slate-50 rounded-lg p-3.5 border border-slate-200">
+                              <div className="text-[10px] font-black uppercase text-slate-600 tracking-wider mb-2">
+                                Key Service Deliverables:
+                              </div>
+                              <ul className="space-y-1.5">
+                                {pillar.deliverables.map((del, dIdx) => (
+                                  <li key={dIdx} className="text-xs text-slate-700 flex items-start gap-2">
+                                    <Check className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
+                                    <span>{del}</span>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+
+                            {/* Standard Reference & Strategic Impact */}
+                            <div className="p-3 rounded-lg bg-red-50 border border-red-200 text-xs text-slate-700 flex items-start gap-2">
+                              <span className="text-red-700 font-bold shrink-0">💡 Strategic Impact:</span>
+                              <span>{pillar.roiHighlight}</span>
+                            </div>
+
+                            {/* Standard Reference and CTA */}
+                            <div className="flex items-center justify-between pt-2 border-t border-slate-100">
+                              <span className="text-xs font-bold text-slate-500 flex items-center gap-1.5">
+                                <Award className="w-3.5 h-3.5 text-red-600" />
+                                <span className="truncate max-w-[240px]">{pillar.standardReference}</span>
+                              </span>
+                              <button
+                                onClick={() => onNavigate?.('contact')}
+                                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-red-600 hover:bg-red-700 text-white font-bold text-xs uppercase tracking-wider rounded transition-colors cursor-pointer"
+                              >
+                                <span>Consult on Pillar {pillar.number}</span>
+                                <ArrowRight className="w-3 h-3" />
+                              </button>
+                            </div>
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
                   </div>
+                );
+              })}
+            </div>
+
+            {/* Column 2: Sticky Image Showcase (5 Cols) */}
+            <div className="lg:col-span-5 lg:sticky lg:top-24 space-y-4">
+              <div className="relative rounded-2xl overflow-hidden shadow-xl border border-slate-200 bg-white group">
+                <img
+                  src={contractAdvisoryImg}
+                  alt="Construction Contract Advisory and Claims Resolution Leadership"
+                  className="w-full h-auto max-h-[640px] object-cover object-center group-hover:scale-105 transition-transform duration-700"
+                  loading="lazy"
+                />
+              </div>
+
+              {/* Quick Key Highlights Bar */}
+              <div className="bg-white rounded-xl p-4 border border-slate-200 shadow-sm grid grid-cols-3 gap-2 text-center">
+                <div className="border-r border-slate-200 pr-2">
+                  <div className="text-base font-black text-slate-900">4 Frameworks</div>
+                  <div className="text-[10px] font-bold uppercase text-slate-500">JBCC, NEC, FIDIC, GCC</div>
                 </div>
-              );
-            })}
+                <div className="border-r border-slate-200 pr-2">
+                  <div className="text-base font-black text-red-600">94.8%</div>
+                  <div className="text-[10px] font-bold uppercase text-slate-500">Pre-Litigation</div>
+                </div>
+                <div>
+                  <div className="text-base font-black text-emerald-600">SCL 2nd Ed</div>
+                  <div className="text-[10px] font-bold uppercase text-slate-500">Delay Protocol</div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -1040,16 +699,16 @@ export const EurekaConstructionClaimsPage: React.FC<EurekaConstructionClaimsPage
       </section>
 
       {/* 6-Step Claims Management & Dispute Escalation Lifecycle */}
-      <section className="py-20 bg-[#030813] border-b border-slate-800">
+      <section className="py-20 bg-slate-50 border-b border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <span className="text-red-500 text-xs font-black uppercase tracking-widest">
+            <span className="text-red-600 text-xs font-black uppercase tracking-widest">
               STRUCTURED ADVISORY ROADMAP
             </span>
-            <h2 className="text-3xl font-black text-white mt-1">
+            <h2 className="text-3xl font-black text-slate-900 mt-1">
               The 6-Step Claims &amp; Dispute Resolution Process
             </h2>
-            <p className="text-sm text-slate-400 mt-2">
+            <p className="text-sm text-slate-600 mt-2">
               Our proven methodological workflow ensures no contractual deadlines are missed and every claim is built on unshakeable empirical grounds.
             </p>
           </div>
@@ -1095,105 +754,22 @@ export const EurekaConstructionClaimsPage: React.FC<EurekaConstructionClaimsPage
             ].map((st, sIdx) => (
               <div
                 key={sIdx}
-                className="bg-[#081226] border border-slate-800 rounded-xl p-6 hover:border-red-500/50 transition-all group"
+                className="bg-white border border-slate-200 rounded-xl p-6 hover:border-red-400 hover:shadow-lg transition-all group shadow-sm"
               >
                 <div className="flex items-center justify-between mb-3">
-                  <span className="text-xs font-mono font-black text-red-500">{st.step}</span>
-                  <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-slate-900 border border-slate-800 text-slate-400">
+                  <span className="text-xs font-mono font-black text-red-600">{st.step}</span>
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-slate-100 border border-slate-200 text-slate-600">
                     {st.badge}
                   </span>
                 </div>
-                <h3 className="text-base font-bold text-white mb-2 group-hover:text-red-400 transition-colors">
+                <h3 className="text-base font-bold text-slate-900 mb-2 group-hover:text-red-600 transition-colors">
                   {st.title}
                 </h3>
-                <p className="text-xs text-slate-300 leading-relaxed">
+                <p className="text-xs text-slate-600 leading-relaxed">
                   {st.desc}
                 </p>
               </div>
             ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Real-World Case Studies / Resolution Scenarios */}
-      <section className="py-20 bg-[#060e20] border-b border-slate-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-12">
-            <span className="text-red-500 text-xs font-black uppercase tracking-widest">
-              PROVEN TRACK RECORD &amp; IMPACT
-            </span>
-            <h2 className="text-3xl font-black text-white mt-1">
-              Case Studies &amp; Dispute Resolutions
-            </h2>
-            <p className="text-sm text-slate-400 mt-2">
-              Representative examples of successful claims preparation, defense, and dispute resolution across major sectors.
-            </p>
-          </div>
-
-          <div className="grid lg:grid-cols-3 gap-6 mb-8">
-            {caseStudies.map((cs, cIdx) => (
-              <button
-                key={cIdx}
-                onClick={() => setSelectedCaseIndex(cIdx)}
-                className={`p-5 rounded-xl border text-left transition-all cursor-pointer ${
-                  selectedCaseIndex === cIdx
-                    ? 'bg-[#0a1838] border-red-500 shadow-xl'
-                    : 'bg-[#081226] border-slate-800 hover:border-slate-700'
-                }`}
-              >
-                <span className="text-[10px] font-bold uppercase tracking-wider text-red-400 block mb-1">
-                  {cs.sector}
-                </span>
-                <h3 className="text-sm font-bold text-white mb-2 leading-snug">
-                  {cs.title}
-                </h3>
-                <div className="text-[11px] text-slate-400 font-mono">
-                  {cs.contract}
-                </div>
-                <div className="mt-3 pt-3 border-t border-slate-800 text-xs font-bold text-emerald-400">
-                  ★ {cs.statHighlight}
-                </div>
-              </button>
-            ))}
-          </div>
-
-          {/* Selected Case Study Full Breakdown */}
-          <div className="bg-[#081226] border border-slate-800 rounded-xl p-6 sm:p-8">
-            <div className="grid md:grid-cols-12 gap-8">
-              <div className="md:col-span-8 space-y-4">
-                <div className="inline-block text-[11px] font-bold text-red-400 bg-red-950/60 border border-red-500/30 px-3 py-1 rounded">
-                  CASE STUDY #{selectedCaseIndex + 1} &bull; {caseStudies[selectedCaseIndex].sector.toUpperCase()}
-                </div>
-                <h3 className="text-xl font-black text-white">
-                  {caseStudies[selectedCaseIndex].title}
-                </h3>
-
-                <div className="space-y-3 text-xs text-slate-300">
-                  <div className="bg-slate-900/80 p-3.5 rounded border border-slate-800">
-                    <strong className="text-white block mb-1">The Dispute Challenge:</strong>
-                    {caseStudies[selectedCaseIndex].challenge}
-                  </div>
-                  <div className="bg-slate-900/80 p-3.5 rounded border border-slate-800">
-                    <strong className="text-red-400 block mb-1">EFMS Forensic Intervention:</strong>
-                    {caseStudies[selectedCaseIndex].intervention}
-                  </div>
-                </div>
-              </div>
-
-              <div className="md:col-span-4 flex flex-col justify-between bg-slate-900/90 border border-slate-800 rounded-lg p-6">
-                <div>
-                  <span className="text-xs font-bold uppercase tracking-wider text-slate-400 block mb-2">
-                    Verified Outcome
-                  </span>
-                  <div className="text-sm font-semibold text-slate-200 leading-relaxed mb-4">
-                    {caseStudies[selectedCaseIndex].outcome}
-                  </div>
-                </div>
-                <div className="p-3 rounded bg-emerald-950/60 border border-emerald-500/30 text-xs text-emerald-300 font-mono font-bold">
-                  ✓ {caseStudies[selectedCaseIndex].statHighlight}
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </section>
@@ -1237,50 +813,6 @@ export const EurekaConstructionClaimsPage: React.FC<EurekaConstructionClaimsPage
                 )}
               </div>
             ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Bottom CTA / Consultation Intake */}
-      <section className="py-20 bg-gradient-to-t from-[#060e20] to-[#030813]">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-gradient-to-br from-[#0c1833] via-[#09132e] to-[#040a17] border-2 border-red-500/50 rounded-2xl p-8 sm:p-12 shadow-2xl text-center relative overflow-hidden">
-            <div className="absolute -top-24 -right-24 w-64 h-64 bg-red-600/10 rounded-full blur-3xl pointer-events-none" />
-
-            <span className="text-red-500 text-xs font-black uppercase tracking-widest">
-              CONFIDENTIAL CONTRACTUAL REVIEW
-            </span>
-            <h2 className="text-2xl sm:text-4xl font-black text-white mt-2 mb-4">
-              Facing a Disputed Claim or Delayed Handover?
-            </h2>
-            <p className="text-sm text-slate-300 max-w-2xl mx-auto mb-8">
-              Speak with our registered Pr. CPM and claims specialists. We will review your notices, contract data, and schedules under a strict Non-Disclosure Agreement (NDA) to establish an unassailable commercial strategy.
-            </p>
-
-            <div className="flex flex-wrap justify-center gap-4">
-              <button
-                onClick={() => onNavigate?.('contact')}
-                className="px-8 py-3.5 rounded-md bg-red-600 hover:bg-red-700 text-white font-bold text-xs uppercase tracking-wider transition-all shadow-lg hover:shadow-red-600/30 flex items-center gap-2 cursor-pointer"
-              >
-                <Calendar className="w-4 h-4" />
-                <span>Schedule Confidential Claims Assessment</span>
-              </button>
-            </div>
-
-            <div className="mt-8 pt-8 border-t border-slate-800/80 flex flex-wrap justify-center items-center gap-6 text-xs text-slate-400">
-              <div className="flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-red-500" />
-                <span>Pr. CPM &amp; PMP Registered</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-red-500" />
-                <span>Strict NDA Protection</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-red-500" />
-                <span>SCL 2nd Ed Protocol Compliant</span>
-              </div>
-            </div>
           </div>
         </div>
       </section>

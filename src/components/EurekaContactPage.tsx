@@ -38,7 +38,6 @@ export const EurekaContactPage: React.FC<EurekaContactPageProps> = ({
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [inquiryType, setInquiryType] = useState<'quote' | 'emergency' | 'audit' | 'general'>('quote');
-  const [selectedHub, setSelectedHub] = useState<number>(0);
   const [openFaq, setOpenFaq] = useState<number | null>(0);
 
   // Form State
@@ -76,48 +75,6 @@ export const EurekaContactPage: React.FC<EurekaContactPageProps> = ({
     setTicketId(genId);
     setFormSubmitted(true);
   };
-
-  const regionalHubs = [
-    {
-      id: 'pretoria-hq',
-      name: 'Head Office & National Operations',
-      city: 'Pretoria & Gauteng Central',
-      address: '170 Pitts Avenue, Weavind Park, Pretoria, South Africa',
-      phone: '+27 74 518 7012',
-      whatsapp: '+27 74 518 7012',
-      email: 'info@eurekasolutions.co.za',
-      hours: 'Office: Mon - Fri 08:00 - 17:00 | Helpdesk: 24/7/365',
-      fleet: 'Rapid Deployment Engineering Fleet',
-      lead: 'Executive Operations & Technical Director',
-      coverage: 'Pretoria, Johannesburg, Centurion, Midrand, Ekurhuleni & Nationwide SA',
-    },
-    {
-      id: 'gauteng-industrial',
-      name: 'Gauteng Commercial & Industrial Hub',
-      city: 'Johannesburg & Greater Gauteng',
-      address: '170 Pitts Avenue, Weavind Park, Pretoria, South Africa',
-      phone: '+27 74 518 7012',
-      whatsapp: '+27 74 518 7012',
-      email: 'info@eurekasolutions.co.za',
-      hours: '24/7 Operations & On-Call Engineering',
-      fleet: 'Commercial M&E & HVAC Mobile Units',
-      lead: 'Senior Project & Facilities Manager',
-      coverage: 'Sandton, Rosebank, Midrand, Kempton Park, Germiston & Surrounds',
-    },
-    {
-      id: 'national-projects',
-      name: 'National Project Management & Consulting',
-      city: 'Nationwide South Africa',
-      address: '170 Pitts Avenue, Weavind Park, Pretoria, South Africa',
-      phone: '+27 74 518 7012',
-      whatsapp: '+27 74 518 7012',
-      email: 'info@eurekasolutions.co.za',
-      hours: 'Office: Mon - Fri 08:00 - 17:00',
-      fleet: 'Pr. CPM & Compliance Survey Vehicles',
-      lead: 'Pr. CPM Construction & FM Advisory Lead',
-      coverage: 'Gauteng, Western Cape, KwaZulu-Natal, Mpumalanga, Limpopo & Free State',
-    },
-  ];
 
   const faqs = [
     {
@@ -199,54 +156,6 @@ export const EurekaContactPage: React.FC<EurekaContactPageProps> = ({
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
             {/* Left Column: Interactive Contact / RFQ Form (7 Cols) */}
             <div className="lg:col-span-7 bg-white rounded-2xl p-6 sm:p-8 border border-slate-200 shadow-xl">
-              {/* Form Mode Selector */}
-              <div className="flex items-center gap-2 mb-6 p-1.5 bg-slate-100 rounded-xl border border-slate-200 overflow-x-auto text-xs font-bold">
-                <button
-                  type="button"
-                  onClick={() => setInquiryType('quote')}
-                  className={`flex-1 min-w-[130px] py-2 px-3 rounded-lg transition-all text-center ${
-                    inquiryType === 'quote'
-                      ? 'bg-white text-slate-900 shadow-sm border border-slate-200'
-                      : 'text-slate-600 hover:text-slate-900'
-                  }`}
-                >
-                  PPM / Maintenance Quote
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setInquiryType('emergency')}
-                  className={`flex-1 min-w-[130px] py-2 px-3 rounded-lg transition-all text-center ${
-                    inquiryType === 'emergency'
-                      ? 'bg-red-600 text-white shadow-sm'
-                      : 'text-red-700 hover:text-red-900'
-                  }`}
-                >
-                  ⚡ Urgent Technical Dispatch
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setInquiryType('audit')}
-                  className={`flex-1 min-w-[130px] py-2 px-3 rounded-lg transition-all text-center ${
-                    inquiryType === 'audit'
-                      ? 'bg-white text-slate-900 shadow-sm border border-slate-200'
-                      : 'text-slate-600 hover:text-slate-900'
-                  }`}
-                >
-                  Site Audit &amp; Survey
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setInquiryType('general')}
-                  className={`flex-1 min-w-[120px] py-2 px-3 rounded-lg transition-all text-center ${
-                    inquiryType === 'general'
-                      ? 'bg-white text-slate-900 shadow-sm border border-slate-200'
-                      : 'text-slate-600 hover:text-slate-900'
-                  }`}
-                >
-                  General Inquiry
-                </button>
-              </div>
-
               {formSubmitted ? (
                 <div className="text-center py-10 px-4 animate-in fade-in zoom-in-95">
                   <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto mb-4 border border-emerald-200">
@@ -319,19 +228,6 @@ export const EurekaContactPage: React.FC<EurekaContactPageProps> = ({
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-4">
-                  <div>
-                    <h2 className="text-xl font-extrabold text-slate-900">
-                      {inquiryType === 'emergency'
-                        ? '⚡ Urgent Technical Dispatch Request'
-                        : inquiryType === 'audit'
-                        ? 'Book a Free Site Condition & Compliance Survey'
-                        : 'Request a Comprehensive Facilities & Project Quote'}
-                    </h2>
-                    <p className="text-xs text-slate-500 mt-1">
-                      Fill in your property specifications below. For urgent matters, please call or WhatsApp us directly.
-                    </p>
-                  </div>
-
                   {/* Row 1: Name & Job Title */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
@@ -625,183 +521,6 @@ export const EurekaContactPage: React.FC<EurekaContactPageProps> = ({
                   </div>
                 </div>
               </div>
-
-              {/* Card 3: CAFM & Client Service Portal */}
-              <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-md">
-                <div className="flex items-center justify-between mb-2">
-                  <div className="flex items-center gap-2 text-xs font-extrabold text-slate-900">
-                    <FileText className="w-4 h-4 text-red-600" />
-                    <span>Client Maintenance Service Desk</span>
-                  </div>
-                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">
-                    Active
-                  </span>
-                </div>
-                <p className="text-xs text-slate-600 leading-relaxed mb-4">
-                  Log routine maintenance tasks, track work order milestones, view asset inspection reports, and access compliance certificates.
-                </p>
-                <div className="flex gap-2">
-                  <a
-                    href="https://wa.me/27745187012?text=Hello%20Eureka%20I%20would%20like%20to%20log%20a%20maintenance%20request"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex-1 inline-flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-all shadow-sm"
-                  >
-                    <MessageSquare className="w-3.5 h-3.5" />
-                    <span>Log via WhatsApp</span>
-                  </a>
-                  <a
-                    href="mailto:info@eurekasolutions.co.za?subject=Maintenance%20Service%20Request"
-                    className="flex-1 inline-flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold transition-all shadow-sm"
-                  >
-                    <Mail className="w-3.5 h-3.5" />
-                    <span>Email Support</span>
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 5. Regional Hubs & Nationwide Operations Centers */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-white border-t border-slate-200">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center max-w-2xl mx-auto mb-10">
-            <div className="inline-flex items-center gap-1.5 text-xs font-extrabold text-red-600 uppercase tracking-widest mb-2">
-              <MapPin className="w-3.5 h-3.5" />
-              <span>South African Operations</span>
-            </div>
-            <h2 className="text-2xl sm:text-3xl font-black text-slate-900">
-              Operations Centers &amp; Service Coverage
-            </h2>
-            <p className="text-xs sm:text-sm text-slate-600 mt-2">
-              Headquartered in Pretoria with operational delivery capacity across Gauteng and major commercial corridors nationwide.
-            </p>
-          </div>
-
-          {/* Hub Selector Tabs */}
-          <div className="flex items-center justify-center gap-2 mb-8 overflow-x-auto pb-2">
-            {regionalHubs.map((hub, idx) => (
-              <button
-                key={hub.id}
-                type="button"
-                onClick={() => setSelectedHub(idx)}
-                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
-                  selectedHub === idx
-                    ? 'bg-[#0b3582] text-white shadow-md'
-                    : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
-                }`}
-              >
-                {hub.city}
-              </button>
-            ))}
-          </div>
-
-          {/* Active Hub Card Display */}
-          <div className="bg-slate-50 rounded-2xl p-6 sm:p-8 border border-slate-200 shadow-sm grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-            <div className="lg:col-span-7 space-y-4">
-              <div className="inline-block px-3 py-1 rounded-full bg-blue-100 text-[#0b3582] text-xs font-bold">
-                {regionalHubs[selectedHub].name}
-              </div>
-              <h3 className="text-2xl font-black text-slate-900">
-                {regionalHubs[selectedHub].city}
-              </h3>
-              
-              <div className="space-y-3 text-xs text-slate-700 pt-2">
-                <div className="flex items-start gap-2.5">
-                  <MapPin className="w-4 h-4 text-red-600 flex-shrink-0 mt-0.5" />
-                  <div>
-                    <span className="font-semibold text-slate-900 block">Office Address:</span>
-                    <span>{regionalHubs[selectedHub].address}</span>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-2.5">
-                  <Phone className="w-4 h-4 text-[#0b3582] flex-shrink-0 mt-0.5" />
-                  <div>
-                    <span className="font-semibold text-slate-900 block">Telephone Number:</span>
-                    <a href="tel:+27745187012" className="font-bold text-[#0b3582] hover:underline">
-                      {regionalHubs[selectedHub].phone}
-                    </a>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-2.5">
-                  <MessageSquare className="w-4 h-4 text-emerald-600 flex-shrink-0 mt-0.5" />
-                  <div>
-                    <span className="font-semibold text-slate-900 block">WhatsApp Number:</span>
-                    <a
-                      href="https://wa.me/27745187012"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="font-bold text-emerald-600 hover:underline"
-                    >
-                      {regionalHubs[selectedHub].whatsapp}
-                    </a>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-2.5">
-                  <Mail className="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5" />
-                  <div>
-                    <span className="font-semibold text-slate-900 block">Email Address:</span>
-                    <a href="mailto:info@eurekasolutions.co.za" className="font-bold text-slate-800 hover:underline">
-                      {regionalHubs[selectedHub].email}
-                    </a>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-2.5">
-                  <Clock className="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5" />
-                  <div>
-                    <span className="font-semibold text-slate-900 block">Operating Hours:</span>
-                    <span>{regionalHubs[selectedHub].hours}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="lg:col-span-5 bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-4">
-              <h4 className="text-xs font-extrabold uppercase tracking-wider text-slate-500">
-                Operational Highlights &amp; Coverage
-              </h4>
-              
-              <div className="space-y-3 text-xs">
-                <div className="flex justify-between py-1.5 border-b border-slate-100">
-                  <span className="text-slate-500 font-semibold">Service Delivery:</span>
-                  <span className="font-bold text-slate-900">{regionalHubs[selectedHub].fleet}</span>
-                </div>
-                <div className="flex justify-between py-1.5 border-b border-slate-100">
-                  <span className="text-slate-500 font-semibold">Professional Governance:</span>
-                  <span className="font-bold text-slate-900">{regionalHubs[selectedHub].lead}</span>
-                </div>
-                <div>
-                  <span className="text-slate-500 font-semibold block mb-1">Key Geographic Coverage:</span>
-                  <span className="text-slate-700 leading-relaxed block">
-                    {regionalHubs[selectedHub].coverage}
-                  </span>
-                </div>
-              </div>
-
-              <div className="pt-2 grid grid-cols-2 gap-2">
-                <a
-                  href="tel:+27745187012"
-                  className="py-2.5 px-3 rounded-lg bg-[#0b3582] hover:bg-[#d91b1b] text-white text-xs font-bold transition-colors flex items-center justify-center gap-1.5"
-                >
-                  <Phone className="w-3.5 h-3.5" />
-                  <span>Call Us</span>
-                </a>
-                <a
-                  href="https://wa.me/27745187012"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="py-2.5 px-3 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-colors flex items-center justify-center gap-1.5"
-                >
-                  <MessageSquare className="w-3.5 h-3.5" />
-                  <span>WhatsApp</span>
-                </a>
-              </div>
             </div>
           </div>
         </div>
@@ -941,40 +660,6 @@ export const EurekaContactPage: React.FC<EurekaContactPageProps> = ({
                 )}
               </div>
             ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 8. Bottom CTA Strip */}
-      <section className="bg-[#d91b1b] text-white py-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
-          <div>
-            <h2 className="text-2xl sm:text-3xl font-black tracking-tight">
-              Ready to Upgrade Your Facilities &amp; Property Management?
-            </h2>
-            <p className="text-xs sm:text-sm text-red-100 mt-1 max-w-xl">
-              Contact our solutions team today for a comprehensive asset condition assessment and customized SLA proposal.
-            </p>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-3">
-            <a
-              href="https://wa.me/27745187012"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-6 py-3 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs tracking-wider transition-all shadow-md active:scale-95 flex items-center gap-2"
-            >
-              <MessageSquare className="w-4 h-4" />
-              <span>WhatsApp: +27 74 518 7012</span>
-            </a>
-
-            <a
-              href="tel:+27745187012"
-              className="px-6 py-3 rounded-lg bg-white text-slate-900 hover:bg-slate-100 font-extrabold text-xs tracking-wider transition-all shadow-md active:scale-95 flex items-center gap-2"
-            >
-              <Phone className="w-4 h-4 text-red-600" />
-              <span>+27 74 518 7012</span>
-            </a>
           </div>
         </div>
       </section>

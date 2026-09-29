@@ -15,6 +15,7 @@ import { EurekaQuantitySurveyingPage } from './components/EurekaQuantitySurveyin
 import { EurekaConstructionClaimsPage } from './components/EurekaConstructionClaimsPage';
 import { EurekaDelayAnalysisPage } from './components/EurekaDelayAnalysisPage';
 import { EurekaPricingPage } from './components/EurekaPricingPage';
+import { EurekaProjectsPage } from './components/EurekaProjectsPage';
 import { EurekaContactPage } from './components/EurekaContactPage';
 import { EurekaChatbot } from './components/EurekaChatbot';
 
@@ -34,6 +35,8 @@ export type ActivePage =
   | 'quantity-surveying'
   | 'construction-claims'
   | 'delay-analysis'
+  | 'projects'
+  | 'gallery'
   | 'pricing'
   | 'contact';
 
@@ -105,6 +108,9 @@ export default function App() {
       )}
       {currentPage === 'pricing' && (
         <EurekaPricingPage onNavigate={handleNavigate} />
+      )}
+      {(currentPage === 'projects' || currentPage === 'gallery') && (
+        <EurekaProjectsPage onNavigate={handleNavigate} />
       )}
       {currentPage === 'contact' && (
         <EurekaContactPage onNavigate={handleNavigate} />

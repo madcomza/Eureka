@@ -178,11 +178,6 @@ export const EurekaAboutPage: React.FC<EurekaAboutPageProps> = ({ onNavigate }) 
                     className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
                     referrerPolicy="no-referrer"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent pointer-events-none" />
-                  <div className="absolute bottom-2.5 left-2.5 right-2.5 bg-black/60 backdrop-blur-sm border border-white/10 py-1.5 px-2.5 rounded text-left">
-                    <span className="text-[10px] font-extrabold uppercase tracking-wider text-red-400 block">Leadership</span>
-                    <span className="text-xs font-black text-white block">Founder &amp; Managing Director</span>
-                  </div>
                 </div>
                 <h3 className="text-lg font-black text-white uppercase tracking-tight">MONWABISI MAKINANA</h3>
                 <p className="text-xs font-bold text-red-400 mt-0.5 tracking-wide">Pr. CPM, PMP®</p>

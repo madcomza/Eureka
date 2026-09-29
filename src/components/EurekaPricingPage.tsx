@@ -9,8 +9,6 @@ import {
   Plus,
   Minus,
   Trash2,
-  Phone,
-  Mail,
   MapPin,
   Clock,
   ShieldCheck,
@@ -20,9 +18,6 @@ import {
   Code2,
   CheckCircle2,
   ArrowRight,
-  Bug,
-  Home,
-  Building2,
   Layers,
   Sparkle,
   Wrench,
@@ -49,18 +44,13 @@ interface PriceItem {
 export const EurekaPricingPage: React.FC<EurekaPricingPageProps> = ({
   onNavigate
 }) => {
-  const [activeCategory, setActiveCategory] = useState<string>('all');
+  const [activeCategory, setActiveCategory] = useState<string>('couches');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [cart, setCart] = useState<{ [key: string]: number }>({
     'couch-3': 1,
     'rug-med': 1
   });
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-  // Pest control quote form state
-  const [pestPropertyType, setPestPropertyType] = useState<'Home' | 'Business'>('Home');
-  const [selectedPests, setSelectedPests] = useState<string[]>(['Cockroaches']);
-  const [pestSubmitted, setPestSubmitted] = useState(false);
 
   const priceCatalog: PriceItem[] = [
     // Couches - Single Frame
@@ -135,30 +125,66 @@ export const EurekaPricingPage: React.FC<EurekaPricingPageProps> = ({
     { id: 'fm-paint', category: 'fm', categoryLabel: 'Facility Management & Installations', name: 'Commercial & Exterior Painting', unit: 'Project quote', price: 'POA' }
   ];
 
-  const pestOptions = [
-    'Cockroaches',
-    'Ants',
-    'Termites & Wood Destroying Pests',
-    'Rodents (Rats & Mice)',
-    'Mosquito Control',
-    'Bed Bugs',
-    'Soil Poisoning',
-    'Flea Control',
-    'Carpet Beetle'
+  const categories = [
+    {
+      key: 'couches',
+      label: 'Couches & Sofas',
+      subtitle: 'Single & multi-frame sofas, ottomans',
+      icon: Layers,
+      count: priceCatalog.filter(i => i.category === 'couches').length,
+    },
+    {
+      key: 'chairs',
+      label: 'Chairs & Loungers',
+      subtitle: 'Dining, occasional chairs & day beds',
+      icon: Sparkle,
+      count: priceCatalog.filter(i => i.category === 'chairs').length,
+    },
+    {
+      key: 'mattresses',
+      label: 'Mattresses & Bases',
+      subtitle: 'Cot to King size deep sanitization',
+      icon: ShieldCheck,
+      count: priceCatalog.filter(i => i.category === 'mattresses').length,
+    },
+    {
+      key: 'carpets',
+      label: 'Fitted Carpets',
+      subtitle: 'Wall-to-wall deep steam extraction',
+      icon: Sparkles,
+      count: priceCatalog.filter(i => i.category === 'carpets').length,
+    },
+    {
+      key: 'rugs',
+      label: 'Loose Rugs (Offsite Clean)',
+      subtitle: 'Free 15km collection & industrial wash',
+      icon: Truck,
+      count: priceCatalog.filter(i => i.category === 'rugs').length,
+    },
+    {
+      key: 'other',
+      label: 'Specialized Cleaning',
+      subtitle: 'High-pressure paving & roof wash',
+      icon: Wrench,
+      count: priceCatalog.filter(i => i.category === 'other').length,
+    },
+    {
+      key: 'fm',
+      label: 'Facility Management',
+      subtitle: 'Electrical CoC, plumbing & drywalling',
+      icon: FileCode2,
+      count: priceCatalog.filter(i => i.category === 'fm').length,
+    },
   ];
 
-  const togglePest = (pest: string) => {
-    if (selectedPests.includes(pest)) {
-      setSelectedPests(selectedPests.filter(p => p !== pest));
-    } else {
-      setSelectedPests([...selectedPests, pest]);
-    }
-  };
+  const currentCategory = categories.find(c => c.key === activeCategory) || categories[0];
 
   const filteredItems = useMemo(() => {
     return priceCatalog.filter(item => {
-      const matchesCategory = activeCategory === 'all' || item.category === activeCategory;
-      const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      const matchesCategory = item.category === activeCategory;
+      const matchesSearch =
+        searchQuery === '' ||
+        item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         item.categoryLabel.toLowerCase().includes(searchQuery.toLowerCase());
       return matchesCategory && matchesSearch;
     });
@@ -268,98 +294,172 @@ export const EurekaPricingPage: React.FC<EurekaPricingPageProps> = ({
         </div>
       </section>
 
-      {/* Main Two-Column Content: Pricing Catalog & Live Interactive Estimator */}
+      {/* Main 3-Column Content: Vertical Categories (Left), Category Items (Center), Quotation Basket (Right) */}
       <section className="py-12 lg:py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" id="estimator">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
           
-          {/* Left / Main Column: Filterable Price Catalog */}
-          <div className="lg:col-span-8 space-y-6">
-            
-            {/* Search & Category Filter Bar */}
-            <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-4 sm:p-5">
-              <div className="flex flex-col sm:flex-row gap-3 items-center justify-between mb-4">
-                <div className="relative w-full sm:w-72">
-                  <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-                  <input
-                    type="text"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search couch, mattress, carpet..."
-                    className="w-full pl-9 pr-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-red-500 transition-colors"
-                  />
+          {/* Column 1: Vertical Category Tabs (Left) */}
+          <div className="lg:col-span-3 lg:sticky lg:top-24 space-y-4">
+            <div className="bg-white rounded-xl shadow-xs border border-slate-200 overflow-hidden">
+              <div className="p-4 bg-slate-900 text-white flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Layers className="w-4 h-4 text-red-400" />
+                  <span className="text-xs font-black uppercase tracking-wider">Service Categories</span>
                 </div>
-                <div className="text-xs text-slate-500 font-medium self-end sm:self-center">
-                  Showing <strong className="text-slate-800">{filteredItems.length}</strong> services
-                </div>
+                <span className="text-[10px] font-bold bg-slate-800 text-slate-300 px-2 py-0.5 rounded-full border border-slate-700">
+                  {categories.length} Tiers
+                </span>
               </div>
 
-              {/* Category Pills */}
-              <div className="flex flex-wrap gap-2 pt-2 border-t border-slate-100">
-                {[
-                  { key: 'all', label: 'All Services' },
-                  { key: 'couches', label: 'Couches & Sofas' },
-                  { key: 'chairs', label: 'Chairs & Loungers' },
-                  { key: 'mattresses', label: 'Mattresses & Bases' },
-                  { key: 'carpets', label: 'Fitted Carpets' },
-                  { key: 'rugs', label: 'Loose Rugs' },
-                  { key: 'other', label: 'Specialized Cleaning' },
-                  { key: 'fm', label: 'Facility Management' }
-                ].map(cat => (
-                  <button
-                    key={cat.key}
-                    onClick={() => setActiveCategory(cat.key)}
-                    className={`px-3 py-1.5 rounded-md text-xs font-bold tracking-tight transition-all ${
-                      activeCategory === cat.key
-                        ? 'bg-[#09132e] text-white shadow-sm'
-                        : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                    }`}
-                  >
-                    {cat.label}
-                  </button>
-                ))}
+              {/* Vertical Tabs List */}
+              <div className="p-2 space-y-1.5">
+                {categories.map(cat => {
+                  const IconComp = cat.icon;
+                  const isActive = activeCategory === cat.key;
+                  return (
+                    <button
+                      key={cat.key}
+                      onClick={() => {
+                        setActiveCategory(cat.key);
+                        setSearchQuery('');
+                      }}
+                      className={`w-full text-left p-3 rounded-lg transition-all flex items-start justify-between gap-2.5 cursor-pointer ${
+                        isActive
+                          ? 'bg-[#09132e] text-white shadow-sm border-l-4 border-l-red-500'
+                          : 'bg-white text-slate-700 hover:bg-slate-100/90 border border-slate-100'
+                      }`}
+                    >
+                      <div className="flex items-start gap-2.5 min-w-0">
+                        <div
+                          className={`w-7 h-7 rounded flex items-center justify-center shrink-0 mt-0.5 ${
+                            isActive
+                              ? 'bg-red-500 text-white'
+                              : 'bg-slate-100 text-slate-600'
+                          }`}
+                        >
+                          <IconComp className="w-3.5 h-3.5" />
+                        </div>
+                        <div className="min-w-0">
+                          <p className={`text-xs font-bold leading-tight truncate ${isActive ? 'text-white' : 'text-slate-900'}`}>
+                            {cat.label}
+                          </p>
+                          <p className={`text-[10px] leading-tight mt-0.5 truncate ${isActive ? 'text-slate-300' : 'text-slate-400'}`}>
+                            {cat.subtitle}
+                          </p>
+                        </div>
+                      </div>
+                      <span
+                        className={`text-[10px] font-bold px-1.5 py-0.5 rounded shrink-0 ${
+                          isActive
+                            ? 'bg-white/20 text-white'
+                            : 'bg-slate-100 text-slate-500'
+                        }`}
+                      >
+                        {cat.count}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Quick Logistics & Terms Sticky Card */}
+            <div className="bg-slate-900 text-white rounded-xl p-4 border border-slate-800 space-y-3 shadow-xs hidden lg:block">
+              <div className="flex items-center gap-2 text-xs font-bold text-sky-400 uppercase tracking-wide">
+                <ShieldCheck className="w-4 h-4 text-emerald-400" />
+                <span>Quick Booking Policy</span>
+              </div>
+              <ul className="text-[11px] text-slate-300 space-y-2">
+                <li className="flex items-start gap-1.5">
+                  <Truck className="w-3.5 h-3.5 text-sky-400 shrink-0 mt-0.5" />
+                  <span><strong>Free 15km Collection</strong> for loose rugs from Midrand.</span>
+                </li>
+                <li className="flex items-start gap-1.5">
+                  <Clock className="w-3.5 h-3.5 text-amber-400 shrink-0 mt-0.5" />
+                  <span><strong>4-7 Working Days</strong> industrial wash &amp; drying.</span>
+                </li>
+                <li className="flex items-start gap-1.5">
+                  <AlertCircle className="w-3.5 h-3.5 text-red-400 shrink-0 mt-0.5" />
+                  <span><strong>R 600.00 Min. Order</strong> standard residential deep clean.</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Column 2: Active Category Service Items (Center) */}
+          <div className="lg:col-span-5 space-y-4">
+            
+            {/* Search & Active Category Banner */}
+            <div className="bg-white rounded-xl shadow-xs border border-slate-200 p-4 space-y-3">
+              <div className="relative w-full">
+                <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder={`Search inside ${currentCategory.label}...`}
+                  className="w-full pl-9 pr-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-red-500 transition-colors"
+                />
+              </div>
+
+              {/* Active Category Meta Header */}
+              <div className="flex items-center justify-between pt-2 border-t border-slate-100">
+                <div className="flex items-center gap-2">
+                  <div className="w-6 h-6 rounded bg-red-50 text-red-600 flex items-center justify-center font-bold">
+                    {React.createElement(currentCategory.icon, { className: "w-3.5 h-3.5" })}
+                  </div>
+                  <div>
+                    <h2 className="text-xs font-bold text-slate-900 uppercase tracking-wide">
+                      {currentCategory.label}
+                    </h2>
+                    <p className="text-[11px] text-slate-500">{currentCategory.subtitle}</p>
+                  </div>
+                </div>
+                <div className="text-[11px] text-slate-500 font-medium">
+                  <strong>{filteredItems.length}</strong> items
+                </div>
               </div>
             </div>
 
             {/* Price Items Cards List */}
-            <div className="space-y-3">
+            <div className="space-y-2.5">
               {filteredItems.map(item => {
                 const qty = cart[item.id] || 0;
-                const isPOA = item.price === 'POA';
 
                 return (
                   <div
                     key={item.id}
-                    className={`bg-white rounded-xl p-4 sm:p-5 border transition-all duration-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 ${
+                    className={`bg-white rounded-xl p-4 border transition-all duration-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 ${
                       qty > 0
                         ? 'border-red-300 ring-1 ring-red-200 shadow-sm bg-red-50/10'
                         : 'border-slate-200 hover:border-slate-300'
                     }`}
                   >
-                    <div className="space-y-1">
-                      <div className="flex items-center gap-2">
-                        <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 bg-slate-100 px-2 py-0.5 rounded">
+                    <div className="space-y-0.5 min-w-0 pr-2">
+                      <div className="flex items-center gap-1.5">
+                        <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded">
                           {item.categoryLabel}
                         </span>
                         {item.popular && (
-                          <span className="text-[10px] font-bold text-red-600 bg-red-50 border border-red-200 px-2 py-0.5 rounded">
+                          <span className="text-[10px] font-bold text-red-600 bg-red-50 border border-red-200 px-1.5 py-0.5 rounded">
                             POPULAR
                           </span>
                         )}
                       </div>
-                      <h3 className="text-sm sm:text-base font-bold text-slate-900">
+                      <h3 className="text-xs sm:text-sm font-bold text-slate-900 leading-snug">
                         {item.name}
                       </h3>
                       {item.dimensions && (
-                        <p className="text-xs text-slate-500">
+                        <p className="text-[11px] text-slate-500">
                           Standard area: <strong className="text-slate-700">{item.dimensions}</strong>
                         </p>
                       )}
-                      <p className="text-xs text-slate-400">{item.unit}</p>
+                      <p className="text-[11px] text-slate-400">{item.unit}</p>
                     </div>
 
-                    <div className="flex items-center justify-between sm:justify-end w-full sm:w-auto gap-4 pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-100">
+                    <div className="flex items-center justify-between sm:justify-end w-full sm:w-auto gap-3 pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-100 shrink-0">
                       <div className="text-right">
-                        <div className="text-lg sm:text-xl font-black text-[#0b3582]">
+                        <div className="text-base sm:text-lg font-black text-[#0b3582]">
                           {typeof item.price === 'number' ? `R ${item.price.toFixed(2)}` : 'POA'}
                         </div>
                         <div className="text-[10px] text-slate-400">
@@ -368,33 +468,33 @@ export const EurekaPricingPage: React.FC<EurekaPricingPageProps> = ({
                       </div>
 
                       {/* Add to Basket / Quantity Controls */}
-                      <div className="flex items-center gap-1.5 bg-slate-50 p-1 rounded-lg border border-slate-200">
+                      <div className="flex items-center gap-1 bg-slate-50 p-1 rounded-lg border border-slate-200">
                         {qty > 0 ? (
                           <>
                             <button
                               onClick={() => updateQuantity(item.id, -1)}
-                              className="w-7 h-7 rounded bg-white hover:bg-slate-200 text-slate-700 flex items-center justify-center font-bold text-sm shadow-xs transition-colors"
+                              className="w-6 h-6 rounded bg-white hover:bg-slate-200 text-slate-700 flex items-center justify-center font-bold text-xs shadow-xs transition-colors"
                               aria-label="Decrease"
                             >
-                              <Minus className="w-3.5 h-3.5" />
+                              <Minus className="w-3 h-3" />
                             </button>
-                            <span className="w-8 text-center text-xs font-extrabold text-slate-900">
+                            <span className="w-6 text-center text-xs font-extrabold text-slate-900">
                               {qty}
                             </span>
                             <button
                               onClick={() => updateQuantity(item.id, 1)}
-                              className="w-7 h-7 rounded bg-red-600 hover:bg-red-700 text-white flex items-center justify-center font-bold text-sm shadow-xs transition-colors"
+                              className="w-6 h-6 rounded bg-red-600 hover:bg-red-700 text-white flex items-center justify-center font-bold text-xs shadow-xs transition-colors"
                               aria-label="Increase"
                             >
-                              <Plus className="w-3.5 h-3.5" />
+                              <Plus className="w-3 h-3" />
                             </button>
                           </>
                         ) : (
                           <button
                             onClick={() => updateQuantity(item.id, 1)}
-                            className="px-3 py-1.5 rounded bg-[#09132e] hover:bg-red-600 text-white text-xs font-bold flex items-center gap-1.5 transition-all shadow-xs"
+                            className="px-2.5 py-1.5 rounded bg-[#09132e] hover:bg-red-600 text-white text-xs font-bold flex items-center gap-1 transition-all shadow-xs"
                           >
-                            <Plus className="w-3.5 h-3.5" />
+                            <Plus className="w-3 h-3" />
                             <span>Add</span>
                           </button>
                         )}
@@ -405,44 +505,41 @@ export const EurekaPricingPage: React.FC<EurekaPricingPageProps> = ({
               })}
 
               {filteredItems.length === 0 && (
-                <div className="bg-white rounded-xl p-8 text-center border border-slate-200 text-slate-500">
-                  <p className="font-semibold text-sm">No services matched your search.</p>
+                <div className="bg-white rounded-xl p-6 text-center border border-slate-200 text-slate-500">
+                  <p className="font-semibold text-xs">No services matched "{searchQuery}" in this category.</p>
                   <button
-                    onClick={() => {
-                      setSearchQuery('');
-                      setActiveCategory('all');
-                    }}
+                    onClick={() => setSearchQuery('')}
                     className="mt-2 text-xs text-red-600 font-bold hover:underline"
                   >
-                    Reset filters
+                    Clear search
                   </button>
                 </div>
               )}
             </div>
 
             {/* Official Disclaimers Notice Block */}
-            <div className="bg-amber-50/70 border border-amber-200 rounded-xl p-5 space-y-3 text-xs text-amber-900">
-              <div className="flex items-center gap-2 font-bold text-amber-950 uppercase tracking-wide">
-                <AlertCircle className="w-4 h-4 text-amber-600" />
-                <span>Official Cleaning Terms &amp; Logistics Guidelines</span>
+            <div className="bg-amber-50/70 border border-amber-200 rounded-xl p-4 space-y-2 text-xs text-amber-900">
+              <div className="flex items-center gap-2 font-bold text-amber-950 uppercase tracking-wide text-[11px]">
+                <AlertCircle className="w-3.5 h-3.5 text-amber-600" />
+                <span>Cleaning Terms &amp; Logistics Guidelines</span>
               </div>
-              <ul className="list-disc list-inside space-y-1.5 text-amber-900/90 leading-relaxed">
+              <ul className="list-disc list-inside space-y-1 text-amber-900/90 text-[11px] leading-relaxed">
                 <li>
-                  <strong>Offsite Loose Rug Cleaning:</strong> Loose rugs undergo an intensive multi-stage decontamination process at our specialized facility. Standard turnaround is <strong>4-7 working days</strong>.
+                  <strong>Offsite Loose Rugs:</strong> 4-7 working days turnaround with industrial decontamination.
                 </li>
                 <li>
-                  <strong>Complimentary Logistics:</strong> Free collection and return delivery is included within a <strong>15km radius of Midrand</strong>. A modest transport fee applies for outlying areas.
+                  <strong>Complimentary Logistics:</strong> Free collection and return delivery within 15km of Midrand.
                 </li>
                 <li>
-                  <strong>Minimum Order Policy:</strong> A minimum order threshold of <strong>R 600.00</strong> applies for all residential deep cleaning dispatches.
+                  <strong>Minimum Order:</strong> R 600.00 threshold for residential deep cleanings.
                 </li>
               </ul>
             </div>
           </div>
 
-          {/* Right Column: Live Interactive Quotation Basket */}
-          <div className="lg:col-span-4">
-            <div className="sticky top-24 bg-white rounded-xl shadow-lg border border-slate-200 overflow-hidden">
+          {/* Column 3: Live Interactive Quotation Basket (Right) */}
+          <div className="lg:col-span-4 lg:sticky lg:top-24">
+            <div className="bg-white rounded-xl shadow-lg border border-slate-200 overflow-hidden">
               {/* Header */}
               <div className="bg-[#09132e] text-white p-4 sm:p-5 flex items-center justify-between">
                 <div className="flex items-center gap-2.5">
@@ -606,232 +703,8 @@ export const EurekaPricingPage: React.FC<EurekaPricingPageProps> = ({
         </div>
       </section>
 
-      {/* Pest Control Dedicated Interactive Quote Matrix (As in PDF Page 5-7) */}
-      <section className="py-16 bg-white border-t border-slate-200" id="pest-control">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-3xl mx-auto text-center mb-10">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded bg-red-50 text-red-600 text-xs font-bold tracking-wider uppercase mb-2">
-              <Bug className="w-3.5 h-3.5" />
-              <span>Specialized Pest Management</span>
-            </span>
-            <h2 className="text-2xl sm:text-4xl font-black text-[#09132e] tracking-tight">
-              PEST CONTROL PRICING QUESTIONNAIRE
-            </h2>
-            <p className="text-slate-600 text-xs sm:text-sm mt-2">
-              Pest eradication pricing depends on property dimensions, infestation severity, and target species. Populate the details below for a binding quote within 2 hours.
-            </p>
-          </div>
 
-          <div className="max-w-4xl mx-auto bg-slate-50 border border-slate-200 rounded-2xl p-6 sm:p-8 shadow-sm">
-            {pestSubmitted ? (
-              <div className="text-center py-10 space-y-4">
-                <CheckCircle2 className="w-12 h-12 text-emerald-500 mx-auto" />
-                <h3 className="text-xl font-bold text-slate-900">Pest Control Request Received!</h3>
-                <p className="text-xs text-slate-600 max-w-md mx-auto">
-                  Our certified Pest Control Officers (PCOs) are analyzing your property requirements and will contact you directly with an official quote.
-                </p>
-                <button
-                  onClick={() => setPestSubmitted(false)}
-                  className="mt-4 px-4 py-2 bg-[#09132e] text-white text-xs font-bold rounded"
-                >
-                  Submit Another Request
-                </button>
-              </div>
-            ) : (
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  setPestSubmitted(true);
-                }}
-                className="space-y-6"
-              >
-                {/* 1. Property Type Selection */}
-                <div>
-                  <label className="block text-xs font-extrabold uppercase tracking-wide text-slate-700 mb-2">
-                    1. Where will you need pest control services? *
-                  </label>
-                  <div className="grid grid-cols-2 gap-4">
-                    <button
-                      type="button"
-                      onClick={() => setPestPropertyType('Home')}
-                      className={`p-4 rounded-xl border text-left flex items-center gap-3 transition-all ${
-                        pestPropertyType === 'Home'
-                          ? 'border-red-600 bg-red-50/40 text-red-950 font-bold ring-1 ring-red-500'
-                          : 'border-slate-200 bg-white text-slate-700 hover:border-slate-300'
-                      }`}
-                    >
-                      <Home className="w-5 h-5 text-red-600" />
-                      <div>
-                        <span className="block text-sm font-bold">Residential (Home)</span>
-                        <span className="block text-[11px] text-slate-500 font-normal">Houses, Townhouses, Apartments</span>
-                      </div>
-                    </button>
 
-                    <button
-                      type="button"
-                      onClick={() => setPestPropertyType('Business')}
-                      className={`p-4 rounded-xl border text-left flex items-center gap-3 transition-all ${
-                        pestPropertyType === 'Business'
-                          ? 'border-red-600 bg-red-50/40 text-red-950 font-bold ring-1 ring-red-500'
-                          : 'border-slate-200 bg-white text-slate-700 hover:border-slate-300'
-                      }`}
-                    >
-                      <Building2 className="w-5 h-5 text-[#0b3582]" />
-                      <div>
-                        <span className="block text-sm font-bold">Commercial (Business)</span>
-                        <span className="block text-[11px] text-slate-500 font-normal">Offices, Warehouses, Hospitality</span>
-                      </div>
-                    </button>
-                  </div>
-                </div>
-
-                {/* 2. Target Pests Multi-Select */}
-                <div>
-                  <label className="block text-xs font-extrabold uppercase tracking-wide text-slate-700 mb-2">
-                    2. What type of pest control treatment do you require? (Select all that apply) *
-                  </label>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
-                    {pestOptions.map((pest) => {
-                      const isSelected = selectedPests.includes(pest);
-                      return (
-                        <button
-                          key={pest}
-                          type="button"
-                          onClick={() => togglePest(pest)}
-                          className={`p-3 rounded-lg border text-left text-xs font-semibold flex items-center justify-between transition-all ${
-                            isSelected
-                              ? 'border-red-500 bg-red-50 text-red-900 font-bold'
-                              : 'border-slate-200 bg-white text-slate-700 hover:border-slate-300'
-                          }`}
-                        >
-                          <span>{pest}</span>
-                          {isSelected && <CheckCircle2 className="w-3.5 h-3.5 text-red-600 shrink-0 ml-1" />}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                {/* 3. Property Size Details */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-xs font-bold text-slate-700 uppercase mb-1">
-                      Property Size / Square Metres *
-                    </label>
-                    <input
-                      type="text"
-                      placeholder="e.g. 250 sqm or 3-bedroom duplex"
-                      required
-                      className="w-full px-3 py-2.5 bg-white border border-slate-200 rounded-lg text-xs focus:outline-none focus:border-red-500"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-bold text-slate-700 uppercase mb-1">
-                      Suburb &amp; City *
-                    </label>
-                    <input
-                      type="text"
-                      placeholder="e.g. Midrand / Sandton / Centurion"
-                      required
-                      className="w-full px-3 py-2.5 bg-white border border-slate-200 rounded-lg text-xs focus:outline-none focus:border-red-500"
-                    />
-                  </div>
-                </div>
-
-                {/* 4. Contact Details */}
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                  <div>
-                    <label className="block text-xs font-bold text-slate-700 uppercase mb-1">
-                      Full Name *
-                    </label>
-                    <input
-                      type="text"
-                      placeholder="e.g. Sipho Ndlovu"
-                      required
-                      className="w-full px-3 py-2.5 bg-white border border-slate-200 rounded-lg text-xs focus:outline-none focus:border-red-500"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-bold text-slate-700 uppercase mb-1">
-                      Email Address *
-                    </label>
-                    <input
-                      type="email"
-                      placeholder="sipho@company.co.za"
-                      required
-                      className="w-full px-3 py-2.5 bg-white border border-slate-200 rounded-lg text-xs focus:outline-none focus:border-red-500"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-bold text-slate-700 uppercase mb-1">
-                      Contact Number *
-                    </label>
-                    <input
-                      type="tel"
-                      placeholder="074 518 7012"
-                      required
-                      className="w-full px-3 py-2.5 bg-white border border-slate-200 rounded-lg text-xs focus:outline-none focus:border-red-500"
-                    />
-                  </div>
-                </div>
-
-                {/* 5. Detailed Description */}
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 uppercase mb-1">
-                    Detailed Description of Works / Noticeable Infestation Signs
-                  </label>
-                  <textarea
-                    rows={3}
-                    placeholder="Provide additional details regarding active pest activity, past treatments, kitchen areas, or garden surroundings..."
-                    className="w-full px-3 py-2.5 bg-white border border-slate-200 rounded-lg text-xs focus:outline-none focus:border-red-500"
-                  ></textarea>
-                </div>
-
-                <button
-                  type="submit"
-                  className="w-full py-3.5 bg-[#0b3582] hover:bg-red-600 text-white font-extrabold text-xs uppercase tracking-wider rounded-lg shadow-md transition-all flex items-center justify-center gap-2"
-                >
-                  <span>SUBMIT PEST CONTROL PRICING REQUEST</span>
-                  <ArrowRight className="w-4 h-4" />
-                </button>
-              </form>
-            )}
-          </div>
-        </div>
-      </section>
-
-      {/* Facilities Management & Construction Quotations Banner */}
-      <section className="bg-gradient-to-r from-[#050b1b] via-[#09132e] to-[#0c235c] text-white py-14">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="space-y-2 text-center md:text-left">
-            <span className="text-xs font-bold text-red-400 uppercase tracking-widest">
-              CUSTOM CONTRACTS &bull; COMMERCIAL PROPERTY
-            </span>
-            <h3 className="text-2xl sm:text-3xl font-black">
-              Need a Custom SLA or Commercial Project Tender?
-            </h3>
-            <p className="text-slate-300 text-xs sm:text-sm max-w-2xl">
-              We structure custom Price-on-Ask (POA) proposals for corporate office parks, retail chains, and industrial complexes under registered Pr. CPM governance.
-            </p>
-          </div>
-          <div className="flex flex-col sm:flex-row gap-3 shrink-0">
-            <a
-              href="tel:+27745187012"
-              className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-red-600 hover:bg-red-700 text-white text-xs font-extrabold rounded tracking-wider transition-all"
-            >
-              <Phone className="w-4 h-4" />
-              <span>CALL +27 74 518 7012</span>
-            </a>
-            <a
-              href="mailto:info@eurekasolutions.co.za"
-              className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-slate-800 hover:bg-slate-700 text-white text-xs font-extrabold rounded tracking-wider border border-slate-700 transition-all"
-            >
-              <Mail className="w-4 h-4" />
-              <span>EMAIL RFQ</span>
-            </a>
-          </div>
-        </div>
-      </section>
 
       {/* Footer Contact Strip */}
       <EurekaFooter onNavigate={onNavigate}  />

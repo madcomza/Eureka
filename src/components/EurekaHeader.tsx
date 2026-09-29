@@ -42,6 +42,8 @@ export type NavPage =
   | 'quantity-surveying'
   | 'construction-claims'
   | 'delay-analysis'
+  | 'projects'
+  | 'gallery'
   | 'pricing'
   | 'contact';
 
@@ -55,19 +57,26 @@ export const EurekaHeader: React.FC<EurekaHeaderProps> = ({
   onNavigate
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [solutionsDropdownOpen, setSolutionsDropdownOpen] = useState(false);
-  const [mobileSolutionsOpen, setMobileSolutionsOpen] = useState(true);
+  const [activeDropdown, setActiveDropdown] = useState<'facilities' | 'construction' | 'consultancy' | null>(null);
+  const [mobileFacilitiesOpen, setMobileFacilitiesOpen] = useState(false);
+  const [mobileConstructionOpen, setMobileConstructionOpen] = useState(false);
+  const [mobileConsultancyOpen, setMobileConsultancyOpen] = useState(false);
 
-  const isSolutionsActive = [
-    'solutions',
+  const isFacilitiesActive = [
     'facilities-management',
     'commercial-cleaning',
     'pest-control',
     'pre-soil-treatment',
-    'office-relocation',
+    'office-relocation'
+  ].includes(currentPage);
+
+  const isConstructionActive = [
     'construction-management',
     'project-management',
-    'freelance-pm',
+    'freelance-pm'
+  ].includes(currentPage);
+
+  const isConsultancyActive = [
     'construction-consultancy',
     'quantity-surveying',
     'construction-claims',
@@ -77,7 +86,7 @@ export const EurekaHeader: React.FC<EurekaHeaderProps> = ({
   const handleNav = (page: NavPage, subcategory?: 'all' | 'facilities' | 'construction' | 'consultancy') => {
     onNavigate?.(page, subcategory);
     setMobileMenuOpen(false);
-    setSolutionsDropdownOpen(false);
+    setActiveDropdown(null);
   };
 
   return (
@@ -132,8 +141,8 @@ export const EurekaHeader: React.FC<EurekaHeaderProps> = ({
           </button>
 
           {/* Desktop Navigation Links */}
-          <nav className="hidden lg:flex items-center space-x-6 xl:space-x-7 text-xs font-bold tracking-wider text-slate-800">
-            {/* HOME */}
+          <nav className="hidden lg:flex items-center space-x-5 xl:space-x-6 text-xs font-bold tracking-wider text-slate-800">
+            {/* 1. HOME */}
             <button
               onClick={() => handleNav('home')}
               className={`transition-colors cursor-pointer pb-1 ${
@@ -145,7 +154,7 @@ export const EurekaHeader: React.FC<EurekaHeaderProps> = ({
               HOME
             </button>
 
-            {/* ABOUT US */}
+            {/* 2. ABOUT */}
             <button
               onClick={() => handleNav('about')}
               className={`transition-colors cursor-pointer pb-1 ${
@@ -154,204 +163,304 @@ export const EurekaHeader: React.FC<EurekaHeaderProps> = ({
                   : 'hover:text-[#d91b1b]'
               }`}
             >
-              ABOUT US
+              ABOUT
             </button>
 
-            {/* SOLUTIONS MEGA DROPDOWN */}
-            <div className="relative">
+            {/* 3. FACILITIES DROPDOWN */}
+            <div
+              className="relative"
+              onMouseEnter={() => setActiveDropdown('facilities')}
+              onMouseLeave={() => setActiveDropdown(null)}
+            >
               <button
-                onClick={() => setSolutionsDropdownOpen(!solutionsDropdownOpen)}
-                onMouseEnter={() => setSolutionsDropdownOpen(true)}
+                onClick={() => handleNav('commercial-cleaning')}
                 className={`flex items-center gap-1 transition-colors cursor-pointer py-1 pb-1 ${
-                  isSolutionsActive
+                  isFacilitiesActive
                     ? 'text-[#d91b1b] border-b-2 border-[#d91b1b]'
                     : 'hover:text-[#d91b1b]'
                 }`}
               >
-                <span>SOLUTIONS</span>
-                <ChevronDown className={`w-3.5 h-3.5 transition-transform ${solutionsDropdownOpen ? 'rotate-180' : ''}`} />
+                <span>FACILITIES</span>
+                <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${activeDropdown === 'facilities' ? 'rotate-180 text-sky-600' : ''}`} />
               </button>
 
-              {solutionsDropdownOpen && (
-                <div
-                  onMouseLeave={() => setSolutionsDropdownOpen(false)}
-                  className="absolute left-1/2 -translate-x-1/2 top-full mt-1 w-[720px] bg-white rounded-xl shadow-2xl border border-slate-200 p-4 z-50 animate-in fade-in slide-in-from-top-2 duration-150"
-                >
-                  <div className="flex items-center justify-between pb-3 mb-3 border-b border-slate-100">
-                    <span className="text-xs font-black uppercase tracking-wider text-slate-900">
-                      Our 3 Core Service Divisions
+              {activeDropdown === 'facilities' && (
+                <div className="absolute left-0 top-full mt-1 w-72 bg-white rounded-xl shadow-2xl border border-slate-200 p-2 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
+                  <div className="px-3 py-2 border-b border-slate-100 flex items-center justify-between">
+                    <span className="text-[10px] font-black uppercase tracking-wider text-sky-800 flex items-center gap-1.5">
+                      <Building2 className="w-3.5 h-3.5 text-sky-600" />
+                      Facilities &amp; Property
                     </span>
                     <button
-                      onClick={() => handleNav('solutions', 'all')}
-                      className="text-xs font-bold text-red-600 hover:text-red-700 flex items-center gap-1"
+                      onClick={() => handleNav('solutions', 'facilities')}
+                      className="text-[10px] font-bold text-sky-600 hover:text-sky-800"
                     >
-                      <span>View All Solutions Overview</span>
-                      <ArrowRight className="w-3 h-3" />
+                      Overview &rarr;
                     </button>
                   </div>
-
-                  <div className="grid grid-cols-3 gap-3">
-                    {/* Pillar 1: Facilities */}
-                    <div className="p-2.5 rounded-lg bg-sky-50/60 border border-sky-100 flex flex-col justify-between">
+                  <div className="py-1 space-y-0.5">
+                    <button
+                      onClick={() => handleNav('commercial-cleaning')}
+                      className={`w-full text-left px-3 py-2 rounded-lg text-xs font-semibold transition-all flex items-start gap-2.5 ${
+                        currentPage === 'commercial-cleaning'
+                          ? 'bg-sky-50 text-sky-900 font-bold border-l-2 border-sky-600'
+                          : 'text-slate-700 hover:bg-sky-50/80 hover:text-sky-900'
+                      }`}
+                    >
+                      <Sparkles className="w-4 h-4 text-sky-600 mt-0.5 shrink-0" />
                       <div>
-                        <div className="text-[10px] font-black uppercase tracking-wider text-sky-800 flex items-center gap-1 mb-2">
-                          <Building2 className="w-3 h-3 text-sky-600" />
-                          <span>1. Facilities &amp; Property</span>
-                        </div>
-                        <div className="space-y-1">
-                          <button
-                            onClick={() => handleNav('facilities-management')}
-                            className={`w-full text-left px-2 py-1.5 rounded text-[11px] font-semibold transition-colors flex items-center justify-between ${
-                              currentPage === 'facilities-management'
-                                ? 'bg-sky-600 text-white font-bold'
-                                : 'text-slate-700 hover:bg-sky-100 hover:text-sky-900'
-                            }`}
-                          >
-                            <span>Facilities Management</span>
-                          </button>
-                          <button
-                            onClick={() => handleNav('commercial-cleaning')}
-                            className={`w-full text-left px-2 py-1.5 rounded text-[11px] font-semibold transition-colors flex items-center justify-between ${
-                              currentPage === 'commercial-cleaning'
-                                ? 'bg-sky-600 text-white font-bold'
-                                : 'text-slate-700 hover:bg-sky-100 hover:text-sky-900'
-                            }`}
-                          >
-                            <span>Cleaning &amp; Hygiene</span>
-                          </button>
-                          <button
-                            onClick={() => handleNav('pest-control')}
-                            className={`w-full text-left px-2 py-1.5 rounded text-[11px] font-semibold transition-colors flex items-center justify-between ${
-                              currentPage === 'pest-control'
-                                ? 'bg-sky-600 text-white font-bold'
-                                : 'text-slate-700 hover:bg-sky-100 hover:text-sky-900'
-                            }`}
-                          >
-                            <span>Pest Control</span>
-                          </button>
-                          <button
-                            onClick={() => handleNav('pre-soil-treatment')}
-                            className={`w-full text-left px-2 py-1.5 rounded text-[11px] font-semibold transition-colors flex items-center justify-between ${
-                              currentPage === 'pre-soil-treatment'
-                                ? 'bg-sky-600 text-white font-bold'
-                                : 'text-slate-700 hover:bg-sky-100 hover:text-sky-900'
-                            }`}
-                          >
-                            <span>Pre-Soil Treatment</span>
-                          </button>
-                          <button
-                            onClick={() => handleNav('office-relocation')}
-                            className={`w-full text-left px-2 py-1.5 rounded text-[11px] font-semibold transition-colors flex items-center justify-between ${
-                              currentPage === 'office-relocation'
-                                ? 'bg-sky-600 text-white font-bold'
-                                : 'text-slate-700 hover:bg-sky-100 hover:text-sky-900'
-                            }`}
-                          >
-                            <span>Office Relocation</span>
-                          </button>
-                        </div>
+                        <div className="font-bold">Commercial Cleaning</div>
+                        <div className="text-[10px] text-slate-500 font-normal">Corporate, medical &amp; deep hygiene</div>
                       </div>
-                    </div>
-
-                    {/* Pillar 2: Construction Delivery */}
-                    <div className="p-2.5 rounded-lg bg-red-50/60 border border-red-100 flex flex-col justify-between">
+                    </button>
+                    <button
+                      onClick={() => handleNav('pest-control')}
+                      className={`w-full text-left px-3 py-2 rounded-lg text-xs font-semibold transition-all flex items-start gap-2.5 ${
+                        currentPage === 'pest-control'
+                          ? 'bg-sky-50 text-sky-900 font-bold border-l-2 border-sky-600'
+                          : 'text-slate-700 hover:bg-sky-50/80 hover:text-sky-900'
+                      }`}
+                    >
+                      <Bug className="w-4 h-4 text-sky-600 mt-0.5 shrink-0" />
                       <div>
-                        <div className="text-[10px] font-black uppercase tracking-wider text-red-800 flex items-center gap-1 mb-2">
-                          <HardHat className="w-3 h-3 text-red-600" />
-                          <span>2. Construction Delivery</span>
-                        </div>
-                        <div className="space-y-1">
-                          <button
-                            onClick={() => handleNav('construction-management')}
-                            className={`w-full text-left px-2 py-1.5 rounded text-[11px] font-semibold transition-colors flex items-center justify-between ${
-                              currentPage === 'construction-management'
-                                ? 'bg-red-600 text-white font-bold'
-                                : 'text-slate-700 hover:bg-red-100 hover:text-red-900'
-                            }`}
-                          >
-                            <span>Construction Mgmt</span>
-                          </button>
-                          <button
-                            onClick={() => handleNav('project-management')}
-                            className={`w-full text-left px-2 py-1.5 rounded text-[11px] font-semibold transition-colors flex items-center justify-between ${
-                              currentPage === 'project-management'
-                                ? 'bg-red-600 text-white font-bold'
-                                : 'text-slate-700 hover:bg-red-100 hover:text-red-900'
-                            }`}
-                          >
-                            <span>Project Mgmt (PROCSA)</span>
-                          </button>
-                          <button
-                            onClick={() => handleNav('freelance-pm')}
-                            className={`w-full text-left px-2 py-1.5 rounded text-[11px] font-semibold transition-colors flex items-center justify-between ${
-                              currentPage === 'freelance-pm'
-                                ? 'bg-red-600 text-white font-bold'
-                                : 'text-slate-700 hover:bg-red-100 hover:text-red-900'
-                            }`}
-                          >
-                            <span>Freelance PM Support</span>
-                          </button>
-                        </div>
+                        <div className="font-bold">Pest Control Services</div>
+                        <div className="text-[10px] text-slate-500 font-normal">SABS/SANS compliant eradication</div>
                       </div>
-                    </div>
-
-                    {/* Pillar 3: Specialist Consultancy */}
-                    <div className="p-2.5 rounded-lg bg-slate-100/70 border border-slate-200 flex flex-col justify-between">
+                    </button>
+                    <button
+                      onClick={() => handleNav('pre-soil-treatment')}
+                      className={`w-full text-left px-3 py-2 rounded-lg text-xs font-semibold transition-all flex items-start gap-2.5 ${
+                        currentPage === 'pre-soil-treatment'
+                          ? 'bg-sky-50 text-sky-900 font-bold border-l-2 border-sky-600'
+                          : 'text-slate-700 hover:bg-sky-50/80 hover:text-sky-900'
+                      }`}
+                    >
+                      <ShieldCheck className="w-4 h-4 text-sky-600 mt-0.5 shrink-0" />
                       <div>
-                        <div className="text-[10px] font-black uppercase tracking-wider text-slate-800 flex items-center gap-1 mb-2">
-                          <Briefcase className="w-3 h-3 text-[#0b1b3d]" />
-                          <span>3. Specialist Consultancy</span>
-                        </div>
-                        <div className="space-y-1">
-                          <button
-                            onClick={() => handleNav('construction-consultancy')}
-                            className={`w-full text-left px-2 py-1.5 rounded text-[11px] font-semibold transition-colors flex items-center justify-between ${
-                              currentPage === 'construction-consultancy'
-                                ? 'bg-[#0b1b3d] text-white font-bold'
-                                : 'text-slate-700 hover:bg-slate-200 hover:text-slate-900'
-                            }`}
-                          >
-                            <span>Consultancy Advisory</span>
-                          </button>
-                          <button
-                            onClick={() => handleNav('quantity-surveying')}
-                            className={`w-full text-left px-2 py-1.5 rounded text-[11px] font-semibold transition-colors flex items-center justify-between ${
-                              currentPage === 'quantity-surveying'
-                                ? 'bg-[#0b1b3d] text-white font-bold'
-                                : 'text-slate-700 hover:bg-slate-200 hover:text-slate-900'
-                            }`}
-                          >
-                            <span>Quantity Surveying (QS)</span>
-                          </button>
-                          <button
-                            onClick={() => handleNav('construction-claims')}
-                            className={`w-full text-left px-2 py-1.5 rounded text-[11px] font-semibold transition-colors flex items-center justify-between ${
-                              currentPage === 'construction-claims'
-                                ? 'bg-[#0b1b3d] text-white font-bold'
-                                : 'text-slate-700 hover:bg-slate-200 hover:text-slate-900'
-                            }`}
-                          >
-                            <span>Claims &amp; Contracts</span>
-                          </button>
-                          <button
-                            onClick={() => handleNav('delay-analysis')}
-                            className={`w-full text-left px-2 py-1.5 rounded text-[11px] font-semibold transition-colors flex items-center justify-between ${
-                              currentPage === 'delay-analysis'
-                                ? 'bg-[#0b1b3d] text-white font-bold'
-                                : 'text-slate-700 hover:bg-slate-200 hover:text-slate-900'
-                            }`}
-                          >
-                            <span>Forensic Delay Analysis</span>
-                          </button>
-                        </div>
+                        <div className="font-bold">Pre-Soil Treatment</div>
+                        <div className="text-[10px] text-slate-500 font-normal">5-year warranty soil poisoning</div>
                       </div>
-                    </div>
+                    </button>
+                    <button
+                      onClick={() => handleNav('office-relocation')}
+                      className={`w-full text-left px-3 py-2 rounded-lg text-xs font-semibold transition-all flex items-start gap-2.5 ${
+                        currentPage === 'office-relocation'
+                          ? 'bg-sky-50 text-sky-900 font-bold border-l-2 border-sky-600'
+                          : 'text-slate-700 hover:bg-sky-50/80 hover:text-sky-900'
+                      }`}
+                    >
+                      <Truck className="w-4 h-4 text-sky-600 mt-0.5 shrink-0" />
+                      <div>
+                        <div className="font-bold">Office Relocation</div>
+                        <div className="text-[10px] text-slate-500 font-normal">Seamless corporate &amp; IT moves</div>
+                      </div>
+                    </button>
+                    <button
+                      onClick={() => handleNav('facilities-management')}
+                      className={`w-full text-left px-3 py-2 rounded-lg text-xs font-semibold transition-all flex items-start gap-2.5 ${
+                        currentPage === 'facilities-management'
+                          ? 'bg-sky-50 text-sky-900 font-bold border-l-2 border-sky-600'
+                          : 'text-slate-700 hover:bg-sky-50/80 hover:text-sky-900'
+                      }`}
+                    >
+                      <Building2 className="w-4 h-4 text-sky-600 mt-0.5 shrink-0" />
+                      <div>
+                        <div className="font-bold">Facilities Management</div>
+                        <div className="text-[10px] text-slate-500 font-normal">SLA &amp; building operations</div>
+                      </div>
+                    </button>
                   </div>
                 </div>
               )}
             </div>
 
-            {/* PRICING */}
+            {/* 4. CONSTRUCTION DROPDOWN */}
+            <div
+              className="relative"
+              onMouseEnter={() => setActiveDropdown('construction')}
+              onMouseLeave={() => setActiveDropdown(null)}
+            >
+              <button
+                onClick={() => handleNav('construction-management')}
+                className={`flex items-center gap-1 transition-colors cursor-pointer py-1 pb-1 ${
+                  isConstructionActive
+                    ? 'text-[#d91b1b] border-b-2 border-[#d91b1b]'
+                    : 'hover:text-[#d91b1b]'
+                }`}
+              >
+                <span>CONSTRUCTION</span>
+                <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${activeDropdown === 'construction' ? 'rotate-180 text-red-600' : ''}`} />
+              </button>
+
+              {activeDropdown === 'construction' && (
+                <div className="absolute left-1/2 -translate-x-1/2 top-full mt-1 w-72 bg-white rounded-xl shadow-2xl border border-slate-200 p-2 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
+                  <div className="px-3 py-2 border-b border-slate-100 flex items-center justify-between">
+                    <span className="text-[10px] font-black uppercase tracking-wider text-red-800 flex items-center gap-1.5">
+                      <HardHat className="w-3.5 h-3.5 text-red-600" />
+                      Construction Delivery
+                    </span>
+                    <button
+                      onClick={() => handleNav('solutions', 'construction')}
+                      className="text-[10px] font-bold text-red-600 hover:text-red-800"
+                    >
+                      Overview &rarr;
+                    </button>
+                  </div>
+                  <div className="py-1 space-y-0.5">
+                    <button
+                      onClick={() => handleNav('construction-management')}
+                      className={`w-full text-left px-3 py-2 rounded-lg text-xs font-semibold transition-all flex items-start gap-2.5 ${
+                        currentPage === 'construction-management'
+                          ? 'bg-red-50 text-red-900 font-bold border-l-2 border-red-600'
+                          : 'text-slate-700 hover:bg-red-50/80 hover:text-red-900'
+                      }`}
+                    >
+                      <HardHat className="w-4 h-4 text-red-600 mt-0.5 shrink-0" />
+                      <div>
+                        <div className="font-bold">Construction Management</div>
+                        <div className="text-[10px] text-slate-500 font-normal">Principal contractor execution</div>
+                      </div>
+                    </button>
+                    <button
+                      onClick={() => handleNav('project-management')}
+                      className={`w-full text-left px-3 py-2 rounded-lg text-xs font-semibold transition-all flex items-start gap-2.5 ${
+                        currentPage === 'project-management'
+                          ? 'bg-red-50 text-red-900 font-bold border-l-2 border-red-600'
+                          : 'text-slate-700 hover:bg-red-50/80 hover:text-red-900'
+                      }`}
+                    >
+                      <FolderKanban className="w-4 h-4 text-red-600 mt-0.5 shrink-0" />
+                      <div>
+                        <div className="font-bold">Project Management</div>
+                        <div className="text-[10px] text-slate-500 font-normal">PROCSA Stages 1-6 Pr. CPM</div>
+                      </div>
+                    </button>
+                    <button
+                      onClick={() => handleNav('freelance-pm')}
+                      className={`w-full text-left px-3 py-2 rounded-lg text-xs font-semibold transition-all flex items-start gap-2.5 ${
+                        currentPage === 'freelance-pm'
+                          ? 'bg-red-50 text-red-900 font-bold border-l-2 border-red-600'
+                          : 'text-slate-700 hover:bg-red-50/80 hover:text-red-900'
+                      }`}
+                    >
+                      <UserCheck className="w-4 h-4 text-red-600 mt-0.5 shrink-0" />
+                      <div>
+                        <div className="font-bold">Freelance PM Support</div>
+                        <div className="text-[10px] text-slate-500 font-normal">Flexible principal consultant capacity</div>
+                      </div>
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* 5. CONSULTANCY DROPDOWN */}
+            <div
+              className="relative"
+              onMouseEnter={() => setActiveDropdown('consultancy')}
+              onMouseLeave={() => setActiveDropdown(null)}
+            >
+              <button
+                onClick={() => handleNav('construction-consultancy')}
+                className={`flex items-center gap-1 transition-colors cursor-pointer py-1 pb-1 ${
+                  isConsultancyActive
+                    ? 'text-[#d91b1b] border-b-2 border-[#d91b1b]'
+                    : 'hover:text-[#d91b1b]'
+                }`}
+              >
+                <span>CONSULTANCY</span>
+                <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${activeDropdown === 'consultancy' ? 'rotate-180 text-blue-900' : ''}`} />
+              </button>
+
+              {activeDropdown === 'consultancy' && (
+                <div className="absolute right-0 lg:left-1/2 lg:-translate-x-1/2 top-full mt-1 w-72 bg-white rounded-xl shadow-2xl border border-slate-200 p-2 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
+                  <div className="px-3 py-2 border-b border-slate-100 flex items-center justify-between">
+                    <span className="text-[10px] font-black uppercase tracking-wider text-slate-900 flex items-center gap-1.5">
+                      <Briefcase className="w-3.5 h-3.5 text-[#0b1b3d]" />
+                      Specialist Consultancy
+                    </span>
+                    <button
+                      onClick={() => handleNav('solutions', 'consultancy')}
+                      className="text-[10px] font-bold text-[#0b1b3d] hover:text-red-600"
+                    >
+                      Overview &rarr;
+                    </button>
+                  </div>
+                  <div className="py-1 space-y-0.5">
+                    <button
+                      onClick={() => handleNav('construction-consultancy')}
+                      className={`w-full text-left px-3 py-2 rounded-lg text-xs font-semibold transition-all flex items-start gap-2.5 ${
+                        currentPage === 'construction-consultancy'
+                          ? 'bg-slate-100 text-slate-900 font-bold border-l-2 border-[#0b1b3d]'
+                          : 'text-slate-700 hover:bg-slate-100 hover:text-slate-900'
+                      }`}
+                    >
+                      <Briefcase className="w-4 h-4 text-[#0b1b3d] mt-0.5 shrink-0" />
+                      <div>
+                        <div className="font-bold">Consultancy Advisory</div>
+                        <div className="text-[10px] text-slate-500 font-normal">Strategic technical &amp; procurement counsel</div>
+                      </div>
+                    </button>
+                    <button
+                      onClick={() => handleNav('quantity-surveying')}
+                      className={`w-full text-left px-3 py-2 rounded-lg text-xs font-semibold transition-all flex items-start gap-2.5 ${
+                        currentPage === 'quantity-surveying'
+                          ? 'bg-slate-100 text-slate-900 font-bold border-l-2 border-[#0b1b3d]'
+                          : 'text-slate-700 hover:bg-slate-100 hover:text-slate-900'
+                      }`}
+                    >
+                      <Scale className="w-4 h-4 text-[#0b1b3d] mt-0.5 shrink-0" />
+                      <div>
+                        <div className="font-bold">Quantity Surveying (QS)</div>
+                        <div className="text-[10px] text-slate-500 font-normal">Cost planning, BOQs &amp; final accounts</div>
+                      </div>
+                    </button>
+                    <button
+                      onClick={() => handleNav('construction-claims')}
+                      className={`w-full text-left px-3 py-2 rounded-lg text-xs font-semibold transition-all flex items-start gap-2.5 ${
+                        currentPage === 'construction-claims'
+                          ? 'bg-slate-100 text-slate-900 font-bold border-l-2 border-[#0b1b3d]'
+                          : 'text-slate-700 hover:bg-slate-100 hover:text-slate-900'
+                      }`}
+                    >
+                      <FileCheck2 className="w-4 h-4 text-[#0b1b3d] mt-0.5 shrink-0" />
+                      <div>
+                        <div className="font-bold">Claims &amp; Contracts</div>
+                        <div className="text-[10px] text-slate-500 font-normal">JBCC, GCC, FIDIC, NEC dispute advisory</div>
+                      </div>
+                    </button>
+                    <button
+                      onClick={() => handleNav('delay-analysis')}
+                      className={`w-full text-left px-3 py-2 rounded-lg text-xs font-semibold transition-all flex items-start gap-2.5 ${
+                        currentPage === 'delay-analysis'
+                          ? 'bg-slate-100 text-slate-900 font-bold border-l-2 border-[#0b1b3d]'
+                          : 'text-slate-700 hover:bg-slate-100 hover:text-slate-900'
+                      }`}
+                    >
+                      <Clock className="w-4 h-4 text-[#0b1b3d] mt-0.5 shrink-0" />
+                      <div>
+                        <div className="font-bold">Forensic Delay Analysis</div>
+                        <div className="text-[10px] text-slate-500 font-normal">Primavera P6 &amp; EOT defense audits</div>
+                      </div>
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* 6. PROJECTS */}
+            <button
+              onClick={() => handleNav('projects')}
+              className={`transition-colors cursor-pointer pb-1 ${
+                currentPage === 'projects' || currentPage === 'gallery'
+                  ? 'text-[#d91b1b] border-b-2 border-[#d91b1b]'
+                  : 'hover:text-[#d91b1b]'
+              }`}
+            >
+              PROJECTS
+            </button>
+
+            {/* 7. PRICING */}
             <button
               onClick={() => handleNav('pricing')}
               className={`transition-colors cursor-pointer pb-1 ${
@@ -362,27 +471,16 @@ export const EurekaHeader: React.FC<EurekaHeaderProps> = ({
             >
               PRICING
             </button>
-
-            {/* CONTACT */}
-            <button
-              onClick={() => handleNav('contact')}
-              className={`transition-colors cursor-pointer pb-1 ${
-                currentPage === 'contact'
-                  ? 'text-[#d91b1b] border-b-2 border-[#d91b1b]'
-                  : 'hover:text-[#d91b1b]'
-              }`}
-            >
-              CONTACT
-            </button>
           </nav>
 
-          {/* Right Action Buttons */}
+          {/* Right Action Button (Get In Touch) */}
           <div className="hidden lg:flex items-center gap-3">
             <button
+              id="eureka-header-get-in-touch-btn"
               onClick={() => handleNav('contact')}
               className="px-4 py-2.5 rounded-lg text-xs font-black tracking-wider uppercase bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white shadow-md hover:shadow-lg transition-all transform active:scale-95 flex items-center gap-1.5 cursor-pointer"
             >
-              <span>REQUEST PROPOSAL</span>
+              <span>GET IN TOUCH</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </button>
           </div>
@@ -417,123 +515,194 @@ export const EurekaHeader: React.FC<EurekaHeaderProps> = ({
                   currentPage === 'about' ? 'bg-red-50 text-red-600' : 'text-slate-800'
                 }`}
               >
-                About Us
+                About
               </button>
 
-              {/* Mobile Solutions Collapsible */}
+              {/* Mobile Facilities Collapsible */}
               <div className="pt-1">
                 <button
-                  onClick={() => setMobileSolutionsOpen(!mobileSolutionsOpen)}
-                  className="w-full text-left px-3 py-2 rounded-md text-sm font-bold text-slate-800 flex items-center justify-between bg-slate-50"
+                  onClick={() => setMobileFacilitiesOpen(!mobileFacilitiesOpen)}
+                  className={`w-full text-left px-3 py-2 rounded-md text-sm font-bold flex items-center justify-between ${
+                    isFacilitiesActive ? 'bg-sky-50 text-sky-900' : 'bg-slate-50 text-slate-800'
+                  }`}
                 >
-                  <span>Our Solutions</span>
-                  <ChevronDown className={`w-4 h-4 transition-transform ${mobileSolutionsOpen ? 'rotate-180' : ''}`} />
+                  <span className="flex items-center gap-2">
+                    <Building2 className="w-4 h-4 text-sky-600" />
+                    Facilities
+                  </span>
+                  <ChevronDown className={`w-4 h-4 transition-transform ${mobileFacilitiesOpen ? 'rotate-180' : ''}`} />
                 </button>
 
-                {mobileSolutionsOpen && (
-                  <div className="pl-3 pr-1 pt-2 space-y-2">
+                {mobileFacilitiesOpen && (
+                  <div className="pl-4 pr-1 pt-2 space-y-1 border-l-2 border-sky-300 ml-2 mt-1">
                     <button
-                      onClick={() => handleNav('solutions', 'all')}
-                      className="w-full text-left px-2 py-1.5 text-xs font-bold text-red-600 hover:bg-slate-50 rounded"
+                      onClick={() => handleNav('commercial-cleaning')}
+                      className={`w-full text-left px-2 py-1.5 text-xs rounded transition-colors ${
+                        currentPage === 'commercial-cleaning' ? 'font-bold text-sky-600 bg-sky-50' : 'text-slate-700 hover:text-sky-600'
+                      }`}
                     >
-                      &rarr; Solutions Overview
+                      Commercial Cleaning Services
                     </button>
-
-                    {/* Facilities Section */}
-                    <div className="text-[10px] font-black uppercase tracking-wider text-sky-700 px-2 pt-1">
-                      Facilities &amp; Property
-                    </div>
-                    <div className="space-y-1 pl-2 border-l border-sky-200">
-                      <button
-                        onClick={() => handleNav('facilities-management')}
-                        className="w-full text-left px-2 py-1 text-xs text-slate-700 hover:text-sky-600"
-                      >
-                        Facilities Management Services
-                      </button>
-                      <button
-                        onClick={() => handleNav('commercial-cleaning')}
-                        className="w-full text-left px-2 py-1 text-xs text-slate-700 hover:text-sky-600"
-                      >
-                        Commercial Cleaning Services
-                      </button>
-                      <button
-                        onClick={() => handleNav('pest-control')}
-                        className="w-full text-left px-2 py-1 text-xs text-slate-700 hover:text-sky-600"
-                      >
-                        Pest Control Services
-                      </button>
-                      <button
-                        onClick={() => handleNav('pre-soil-treatment')}
-                        className="w-full text-left px-2 py-1 text-xs text-slate-700 hover:text-sky-600"
-                      >
-                        Pre-Soil Treatment &amp; Poisoning
-                      </button>
-                      <button
-                        onClick={() => handleNav('office-relocation')}
-                        className="w-full text-left px-2 py-1 text-xs text-slate-700 hover:text-sky-600"
-                      >
-                        Office &amp; Business Relocation
-                      </button>
-                    </div>
-
-                    {/* Construction Section */}
-                    <div className="text-[10px] font-black uppercase tracking-wider text-red-700 px-2 pt-1">
-                      Construction Delivery
-                    </div>
-                    <div className="space-y-1 pl-2 border-l border-red-200">
-                      <button
-                        onClick={() => handleNav('construction-management')}
-                        className="w-full text-left px-2 py-1 text-xs text-slate-700 hover:text-red-600"
-                      >
-                        Construction Management
-                      </button>
-                      <button
-                        onClick={() => handleNav('project-management')}
-                        className="w-full text-left px-2 py-1 text-xs text-slate-700 hover:text-red-600"
-                      >
-                        Project Management (PROCSA)
-                      </button>
-                      <button
-                        onClick={() => handleNav('freelance-pm')}
-                        className="w-full text-left px-2 py-1 text-xs text-slate-700 hover:text-red-600"
-                      >
-                        Freelance Project Management
-                      </button>
-                    </div>
-
-                    {/* Consultancy Section */}
-                    <div className="text-[10px] font-black uppercase tracking-wider text-slate-700 px-2 pt-1">
-                      Specialist Consultancy
-                    </div>
-                    <div className="space-y-1 pl-2 border-l border-slate-300">
-                      <button
-                        onClick={() => handleNav('construction-consultancy')}
-                        className="w-full text-left px-2 py-1 text-xs text-slate-700 hover:text-[#0b1b3d]"
-                      >
-                        Consultancy &amp; Advisory
-                      </button>
-                      <button
-                        onClick={() => handleNav('quantity-surveying')}
-                        className="w-full text-left px-2 py-1 text-xs text-slate-700 hover:text-[#0b1b3d]"
-                      >
-                        Quantity Surveying (QS)
-                      </button>
-                      <button
-                        onClick={() => handleNav('construction-claims')}
-                        className="w-full text-left px-2 py-1 text-xs text-slate-700 hover:text-[#0b1b3d]"
-                      >
-                        Claims &amp; Contracts Consultancy
-                      </button>
-                      <button
-                        onClick={() => handleNav('delay-analysis')}
-                        className="w-full text-left px-2 py-1 text-xs text-slate-700 hover:text-[#0b1b3d]"
-                      >
-                        Forensic Delay Analysis &amp; P6
-                      </button>
-                    </div>
+                    <button
+                      onClick={() => handleNav('pest-control')}
+                      className={`w-full text-left px-2 py-1.5 text-xs rounded transition-colors ${
+                        currentPage === 'pest-control' ? 'font-bold text-sky-600 bg-sky-50' : 'text-slate-700 hover:text-sky-600'
+                      }`}
+                    >
+                      Pest Control Services
+                    </button>
+                    <button
+                      onClick={() => handleNav('pre-soil-treatment')}
+                      className={`w-full text-left px-2 py-1.5 text-xs rounded transition-colors ${
+                        currentPage === 'pre-soil-treatment' ? 'font-bold text-sky-600 bg-sky-50' : 'text-slate-700 hover:text-sky-600'
+                      }`}
+                    >
+                      Pre-Soil Treatment &amp; Poisoning
+                    </button>
+                    <button
+                      onClick={() => handleNav('office-relocation')}
+                      className={`w-full text-left px-2 py-1.5 text-xs rounded transition-colors ${
+                        currentPage === 'office-relocation' ? 'font-bold text-sky-600 bg-sky-50' : 'text-slate-700 hover:text-sky-600'
+                      }`}
+                    >
+                      Office &amp; Business Relocation
+                    </button>
+                    <button
+                      onClick={() => handleNav('facilities-management')}
+                      className={`w-full text-left px-2 py-1.5 text-xs rounded transition-colors ${
+                        currentPage === 'facilities-management' ? 'font-bold text-sky-600 bg-sky-50' : 'text-slate-700 hover:text-sky-600'
+                      }`}
+                    >
+                      Facilities Management Services
+                    </button>
+                    <button
+                      onClick={() => handleNav('solutions', 'facilities')}
+                      className="w-full text-left px-2 py-1.5 text-xs font-bold text-sky-700 hover:underline"
+                    >
+                      &rarr; All Facilities Solutions Overview
+                    </button>
                   </div>
                 )}
               </div>
+
+              {/* Mobile Construction Collapsible */}
+              <div className="pt-1">
+                <button
+                  onClick={() => setMobileConstructionOpen(!mobileConstructionOpen)}
+                  className={`w-full text-left px-3 py-2 rounded-md text-sm font-bold flex items-center justify-between ${
+                    isConstructionActive ? 'bg-red-50 text-red-900' : 'bg-slate-50 text-slate-800'
+                  }`}
+                >
+                  <span className="flex items-center gap-2">
+                    <HardHat className="w-4 h-4 text-red-600" />
+                    Construction
+                  </span>
+                  <ChevronDown className={`w-4 h-4 transition-transform ${mobileConstructionOpen ? 'rotate-180' : ''}`} />
+                </button>
+
+                {mobileConstructionOpen && (
+                  <div className="pl-4 pr-1 pt-2 space-y-1 border-l-2 border-red-300 ml-2 mt-1">
+                    <button
+                      onClick={() => handleNav('construction-management')}
+                      className={`w-full text-left px-2 py-1.5 text-xs rounded transition-colors ${
+                        currentPage === 'construction-management' ? 'font-bold text-red-600 bg-red-50' : 'text-slate-700 hover:text-red-600'
+                      }`}
+                    >
+                      Construction Management
+                    </button>
+                    <button
+                      onClick={() => handleNav('project-management')}
+                      className={`w-full text-left px-2 py-1.5 text-xs rounded transition-colors ${
+                        currentPage === 'project-management' ? 'font-bold text-red-600 bg-red-50' : 'text-slate-700 hover:text-red-600'
+                      }`}
+                    >
+                      Project Management (PROCSA)
+                    </button>
+                    <button
+                      onClick={() => handleNav('freelance-pm')}
+                      className={`w-full text-left px-2 py-1.5 text-xs rounded transition-colors ${
+                        currentPage === 'freelance-pm' ? 'font-bold text-red-600 bg-red-50' : 'text-slate-700 hover:text-red-600'
+                      }`}
+                    >
+                      Freelance Project Management
+                    </button>
+                    <button
+                      onClick={() => handleNav('solutions', 'construction')}
+                      className="w-full text-left px-2 py-1.5 text-xs font-bold text-red-700 hover:underline"
+                    >
+                      &rarr; All Construction Solutions Overview
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              {/* Mobile Consultancy Collapsible */}
+              <div className="pt-1">
+                <button
+                  onClick={() => setMobileConsultancyOpen(!mobileConsultancyOpen)}
+                  className={`w-full text-left px-3 py-2 rounded-md text-sm font-bold flex items-center justify-between ${
+                    isConsultancyActive ? 'bg-slate-100 text-slate-900' : 'bg-slate-50 text-slate-800'
+                  }`}
+                >
+                  <span className="flex items-center gap-2">
+                    <Briefcase className="w-4 h-4 text-[#0b1b3d]" />
+                    Consultancy
+                  </span>
+                  <ChevronDown className={`w-4 h-4 transition-transform ${mobileConsultancyOpen ? 'rotate-180' : ''}`} />
+                </button>
+
+                {mobileConsultancyOpen && (
+                  <div className="pl-4 pr-1 pt-2 space-y-1 border-l-2 border-slate-400 ml-2 mt-1">
+                    <button
+                      onClick={() => handleNav('construction-consultancy')}
+                      className={`w-full text-left px-2 py-1.5 text-xs rounded transition-colors ${
+                        currentPage === 'construction-consultancy' ? 'font-bold text-[#0b1b3d] bg-slate-100' : 'text-slate-700 hover:text-[#0b1b3d]'
+                      }`}
+                    >
+                      Consultancy &amp; Advisory
+                    </button>
+                    <button
+                      onClick={() => handleNav('quantity-surveying')}
+                      className={`w-full text-left px-2 py-1.5 text-xs rounded transition-colors ${
+                        currentPage === 'quantity-surveying' ? 'font-bold text-[#0b1b3d] bg-slate-100' : 'text-slate-700 hover:text-[#0b1b3d]'
+                      }`}
+                    >
+                      Quantity Surveying (QS)
+                    </button>
+                    <button
+                      onClick={() => handleNav('construction-claims')}
+                      className={`w-full text-left px-2 py-1.5 text-xs rounded transition-colors ${
+                        currentPage === 'construction-claims' ? 'font-bold text-[#0b1b3d] bg-slate-100' : 'text-slate-700 hover:text-[#0b1b3d]'
+                      }`}
+                    >
+                      Claims &amp; Contracts Consultancy
+                    </button>
+                    <button
+                      onClick={() => handleNav('delay-analysis')}
+                      className={`w-full text-left px-2 py-1.5 text-xs rounded transition-colors ${
+                        currentPage === 'delay-analysis' ? 'font-bold text-[#0b1b3d] bg-slate-100' : 'text-slate-700 hover:text-[#0b1b3d]'
+                      }`}
+                    >
+                      Forensic Delay Analysis &amp; P6
+                    </button>
+                    <button
+                      onClick={() => handleNav('solutions', 'consultancy')}
+                      className="w-full text-left px-2 py-1.5 text-xs font-bold text-[#0b1b3d] hover:underline"
+                    >
+                      &rarr; All Consultancy Solutions Overview
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              <button
+                onClick={() => handleNav('projects')}
+                className={`w-full text-left px-3 py-2 rounded-md text-sm font-bold ${
+                  currentPage === 'projects' || currentPage === 'gallery' ? 'bg-red-50 text-red-600' : 'text-slate-800'
+                }`}
+              >
+                Projects
+              </button>
 
               <button
                 onClick={() => handleNav('pricing')}
@@ -541,24 +710,17 @@ export const EurekaHeader: React.FC<EurekaHeaderProps> = ({
                   currentPage === 'pricing' ? 'bg-red-50 text-red-600' : 'text-slate-800'
                 }`}
               >
-                Pricing &amp; Packages
-              </button>
-              <button
-                onClick={() => handleNav('contact')}
-                className={`w-full text-left px-3 py-2 rounded-md text-sm font-bold ${
-                  currentPage === 'contact' ? 'bg-red-50 text-red-600' : 'text-slate-800'
-                }`}
-              >
-                Contact &amp; Audit Request
+                Pricing
               </button>
             </div>
 
             <div className="pt-3 border-t border-slate-100 flex flex-col gap-2">
               <button
                 onClick={() => handleNav('contact')}
-                className="w-full py-3 rounded-lg text-xs font-black uppercase tracking-wider bg-red-600 text-white text-center shadow"
+                className="w-full py-3 rounded-lg text-xs font-black uppercase tracking-wider bg-gradient-to-r from-red-600 to-red-700 text-white text-center shadow flex items-center justify-center gap-2"
               >
-                Request a Proposal / Consultation
+                <span>GET IN TOUCH</span>
+                <ArrowRight className="w-3.5 h-3.5" />
               </button>
             </div>
           </div>

@@ -48,39 +48,7 @@ export const EurekaFacilitiesManagementPage: React.FC<EurekaFacilitiesManagement
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [solutionsDropdownOpen, setSolutionsDropdownOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<'hvac' | 'electrical' | 'plumbing' | 'compliance' | 'workplace'>('hvac');
-  const [formSubmitted, setFormSubmitted] = useState(false);
   const [activeFaq, setActiveFaq] = useState<number | null>(null);
-
-  const [formData, setFormData] = useState({
-    name: '',
-    company: '',
-    email: '',
-    phone: '',
-    propertyType: 'commercial-office',
-    facilitySize: '1000-5000',
-    serviceRequirement: 'total-fm',
-    urgency: 'standard',
-    details: ''
-  });
-
-  const handleFormSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setFormSubmitted(true);
-    setTimeout(() => {
-      setFormSubmitted(false);
-      setFormData({
-        name: '',
-        company: '',
-        email: '',
-        phone: '',
-        propertyType: 'commercial-office',
-        facilitySize: '1000-5000',
-        serviceRequirement: 'total-fm',
-        urgency: 'standard',
-        details: ''
-      });
-    }, 4500);
-  };
 
   const faqItems = [
     {
@@ -111,58 +79,71 @@ export const EurekaFacilitiesManagementPage: React.FC<EurekaFacilitiesManagement
       <EurekaHeader currentPage="facilities-management" onNavigate={onNavigate}  />
 
       {/* 3. Hero Section (Centered Layout) */}
-      <section className="relative bg-gradient-to-r from-[#050b1b] via-[#09132e] to-[#0d276b] text-white py-16 sm:py-24 px-4 sm:px-6 lg:px-8 border-b-4 border-red-600 overflow-hidden">
-        {/* Glow Accent */}
-        <div className="absolute top-0 right-1/4 w-96 h-96 bg-sky-500/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-0 left-1/4 w-96 h-96 bg-red-600/10 rounded-full blur-3xl pointer-events-none" />
+      <section className="relative bg-[#050b1b] text-white py-16 sm:py-24 px-4 sm:px-6 lg:px-8 border-b-4 border-red-600 overflow-hidden">
+        {/* Background Video */}
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover object-center pointer-events-none"
+        >
+          <source src="./Services Hero Section BG.mp4" type="video/mp4" />
+        </video>
 
-        <div className="max-w-4xl mx-auto text-center relative z-10">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-sky-500/20 border border-sky-400/30 text-sky-200 text-xs font-extrabold tracking-wider uppercase mb-5 shadow-sm">
-            <Building2 className="w-3.5 h-3.5 text-sky-400" />
-            <span>SOLUTIONS &bull; 1. FACILITIES &amp; PROPERTY MANAGEMENT</span>
-          </div>
+        {/* Video Overlay: Darker on left, totally clear on right */}
+        <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/60 to-transparent pointer-events-none" />
 
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight text-white mb-4 uppercase leading-tight">
-            FACILITIES MANAGEMENT SERVICES
-          </h1>
-
-          <p className="text-sm sm:text-base md:text-lg text-slate-200 max-w-3xl mx-auto leading-relaxed">
-            Professional built-environment asset care, planned preventative maintenance (PPM), statutory compliance, and integrated facility operations engineered to maximize asset lifecycle performance and minimize operational risk across South Africa.
-          </p>
-
-          {/* Quick CTA Actions */}
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
-            <a
-              href="#quote-form"
-              className="px-7 py-3.5 rounded-lg bg-[#d91b1b] hover:bg-red-700 text-white text-xs font-black tracking-wider uppercase transition-all shadow-lg active:scale-95 cursor-pointer"
-            >
-              Request Custom FM Proposal
-            </a>
-            <a
-              href="#core-scope"
-              className="px-7 py-3.5 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs font-black tracking-wider uppercase transition-all border border-white/20 cursor-pointer"
-            >
-              Explore Service Scope
-            </a>
-          </div>
-
-          {/* Centered KPI Badges Strip */}
-          <div className="mt-12 grid grid-cols-2 sm:grid-cols-4 gap-4 pt-8 border-t border-slate-700/60 max-w-3xl mx-auto text-center">
-            <div className="bg-white/5 rounded-lg p-3.5 border border-white/10 backdrop-blur-sm">
-              <div className="text-xl sm:text-2xl font-black text-white">&lt; 2 Hours</div>
-              <div className="text-xs text-slate-300 font-medium mt-0.5">Emergency Dispatch SLA</div>
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-left">
+          <div className="space-y-6">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-sky-500/20 border border-sky-400/30 text-sky-200 text-xs font-extrabold tracking-wider uppercase shadow-sm">
+              <Building2 className="w-3.5 h-3.5 text-sky-400" />
+              <span>SOLUTIONS &bull; 1. FACILITIES &amp; PROPERTY MANAGEMENT</span>
             </div>
-            <div className="bg-white/5 rounded-lg p-3.5 border border-white/10 backdrop-blur-sm">
-              <div className="text-xl sm:text-2xl font-black text-sky-400">100%</div>
-              <div className="text-xs text-slate-300 font-medium mt-0.5">OHS &amp; SANS Compliance</div>
+
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight text-white uppercase leading-tight max-w-3xl">
+              FACILITIES MANAGEMENT SERVICES
+            </h1>
+
+            <p className="text-sm sm:text-base md:text-lg text-slate-200 max-w-3xl leading-relaxed">
+              Professional built-environment asset care, planned preventative maintenance (PPM), statutory compliance, and integrated facility operations engineered to maximize asset lifecycle performance and minimize operational risk across South Africa.
+            </p>
+
+            {/* Quick CTA Actions */}
+            <div className="pt-2 flex flex-wrap items-center gap-4">
+              <button
+                type="button"
+                onClick={() => onNavigate?.('contact')}
+                className="px-7 py-3.5 rounded-lg bg-[#d91b1b] hover:bg-red-700 text-white text-xs font-black tracking-wider uppercase transition-all shadow-lg active:scale-95 cursor-pointer"
+              >
+                Request Custom FM Proposal
+              </button>
+              <a
+                href="#core-scope"
+                className="px-7 py-3.5 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs font-black tracking-wider uppercase transition-all border border-white/20 cursor-pointer"
+              >
+                Explore Service Scope
+              </a>
             </div>
-            <div className="bg-white/5 rounded-lg p-3.5 border border-white/10 backdrop-blur-sm">
-              <div className="text-xl sm:text-2xl font-black text-white">Single SLA</div>
-              <div className="text-xs text-slate-300 font-medium mt-0.5">All Hard &amp; Soft Services</div>
-            </div>
-            <div className="bg-white/5 rounded-lg p-3.5 border border-white/10 backdrop-blur-sm">
-              <div className="text-xl sm:text-2xl font-black text-red-400">Pr. CPM Led</div>
-              <div className="text-xs text-slate-300 font-medium mt-0.5">SACPCMP Registered</div>
+
+            {/* KPI Badges Strip */}
+            <div className="pt-6 border-t border-slate-700/60 grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-3xl text-left">
+              <div className="bg-white/5 rounded-lg p-3.5 border border-white/10 backdrop-blur-sm">
+                <div className="text-xl sm:text-2xl font-black text-white">&lt; 2 Hours</div>
+                <div className="text-xs text-slate-300 font-medium mt-0.5">Emergency Dispatch SLA</div>
+              </div>
+              <div className="bg-white/5 rounded-lg p-3.5 border border-white/10 backdrop-blur-sm">
+                <div className="text-xl sm:text-2xl font-black text-sky-400">100%</div>
+                <div className="text-xs text-slate-300 font-medium mt-0.5">OHS &amp; SANS Compliance</div>
+              </div>
+              <div className="bg-white/5 rounded-lg p-3.5 border border-white/10 backdrop-blur-sm">
+                <div className="text-xl sm:text-2xl font-black text-white">Single SLA</div>
+                <div className="text-xs text-slate-300 font-medium mt-0.5">All Hard &amp; Soft Services</div>
+              </div>
+              <div className="bg-white/5 rounded-lg p-3.5 border border-white/10 backdrop-blur-sm">
+                <div className="text-xl sm:text-2xl font-black text-red-400">Pr. CPM Led</div>
+                <div className="text-xs text-slate-300 font-medium mt-0.5">SACPCMP Registered</div>
+              </div>
             </div>
           </div>
         </div>
@@ -688,224 +669,6 @@ export const EurekaFacilitiesManagementPage: React.FC<EurekaFacilitiesManagement
         </div>
       </section>
 
-      {/* 8. Emergency Hotline & 2-Hour Dispatch SLA Banner */}
-      <section className="bg-gradient-to-r from-red-600 via-red-700 to-[#08286b] text-white py-12 px-4 sm:px-6 lg:px-8 shadow-lg">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="space-y-2 text-center md:text-left">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded bg-white/20 text-white text-xs font-black uppercase">
-              <Clock className="w-3.5 h-3.5" />
-              <span>RAPID RESPONSE GUARANTEE</span>
-            </div>
-            <h2 className="text-2xl sm:text-3xl font-black tracking-tight">
-              Facing an Urgent Facility Emergency?
-            </h2>
-            <p className="text-xs sm:text-sm text-red-100 max-w-2xl">
-              Power outages, burst water mains, HVAC failure during peak trading, or structural safety hazards — our standby technical response teams are available 24/7.
-            </p>
-          </div>
-
-          <div className="flex items-center gap-3 flex-wrap justify-center">
-            <a
-              href="tel:+27745187012"
-              className="px-6 py-3.5 rounded-lg bg-white text-slate-900 hover:bg-slate-100 text-xs font-black tracking-wider uppercase transition-all shadow-lg active:scale-95 flex items-center gap-2 cursor-pointer"
-            >
-              <Phone className="w-4 h-4 text-red-600" />
-              <span>Call +27 74 518 7012</span>
-            </a>
-            <a
-              href="https://wa.me/27745187012"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-6 py-3.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-black tracking-wider uppercase transition-all shadow-lg active:scale-95 flex items-center gap-2 cursor-pointer"
-            >
-              <MessageSquareWhatsApp className="w-4 h-4" />
-              <span>WhatsApp Operations</span>
-            </a>
-          </div>
-        </div>
-      </section>
-
-      {/* 9. Interactive Facility Consultation & Quote Request Form */}
-      <section id="quote-form" className="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 bg-slate-900 text-white">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
-            {/* Left Column: Form Description & Assurance */}
-            <div className="lg:col-span-5 space-y-6">
-              <span className="text-xs font-black uppercase tracking-widest text-red-400 bg-red-950/80 px-3 py-1 rounded border border-red-800">
-                PROPOSAL &amp; AUDIT REQUEST
-              </span>
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-white tracking-tight leading-tight">
-                Request a Custom Facilities Management Proposal
-              </h2>
-              <p className="text-sm text-slate-300 leading-relaxed">
-                Tell us about your property, facility size, and specific operational challenges. Our technical directorate will conduct a preliminary assessment and provide a transparent, structured service level proposal.
-              </p>
-
-              <div className="space-y-3.5 pt-4">
-                {[
-                  'Complimentary initial site inspection & baseline defect audit',
-                  'Itemized PPM calendar with transparent monthly pricing',
-                  'Registered Pr. CPM & SACPCMP technical oversight guarantee',
-                  'Rapid SLA implementation within 7 to 14 business days'
-                ].map((item, idx) => (
-                  <div key={idx} className="flex items-start gap-3 bg-white/5 p-3 rounded-lg border border-white/10">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
-                    <span className="text-xs sm:text-sm text-slate-200">{item}</span>
-                  </div>
-                ))}
-              </div>
-
-              <div className="p-4 bg-slate-800/80 rounded-xl border border-slate-700 text-xs text-slate-300 space-y-1">
-                <div className="font-bold text-white">Prefer to email our FM desk directly?</div>
-                <div>Email: <a href="mailto:info@eurekafms.co.za" className="text-sky-400 hover:underline">info@eurekafms.co.za</a></div>
-                <div>Headquarters: 170 Pitts Ave, Weavind Park, Pretoria</div>
-              </div>
-            </div>
-
-            {/* Right Column: Interactive Form */}
-            <div className="lg:col-span-7 bg-white text-slate-900 rounded-2xl p-6 sm:p-10 shadow-2xl border border-slate-200">
-              <h3 className="text-lg font-black text-slate-900 mb-1">
-                Facility Assessment Form
-              </h3>
-              <p className="text-xs text-slate-500 mb-6">
-                Fill in your details below to receive a formal facilities proposal.
-              </p>
-
-              {formSubmitted ? (
-                <div className="bg-emerald-50 border-2 border-emerald-500 rounded-xl p-8 text-center space-y-3 animate-in fade-in">
-                  <div className="w-12 h-12 rounded-full bg-emerald-500 text-white flex items-center justify-center mx-auto">
-                    <CheckCircle2 className="w-6 h-6" />
-                  </div>
-                  <h4 className="text-lg font-black text-emerald-900">Proposal Request Received!</h4>
-                  <p className="text-xs text-emerald-700 max-w-md mx-auto">
-                    Thank you, <strong>{formData.name || 'Valued Client'}</strong>. Our facilities engineering team is reviewing your requirements and will contact you within 2 business hours to schedule your baseline facility audit.
-                  </p>
-                </div>
-              ) : (
-                <form onSubmit={handleFormSubmit} className="space-y-4">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-xs font-bold text-slate-700 mb-1">Your Full Name *</label>
-                      <input
-                        type="text"
-                        required
-                        value={formData.name}
-                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                        placeholder="e.g. Johan van der Merwe"
-                        className="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 text-xs focus:ring-2 focus:ring-sky-500 focus:outline-none"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-xs font-bold text-slate-700 mb-1">Company / Property Owner *</label>
-                      <input
-                        type="text"
-                        required
-                        value={formData.company}
-                        onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-                        placeholder="e.g. Apex Commercial Holdings"
-                        className="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 text-xs focus:ring-2 focus:ring-sky-500 focus:outline-none"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-xs font-bold text-slate-700 mb-1">Business Email *</label>
-                      <input
-                        type="email"
-                        required
-                        value={formData.email}
-                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                        placeholder="e.g. johan@apexholdings.co.za"
-                        className="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 text-xs focus:ring-2 focus:ring-sky-500 focus:outline-none"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-xs font-bold text-slate-700 mb-1">Contact Phone / Mobile *</label>
-                      <input
-                        type="tel"
-                        required
-                        value={formData.phone}
-                        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                        placeholder="e.g. +27 82 123 4567"
-                        className="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 text-xs focus:ring-2 focus:ring-sky-500 focus:outline-none"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    <div>
-                      <label className="block text-xs font-bold text-slate-700 mb-1">Property Type</label>
-                      <select
-                        value={formData.propertyType}
-                        onChange={(e) => setFormData({ ...formData, propertyType: e.target.value })}
-                        className="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 text-xs focus:ring-2 focus:ring-sky-500 focus:outline-none bg-white"
-                      >
-                        <option value="commercial-office">Commercial Office</option>
-                        <option value="industrial-warehouse">Industrial / Warehouse</option>
-                        <option value="retail-center">Retail / Shopping Mall</option>
-                        <option value="institutional">School / University / Clinic</option>
-                        <option value="residential-estate">Residential Estate / Complex</option>
-                        <option value="other">Other Built-Environment</option>
-                      </select>
-                    </div>
-                    <div>
-                      <label className="block text-xs font-bold text-slate-700 mb-1">Estimated Size</label>
-                      <select
-                        value={formData.facilitySize}
-                        onChange={(e) => setFormData({ ...formData, facilitySize: e.target.value })}
-                        className="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 text-xs focus:ring-2 focus:ring-sky-500 focus:outline-none bg-white"
-                      >
-                        <option value="under-1000">&lt; 1,000 m²</option>
-                        <option value="1000-5000">1,000 m² – 5,000 m²</option>
-                        <option value="5000-15000">5,000 m² – 15,000 m²</option>
-                        <option value="15000-plus">15,000+ m²</option>
-                        <option value="multi-site">Multi-Site Portfolio</option>
-                      </select>
-                    </div>
-                    <div>
-                      <label className="block text-xs font-bold text-slate-700 mb-1">Service Scope</label>
-                      <select
-                        value={formData.serviceRequirement}
-                        onChange={(e) => setFormData({ ...formData, serviceRequirement: e.target.value })}
-                        className="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 text-xs focus:ring-2 focus:ring-sky-500 focus:outline-none bg-white"
-                      >
-                        <option value="total-fm">Total Integrated FM (Hard + Soft)</option>
-                        <option value="hard-maintenance">Hard Maintenance (HVAC, Elecl, Plumb)</option>
-                        <option value="soft-services">Soft Services (Cleaning, Hygiene, Pest)</option>
-                        <option value="statutory-audit">OHS &amp; Compliance Audit Only</option>
-                        <option value="emergency-callout">Emergency Callout / Urgent Repair</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-bold text-slate-700 mb-1">
-                      Facility Description &amp; Specific Maintenance Challenges
-                    </label>
-                    <textarea
-                      rows={3}
-                      value={formData.details}
-                      onChange={(e) => setFormData({ ...formData, details: e.target.value })}
-                      placeholder="Please mention your location, key equipment on site, existing maintenance pain points, or upcoming lease deadlines..."
-                      className="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 text-xs focus:ring-2 focus:ring-sky-500 focus:outline-none"
-                    ></textarea>
-                  </div>
-
-                  <button
-                    type="submit"
-                    className="w-full py-3.5 px-6 rounded-lg bg-[#d91b1b] hover:bg-red-700 text-white text-xs font-black tracking-wider uppercase transition-all shadow-lg active:scale-95 flex items-center justify-center gap-2 cursor-pointer"
-                  >
-                    <Send className="w-4 h-4" />
-                    <span>Submit Proposal Request</span>
-                  </button>
-                </form>
-              )}
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* 10. Frequently Asked Questions (FAQ) */}
       <section className="py-16 sm:py-20 px-4 sm:px-6 lg:px-8 bg-slate-50 border-b border-slate-200">
         <div className="max-w-4xl mx-auto">
@@ -948,42 +711,8 @@ export const EurekaFacilitiesManagementPage: React.FC<EurekaFacilitiesManagement
         </div>
       </section>
 
-      {/* 11. Bottom CTA Strip */}
-      <section className="bg-slate-900 text-white py-16 px-4 sm:px-6 lg:px-8 text-center border-t border-slate-800">
-        <div className="max-w-4xl mx-auto space-y-5">
-          <h2 className="text-2xl sm:text-3xl font-black tracking-tight">
-            Ready to Optimize Your Facility's Operations &amp; Reduce Downtime?
-          </h2>
-          <p className="text-xs sm:text-sm text-slate-300 max-w-2xl mx-auto leading-relaxed">
-            Partner with Eureka Facilities Management Solutions for certified technical governance, single-point accountability, and predictable asset performance.
-          </p>
-          <div className="pt-2 flex flex-wrap items-center justify-center gap-4">
-            <button
-              onClick={() => onNavigate?.('contact')}
-              className="px-7 py-3.5 rounded-lg bg-[#d91b1b] hover:bg-red-700 text-white text-xs font-black tracking-wider uppercase transition-all shadow-lg active:scale-95 cursor-pointer"
-            >
-              Request a Consultation
-            </button>
-            <button
-              onClick={() => onNavigate?.('solutions', 'all')}
-              className="px-7 py-3.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-white text-xs font-black tracking-wider uppercase transition-all border border-slate-700 cursor-pointer"
-            >
-              View All 3 Solutions
-            </button>
-          </div>
-        </div>
-      </section>
-
       {/* 12. Site Footer */}
       <EurekaFooter onNavigate={onNavigate}  />
     </div>
   );
 };
-
-function MessageSquareWhatsApp(props: React.SVGProps<SVGSVGElement>) {
-  return (
-    <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" {...props}>
-      <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
-    </svg>
-  );
-}

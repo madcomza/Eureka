@@ -33,41 +33,6 @@ export const EurekaFooter: React.FC<EurekaFooterProps> = ({
 
   return (
     <footer id="eureka-standard-footer" className="bg-[#07132c] text-white font-sans antialiased border-t-4 border-red-600">
-      {/* 1. Global Call to Action Pre-Footer Banner */}
-      <div className="bg-gradient-to-r from-[#0b1b3d] via-[#112759] to-[#0b1b3d] border-b border-slate-800/80 py-10 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
-          <div>
-            <div className="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-red-400 mb-1 flex items-center gap-1.5">
-              <Award className="w-3.5 h-3.5" />
-              <span>DIRECTOR-LED BUILT ENVIRONMENT EXPERTISE</span>
-            </div>
-            <h2 className="text-xl sm:text-2xl lg:text-3xl font-black text-white tracking-tight">
-              Ready to Enhance Your Facilities or Protect Your Project?
-            </h2>
-            <p className="text-xs sm:text-sm text-slate-300 max-w-2xl mt-1">
-              Speak directly with our registered Pr. CPM and built environment specialists for an immediate assessment, schedule audit, or tailored proposal.
-            </p>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-3 shrink-0">
-            <a
-              href="tel:+27745187012"
-              className="px-5 py-3 rounded-lg text-xs font-bold text-white bg-slate-800 hover:bg-slate-700 border border-slate-600 transition-all flex items-center gap-2"
-            >
-              <Phone className="w-3.5 h-3.5 text-red-400" />
-              <span>+27 74 518 7012</span>
-            </a>
-            <button
-              onClick={() => handleNav('contact')}
-              className="px-6 py-3 rounded-lg text-xs font-black tracking-wider uppercase bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white shadow-lg transition-all transform active:scale-95 flex items-center gap-2 cursor-pointer"
-            >
-              <span>REQUEST PROPOSAL</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </button>
-          </div>
-        </div>
-      </div>
-
       {/* 2. Main Footer Multi-Column Grid */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 lg:gap-8">
@@ -111,14 +76,6 @@ export const EurekaFooter: React.FC<EurekaFooterProps> = ({
             <ul className="space-y-2 text-xs text-slate-300">
               <li>
                 <button
-                  onClick={() => handleNav('facilities-management')}
-                  className="hover:text-sky-400 transition-colors text-left"
-                >
-                  Facilities Management
-                </button>
-              </li>
-              <li>
-                <button
                   onClick={() => handleNav('commercial-cleaning')}
                   className="hover:text-sky-400 transition-colors text-left"
                 >
@@ -147,6 +104,14 @@ export const EurekaFooter: React.FC<EurekaFooterProps> = ({
                   className="hover:text-sky-400 transition-colors text-left"
                 >
                   Office &amp; Business Relocation
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => handleNav('facilities-management')}
+                  className="hover:text-sky-400 transition-colors text-left"
+                >
+                  Facilities Management
                 </button>
               </li>
               <li>
@@ -313,6 +278,9 @@ export const EurekaFooter: React.FC<EurekaFooterProps> = ({
             </button>
             <button onClick={() => handleNav('solutions', 'all')} className="hover:text-white transition-colors">
               Solutions
+            </button>
+            <button onClick={() => handleNav('projects')} className="hover:text-white transition-colors">
+              Projects
             </button>
             <button onClick={() => handleNav('pricing')} className="hover:text-white transition-colors">
               Pricing

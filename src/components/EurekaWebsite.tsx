@@ -4,27 +4,19 @@ import monwabisiImg from '../assets/images/monwabisi-makinana.jpg';
 import facilitiesImg from '../assets/images/facilities_and_property_solutions.jpg';
 import constructionImg from '../assets/images/construction_delivery_solutions.jpg';
 import consultancyImg from '../assets/images/consultancy_solutions.jpg';
-import garankuwaMallImg from '../assets/images/garankuwa_city_mall.jpg';
-import garankuwaMallWebp from '../assets/images/garankuwa_city_mall.webp';
-import publicSectorImg from '../assets/images/public_sector_infrastructure_program.jpg';
-import constructionProjectImg from '../assets/images/construction_project.jpg';
-import constructionClaimDisputeImg from '../assets/images/construction_claim_dispute.jpg';
-import projectManagerImg from '../assets/images/project_manager.jpg';
-import publicSectorMunicipalitiesImg from '../assets/images/public_sector_municipalities.jpg';
-import unisaLibraryImg from '../assets/images/unisa-library.jpg';
-import officeRelocationImg from '../assets/images/office_relocation.jpg';
-import hospitalImg from '../assets/images/hospital.jpg';
+import undercoverParkingImg from '../assets/images/undercover_parking.jpg';
+import fumigationImg from '../assets/images/Fumigation.jpeg';
 import { EurekaLogo } from './EurekaLogo';
 import { EurekaHeader } from './EurekaHeader';
 import { EurekaFooter } from './EurekaFooter';
 import {
   Phone,
   Mail,
-  MapPin,
   Linkedin,
   Instagram,
   Facebook,
   ChevronRight,
+  ChevronLeft,
   ArrowRight,
   ArrowLeft,
   Menu,
@@ -33,21 +25,14 @@ import {
   Users,
   ShieldCheck,
   Building2,
-  Factory,
-  ShoppingCart,
-  GraduationCap,
-  HeartPulse,
-  Landmark,
   Layers,
   Briefcase,
-  HardHat,
   Scale,
   CheckCircle2,
   ChevronDown,
   Sparkles,
   HelpCircle,
   Building,
-  Home,
   Check,
   TrendingUp,
   Clock,
@@ -55,12 +40,14 @@ import {
   AlertTriangle,
   Play,
   Pause,
-  ExternalLink
+  ExternalLink,
+  Star,
+  Quote
 } from 'lucide-react';
 import { SolutionSubcategory } from './EurekaSolutionsPage';
 
 interface EurekaWebsiteProps {
-  onNavigate?: (page: 'home' | 'about' | 'solutions' | 'facilities-management' | 'commercial-cleaning' | 'pest-control' | 'pre-soil-treatment' | 'office-relocation' | 'construction-management' | 'project-management' | 'freelance-pm' | 'construction-consultancy' | 'quantity-surveying' | 'construction-claims' | 'delay-analysis' | 'pricing' | 'contact', subcategory?: SolutionSubcategory) => void;
+  onNavigate?: (page: 'home' | 'about' | 'solutions' | 'facilities-management' | 'commercial-cleaning' | 'pest-control' | 'pre-soil-treatment' | 'office-relocation' | 'construction-management' | 'project-management' | 'freelance-pm' | 'construction-consultancy' | 'quantity-surveying' | 'construction-claims' | 'delay-analysis' | 'projects' | 'gallery' | 'pricing' | 'contact', subcategory?: SolutionSubcategory) => void;
 }
 
 export const EurekaWebsite: React.FC<EurekaWebsiteProps> = ({ onNavigate }) => {
@@ -68,7 +55,11 @@ export const EurekaWebsite: React.FC<EurekaWebsiteProps> = ({ onNavigate }) => {
   const [solutionsDropdownOpen, setSolutionsDropdownOpen] = useState(false);
   const [activeHeroSlide, setActiveHeroSlide] = useState(0);
   const [isAutoplay, setIsAutoplay] = useState(true);
-  const [activeTab, setActiveTab] = useState<'all' | 'commercial' | 'infrastructure' | 'specialist'>('all');
+  const [openWhyChooseIndex, setOpenWhyChooseIndex] = useState<number | null>(0);
+
+  const toggleWhyChoose = (idx: number) => {
+    setOpenWhyChooseIndex((prev) => (prev === idx ? null : idx));
+  };
 
   const heroSlides = [
     {
@@ -130,11 +121,11 @@ export const EurekaWebsite: React.FC<EurekaWebsiteProps> = ({ onNavigate }) => {
       badge: 'Operational Continuity',
       color: 'sky',
       services: [
-        'Integrated Facilities Management',
         'Commercial Cleaning & Hygiene Care',
-        'Pest Control & Soil Poisoning',
+        'Pest Control Services',
+        'Pre-Soil Treatment & Soil Poisoning',
         'Office Relocation & Move Coordination',
-        'Routine Building Maintenance & Repairs'
+        'Integrated Facilities Management'
       ]
     },
     {
@@ -170,49 +161,6 @@ export const EurekaWebsite: React.FC<EurekaWebsiteProps> = ({ onNavigate }) => {
         'Delay Analysis & Programme Recovery',
         'Commercial Risk & Cost Engineering'
       ]
-    }
-  ];
-
-  const featuredProjects = [
-    {
-      id: 1,
-      title: 'GaRankuwa City Mall Redevelopment',
-      category: 'commercial',
-      value: 'R676M',
-      location: 'Gauteng, South Africa',
-      desc: 'High-density commercial precinct expansion, tenant fit-out coordination, and comprehensive civil infrastructure upgrades.',
-      image: garankuwaMallImg,
-      scope: 'Project Controls & Construction Management'
-    },
-    {
-      id: 2,
-      title: 'Zwartkop Integrated Facility Development',
-      category: 'infrastructure',
-      value: 'R500M',
-      location: 'Pretoria, South Africa',
-      desc: 'Multi-disciplinary government and institutional facility development, high-security civil works, and environmental management.',
-      image: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=800&q=80',
-      scope: 'Turnkey Project Management & HSE'
-    },
-    {
-      id: 3,
-      title: 'Public Sector Infrastructure Program',
-      category: 'infrastructure',
-      value: 'R264.4M',
-      location: 'South Africa',
-      desc: 'Regional civic infrastructure delivery, municipal service reticulation, and structured contractor administration under GCC & NEC standards.',
-      image: publicSectorImg,
-      scope: 'Programme Management & Claims Mitigation'
-    },
-    {
-      id: 4,
-      title: 'Specialist Library & Research Center Upgrade',
-      category: 'specialist',
-      value: 'R97M',
-      location: 'UNISA Campus, Pretoria',
-      desc: 'Complex institutional refurbishment, high-spec acoustic fit-outs, precision HVAC upgrades, and heritage preservation.',
-      image: unisaLibraryImg,
-      scope: 'Principal Agent & Quality Assurance'
     }
   ];
 
@@ -261,61 +209,69 @@ export const EurekaWebsite: React.FC<EurekaWebsiteProps> = ({ onNavigate }) => {
     }
   ];
 
-  const savingsScenarios = [
+  const [activeTestimonial, setActiveTestimonial] = useState(0);
+  const [isTestimonialAutoplay, setIsTestimonialAutoplay] = useState(true);
+
+  const testimonials = [
     {
-      scenario: 'Scenario 01',
-      title: 'You Manage an Office or Commercial Building',
-      problem: 'Instead of your staff spending hours coordinating cleaners, maintenance providers, pest control, and hygiene suppliers, EFMS brings these facility requirements together under one roof.',
-      benefit: 'Fewer suppliers to coordinate, reduced operational friction, and less management time spent on routine issues.',
-      image: 'https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&w=600&q=80'
+      id: 1,
+      headline: "Peace of mind, every time.",
+      quote: "As a property manager, I work with multiple vendors. Eureka stands out for their consistency, attention to detail, and great customer support. They make my job easier and my properties cleaner.",
+      author: "Thabo N.",
+      role: "Property Manager"
     },
     {
-      scenario: 'Scenario 02',
-      title: 'You Are Planning a Business Relocation',
-      problem: 'Moving offices can disrupt employees and normal business operations. EFMS coordinates relocation requirements together with move-in, move-out, fit-outs, and deep cleaning.',
-      benefit: 'A structured, organised move that protects company assets and minimizes downtime.',
-      image: officeRelocationImg
+      id: 2,
+      headline: "Fast response and great results.",
+      quote: "We had an urgent pest issue at our guesthouse, and Eureka responded within hours. They were discreet, efficient, and followed up to make sure everything was resolved. Excellent service!",
+      author: "Lerato M.",
+      role: "Guesthouse Owner"
     },
     {
-      scenario: 'Scenario 03',
-      title: 'You Are Starting a Construction Project',
-      problem: 'Poor upfront planning leads to budget blowouts, delays, coordination breakdowns, and costly rework. EFMS provides planning, procurement, quality control, and cost monitoring.',
-      benefit: 'Stronger project controls, tight budget adherence, and proactive issue identification.',
-      image: constructionProjectImg
+      id: 3,
+      headline: "Exceptional service for our school.",
+      quote: "Eureka has provided cleaning and sanitation services at our school for several months. Their staff are respectful, reliable, and always go the extra mile. We feel confident knowing our learners are in a clean and safe environment.",
+      author: "Patel",
+      role: "Facilities Coordinator"
     },
     {
-      scenario: 'Scenario 04',
-      title: 'Your Construction Project Is Falling Behind',
-      problem: 'A delayed project threatens cash flow, contractual penalties, and tenant commitments. EFMS reviews schedules, assesses critical paths, analyses delays, and builds recovery programmes.',
-      benefit: 'Clear forensic insight into delay causes with an actionable recovery roadmap to get back on track.',
-      image: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=600&q=80'
+      id: 4,
+      headline: "A trustworthy partner in facilities management.",
+      quote: "We've partnered with Eureka for over two years now. From daily cleaning to washroom hygiene services, they handle it all with professionalism and efficiency. Their team feels like an extension of our own.",
+      author: "Zanele T.",
+      role: "Facilities Coordinator"
     },
     {
-      scenario: 'Scenario 05',
-      title: 'You Are Facing a Construction Claim or Dispute',
-      problem: 'Contractual claims require deep expertise across standard contracts (NEC, FIDIC, GCC, JBCC), records, and quantum analysis. EFMS prepares rigorous claim evaluations and defense.',
-      benefit: 'Direct access to specialist claims and contract advisory without hiring full-time internal legal counsel.',
-      image: constructionClaimDisputeImg
+      id: 5,
+      headline: "Highly recommended for pest control!",
+      quote: "We were dealing with a serious rodent issue in our warehouse, and Eureka came highly recommended. Their pest control team acted quickly, explained the entire process, and completely resolved the problem. We haven't seen a single rodent since.",
+      author: "Darren K.",
+      role: "Operations Director"
     },
     {
-      scenario: 'Scenario 06',
-      title: 'You Need an Experienced Project Manager — Flexibly',
-      problem: 'A high-stakes capital project requires experienced leadership, but your business does not have enough continuous volume to justify a permanent executive appointment.',
-      benefit: 'Senior Pr. CPM and PMP® leadership on-demand, tailored precisely to project duration.',
-      image: projectManagerImg
+      id: 6,
+      headline: "Reliable and professional from day one.",
+      quote: "Eureka has transformed the way our office looks and feels. Their cleaning team is always punctual, professional, and thorough. We've noticed a significant improvement in our workplace hygiene and staff morale.",
+      author: "Nolwazi M.",
+      role: "Office Manager"
     }
   ];
 
-  const whoWeServeCategories = [
-    { title: 'Commercial & Workplaces', desc: 'Offices, corporate parks, multi-tenant headquarters', icon: Building2, img: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=400&q=80' },
-    { title: 'Industrial & Warehouses', desc: 'Logistics hubs, manufacturing plants, workshops', icon: Factory, img: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=400&q=80' },
-    { title: 'Retail & Shopping Centres', desc: 'Retail malls, convenience centers, strip malls', icon: ShoppingCart, img: garankuwaMallWebp },
-    { title: 'Institutions & Healthcare', desc: 'Universities, schools, clinics, hospitals', icon: GraduationCap, img: hospitalImg },
-    { title: 'Public Sector & Municipalities', desc: 'Government agencies, state-owned enterprises', icon: Landmark, img: publicSectorMunicipalitiesImg },
-    { title: 'Developers & Contractors', desc: 'Property developers, construction firms, project teams', icon: HardHat, img: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=400&q=80' },
-    { title: 'SMEs & Growing Businesses', desc: 'Growing enterprises needing outsourced facilities', icon: Briefcase, img: 'https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&w=400&q=80' },
-    { title: 'Residential & Estates', desc: 'Residential complexes, private estates, landlords', icon: Home, img: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=400&q=80' }
-  ];
+  useEffect(() => {
+    if (!isTestimonialAutoplay) return;
+    const interval = setInterval(() => {
+      setActiveTestimonial((prev) => (prev + 1) % testimonials.length);
+    }, 6000);
+    return () => clearInterval(interval);
+  }, [isTestimonialAutoplay, testimonials.length]);
+
+  const nextTestimonial = () => {
+    setActiveTestimonial((prev) => (prev + 1) % testimonials.length);
+  };
+
+  const prevTestimonial = () => {
+    setActiveTestimonial((prev) => (prev - 1 + testimonials.length) % testimonials.length);
+  };
 
   const nextHeroSlide = () => {
     setActiveHeroSlide((prev) => (prev + 1) % heroSlides.length);
@@ -324,10 +280,6 @@ export const EurekaWebsite: React.FC<EurekaWebsiteProps> = ({ onNavigate }) => {
   const prevHeroSlide = () => {
     setActiveHeroSlide((prev) => (prev - 1 + heroSlides.length) % heroSlides.length);
   };
-
-  const filteredProjects = activeTab === 'all'
-    ? featuredProjects
-    : featuredProjects.filter(p => p.category === activeTab);
 
   return (
     <div id="eureka-landing-root" className="w-full bg-white text-slate-900 font-sans antialiased selection:bg-red-500 selection:text-white">
@@ -571,25 +523,21 @@ export const EurekaWebsite: React.FC<EurekaWebsiteProps> = ({ onNavigate }) => {
                       alt={sol.title}
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                    
-                    <div className="absolute top-3.5 left-3.5 bg-black/60 backdrop-blur-md px-2.5 py-1 rounded text-[11px] font-extrabold text-white uppercase tracking-wider border border-white/10">
-                      Solution {sol.num}
-                    </div>
-
-                    <div className="absolute top-3.5 right-3.5 bg-red-600 text-white text-[10px] font-black uppercase px-2.5 py-1 rounded shadow">
-                      {sol.badge}
-                    </div>
-
-                    <div className="absolute bottom-3.5 left-3.5 right-3.5">
-                      <h3 className="text-lg font-black text-white tracking-tight drop-shadow leading-tight">
-                        {sol.title}
-                      </h3>
-                    </div>
                   </div>
 
                   {/* Card Body */}
                   <div className="p-6">
+                    <div className="flex items-center justify-between gap-2 mb-2.5">
+                      <span className="text-[11px] font-extrabold text-red-600 uppercase tracking-wider">
+                        Solution {sol.num}
+                      </span>
+                      <span className="bg-red-50 text-red-700 text-[10px] font-black uppercase px-2.5 py-0.5 rounded border border-red-200">
+                        {sol.badge}
+                      </span>
+                    </div>
+                    <h3 className="text-lg font-black text-slate-900 tracking-tight leading-tight mb-2">
+                      {sol.title}
+                    </h3>
                     <p className="text-xs font-semibold text-slate-800 leading-relaxed mb-3">
                       {sol.subtitle}
                     </p>
@@ -649,17 +597,6 @@ export const EurekaWebsite: React.FC<EurekaWebsiteProps> = ({ onNavigate }) => {
                 className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
                 referrerPolicy="no-referrer"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent" />
-              
-              <div className="absolute top-4 left-4 bg-red-600 text-white text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded shadow">
-                Founder &amp; Director
-              </div>
-
-              <div className="absolute bottom-4 left-4 right-4 bg-black/70 backdrop-blur-md p-3.5 rounded-xl border border-white/10">
-                <span className="text-[11px] font-extrabold text-red-400 uppercase tracking-wider block">Executive Leadership</span>
-                <h4 className="text-sm font-black text-white">Monwabisi Makinana</h4>
-                <p className="text-xs text-slate-300">Pr. CPM (SACPCMP), PMP® (PMI, USA)</p>
-              </div>
             </div>
           </motion.div>
 
@@ -706,16 +643,22 @@ export const EurekaWebsite: React.FC<EurekaWebsiteProps> = ({ onNavigate }) => {
               </div>
             </div>
 
-            <div className="pt-2 flex flex-wrap items-center gap-4">
+            <div className="pt-2 flex flex-wrap items-center gap-3">
               <button
                 onClick={() => onNavigate?.('about')}
-                className="px-6 py-3 bg-[#d91b1b] hover:bg-red-700 text-white text-xs font-black rounded-lg tracking-wider transition-all shadow-md cursor-pointer active:scale-95"
+                className="px-5 py-3 bg-[#d91b1b] hover:bg-red-700 text-white text-xs font-black rounded-lg tracking-wider transition-all shadow-md cursor-pointer active:scale-95"
               >
                 READ FULL LEADERSHIP BIO
               </button>
               <button
+                onClick={() => onNavigate?.('projects')}
+                className="px-5 py-3 bg-sky-600 hover:bg-sky-500 text-white text-xs font-black rounded-lg tracking-wider transition-all shadow-md cursor-pointer active:scale-95"
+              >
+                VIEW PROJECTS
+              </button>
+              <button
                 onClick={() => onNavigate?.('contact')}
-                className="px-6 py-3 bg-white/10 hover:bg-white/20 text-white text-xs font-black rounded-lg tracking-wider border border-white/20 transition-all cursor-pointer"
+                className="px-5 py-3 bg-white/10 hover:bg-white/20 text-white text-xs font-black rounded-lg tracking-wider border border-white/20 transition-all cursor-pointer"
               >
                 SCHEDULE A CONSULTATION
               </button>
@@ -724,104 +667,10 @@ export const EurekaWebsite: React.FC<EurekaWebsiteProps> = ({ onNavigate }) => {
         </div>
       </section>
 
-      {/* 4.8 NEW: Built-Environment Track Record & Project Showcase */}
-      <section className="bg-white py-20 px-4 sm:px-6 lg:px-8 border-b border-slate-200">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
-            <div>
-              <span className="text-xs font-black tracking-widest text-[#d91b1b] uppercase block mb-2">
-                PROVEN BUILT-ENVIRONMENT TRACK RECORD
-              </span>
-              <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
-                Featured Projects &amp; Capabilities Portfolio
-              </h2>
-              <p className="text-sm text-slate-600 mt-2 max-w-xl">
-                Representative project leadership across major commercial precincts, civic infrastructure, and institutional facilities.
-              </p>
-            </div>
-
-            {/* Category Filter Pills */}
-            <div className="flex flex-wrap items-center gap-2">
-              {[
-                { id: 'all', label: 'All Projects' },
-                { id: 'commercial', label: 'Commercial' },
-                { id: 'infrastructure', label: 'Infrastructure' },
-                { id: 'specialist', label: 'Specialist Upgrades' }
-              ].map((tab) => (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id as any)}
-                  className={`px-3.5 py-1.5 text-xs font-bold rounded-full transition-all cursor-pointer ${
-                    activeTab === tab.id
-                      ? 'bg-[#08286b] text-white shadow-sm'
-                      : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
-                  }`}
-                >
-                  {tab.label}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Project Cards Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {filteredProjects.map((proj) => (
-              <motion.div
-                key={proj.id}
-                layout
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                transition={{ duration: 0.35 }}
-                className="bg-slate-50 border border-slate-200 rounded-xl overflow-hidden shadow-sm hover:shadow-md hover:border-slate-300 transition-all flex flex-col justify-between group"
-              >
-                <div>
-                  <div className="relative h-44 overflow-hidden bg-slate-900">
-                    <img
-                      src={proj.image}
-                      alt={proj.title}
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent" />
-                    
-                    <div className="absolute top-3 right-3 bg-red-600 text-white text-[11px] font-black px-2.5 py-0.5 rounded shadow">
-                      {proj.value}
-                    </div>
-
-                    <div className="absolute bottom-2.5 left-3 text-[11px] font-bold text-slate-300 flex items-center gap-1">
-                      <MapPin className="w-3 h-3 text-red-400" />
-                      <span>{proj.location}</span>
-                    </div>
-                  </div>
-
-                  <div className="p-4">
-                    <h3 className="text-sm font-black text-slate-900 mb-1 leading-snug">
-                      {proj.title}
-                    </h3>
-                    <p className="text-xs text-slate-600 leading-relaxed mb-3">
-                      {proj.desc}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="p-4 pt-0 border-t border-slate-200/60 mt-2">
-                  <span className="text-[10px] font-extrabold uppercase tracking-wider text-sky-800 block">
-                    Scope of Delivery:
-                  </span>
-                  <span className="text-xs font-semibold text-slate-800">
-                    {proj.scope}
-                  </span>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 5. Why Businesses Choose EFMS (7 Points from Document with Interactive Animation) */}
+      {/* 5. Why Businesses Choose EFMS (Split into 2 Columns: Accordion + Fumigation Visual) */}
       <section className="bg-slate-50 py-20 px-4 sm:px-6 lg:px-8 border-b border-slate-200">
         <div className="max-w-7xl mx-auto">
-          <div className="max-w-3xl mb-14">
+          <div className="max-w-3xl mb-12">
             <span className="text-xs font-black tracking-widest text-[#d91b1b] uppercase block mb-2">
               WHY CHOOSE EUREKA?
             </span>
@@ -833,234 +682,453 @@ export const EurekaWebsite: React.FC<EurekaWebsiteProps> = ({ onNavigate }) => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {whyChoosePoints.map((point, idx) => {
-              const IconComp = point.icon;
-              return (
-                <motion.div
-                  key={idx}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: idx * 0.08, duration: 0.4 }}
-                  className="p-6 rounded-xl bg-white border border-slate-200 flex flex-col justify-between hover:border-red-500/40 hover:shadow-md transition-all group"
-                >
-                  <div>
-                    <div className="flex items-center justify-between mb-4">
-                      <span className="text-2xl font-black text-[#d91b1b] block">{point.num}</span>
-                      <div className="w-9 h-9 rounded-lg bg-red-50 text-red-600 flex items-center justify-center group-hover:bg-[#d91b1b] group-hover:text-white transition-colors">
-                        <IconComp className="w-4 h-4" />
-                      </div>
-                    </div>
-                    <h3 className="text-base font-extrabold text-slate-900 mb-2">{point.title}</h3>
-                    <p className="text-xs text-slate-600 leading-relaxed">{point.desc}</p>
-                  </div>
-                </motion.div>
-              );
-            })}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+            {/* Column 1: Accordion Format of the 7 Why Choose Points */}
+            <div className="lg:col-span-7 space-y-3">
+              {whyChoosePoints.map((point, idx) => {
+                const IconComp = point.icon;
+                const isOpen = openWhyChooseIndex === idx;
 
-            {/* Quick Consultation Promo Box */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              className="p-6 rounded-xl bg-gradient-to-br from-[#08286b] to-[#04163d] text-white flex flex-col justify-between shadow-xl border border-blue-900"
-            >
-              <div>
-                <span className="text-xs font-black uppercase tracking-wider text-red-400 block mb-2">PARTNER WITH US</span>
-                <h3 className="text-lg font-black text-white mb-2">Ready to discuss your project or facility requirement?</h3>
-                <p className="text-xs text-slate-300 leading-relaxed mb-4">
-                  Speak with our registered project management and facilities specialists today for a tailored assessment.
-                </p>
+                return (
+                  <div
+                    key={idx}
+                    className={`rounded-xl border transition-all duration-200 overflow-hidden ${
+                      isOpen
+                        ? 'bg-white border-red-500/50 shadow-md ring-1 ring-red-500/20'
+                        : 'bg-white border-slate-200 hover:border-slate-300 shadow-sm'
+                    }`}
+                  >
+                    <button
+                      type="button"
+                      onClick={() => toggleWhyChoose(idx)}
+                      className="w-full p-4 sm:p-5 text-left flex items-center justify-between gap-4 cursor-pointer focus:outline-none"
+                      aria-expanded={isOpen}
+                    >
+                      <div className="flex items-center gap-3.5 min-w-0">
+                        <span
+                          className={`text-sm font-black shrink-0 transition-colors ${
+                            isOpen ? 'text-[#d91b1b]' : 'text-slate-400'
+                          }`}
+                        >
+                          {point.num}
+                        </span>
+                        <div
+                          className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 transition-colors ${
+                            isOpen ? 'bg-[#d91b1b] text-white' : 'bg-red-50 text-red-600'
+                          }`}
+                        >
+                          <IconComp className="w-4 h-4" />
+                        </div>
+                        <h3
+                          className={`text-sm sm:text-base font-extrabold transition-colors ${
+                            isOpen ? 'text-slate-950' : 'text-slate-800'
+                          }`}
+                        >
+                          {point.title}
+                        </h3>
+                      </div>
+                      <div
+                        className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 transition-transform duration-200 ${
+                          isOpen ? 'rotate-180 text-red-600 bg-red-50' : 'text-slate-400 bg-slate-100'
+                        }`}
+                      >
+                        <ChevronDown className="w-3.5 h-3.5" />
+                      </div>
+                    </button>
+
+                    <AnimatePresence initial={false}>
+                      {isOpen && (
+                        <motion.div
+                          key="content"
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: 'auto', opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{ duration: 0.25, ease: 'easeInOut' }}
+                          className="overflow-hidden"
+                        >
+                          <div className="px-5 pb-5 pt-1 text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-slate-100 mt-1">
+                            {point.desc}
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Column 2: Fumigation Image & Partner Callout */}
+            <div className="lg:col-span-5 flex flex-col gap-6 lg:sticky lg:top-24">
+              <div className="relative rounded-2xl overflow-hidden shadow-xl border border-slate-200 bg-slate-900 group">
+                <img
+                  src={fumigationImg}
+                  alt="EFMS Certified Specialist Fumigation and Pest Management"
+                  className="w-full h-auto max-h-[580px] object-cover object-center group-hover:scale-105 transition-transform duration-500"
+                />
               </div>
+
+              {/* CTA Button */}
+              <button
+                type="button"
+                onClick={() => onNavigate?.('contact')}
+                className="w-full py-4 px-6 bg-[#d91b1b] hover:bg-red-700 text-white text-xs sm:text-sm font-extrabold uppercase tracking-wider rounded-xl transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2.5 cursor-pointer active:scale-[0.99]"
+              >
+                <span>REQUEST A CONSULTATION</span>
+                <ArrowRight className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 6. Our Value Proposition (Two-Column Layout with Undercover Parking Facility Visual) */}
+      <section className="bg-gradient-to-r from-[#050b1b] via-[#09132e] to-[#0c2460] text-white py-20 px-4 sm:px-6 lg:px-8 border-b border-slate-800 relative overflow-hidden">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-4xl h-80 bg-sky-500/10 rounded-full blur-3xl pointer-events-none" />
+        
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-14 items-center relative z-10">
+          {/* Column 1: Undercover Parking Image */}
+          <motion.div
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="relative rounded-2xl overflow-hidden shadow-2xl border border-white/10 group"
+          >
+            <img
+              src={undercoverParkingImg}
+              alt="EFMS Facility Infrastructure & Undercover Parking Operations"
+              className="w-full h-80 sm:h-96 lg:h-[440px] object-cover object-center group-hover:scale-105 transition-transform duration-700"
+            />
+          </motion.div>
+
+          {/* Column 2: Existing Content */}
+          <motion.div
+            initial={{ opacity: 0, x: 30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="space-y-5 text-left"
+          >
+            <div>
+              <span className="text-xs font-black tracking-widest text-[#d91b1b] uppercase block mb-2">
+                OUR VALUE PROPOSITION
+              </span>
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-black tracking-tight leading-tight">
+                Professional Expertise. Practical Solutions. Reliable Support.
+              </h2>
+            </div>
+            
+            <p className="text-sm sm:text-base text-slate-200 leading-relaxed font-normal">
+              At EFMS, we believe professional services should make your business easier to manage — not more complicated.
+            </p>
+            
+            <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
+              Our combination of facilities management, construction delivery and consultancy solutions allows us to support clients at different stages of the property and project lifecycle.
+            </p>
+            
+            <div className="p-4 rounded-xl bg-sky-950/50 border border-sky-500/30 text-sky-300 text-sm sm:text-base font-semibold leading-relaxed">
+              You focus on your business. We help you manage the facilities, projects and specialist requirements that keep it moving.
+            </div>
+
+            <div className="pt-2 flex flex-wrap items-center gap-4">
               <button
                 onClick={() => onNavigate?.('contact')}
-                className="w-full text-center py-3 bg-[#d91b1b] hover:bg-red-700 text-white text-xs font-extrabold rounded-lg transition-all shadow cursor-pointer active:scale-95"
+                className="px-6 py-3 rounded-lg text-xs font-black tracking-wider uppercase bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white shadow-lg transition-all transform active:scale-95 flex items-center gap-2 cursor-pointer"
               >
-                REQUEST A CONSULTATION
+                <span>REQUEST A PROPOSAL</span>
+                <ArrowRight className="w-4 h-4" />
               </button>
+              <button
+                onClick={() => onNavigate?.('about')}
+                className="px-6 py-3 rounded-lg text-xs font-bold tracking-wider uppercase bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all cursor-pointer"
+              >
+                ABOUT OUR APPROACH
+              </button>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* 7. How We Deliver: Our Structured Delivery Framework */}
+      <section className="bg-slate-50 py-20 px-4 sm:px-6 lg:px-8 border-b border-slate-200">
+        <div className="max-w-7xl mx-auto">
+          {/* Section Heading & Eyebrow */}
+          <div className="text-center max-w-3xl mx-auto mb-14">
+            <span className="text-xs font-black tracking-widest text-[#d91b1b] uppercase block mb-2">
+              HOW WE DELIVER
+            </span>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-slate-900 tracking-tight leading-tight">
+              Our Structured Delivery Framework
+            </h2>
+            <p className="text-sm text-slate-600 mt-2 max-w-2xl mx-auto leading-relaxed">
+              A proven four-stage methodology ensuring risk mitigation, statutory compliance, and cost efficiency.
+            </p>
+          </div>
+
+          {/* Four Stage Cards Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {/* Stage 1 */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.06, duration: 0.4 }}
+              className="p-6 rounded-xl bg-white border border-slate-200 flex flex-col justify-between hover:border-red-500/40 hover:shadow-md transition-all group"
+            >
+              <div>
+                <div className="flex items-center justify-between mb-5">
+                  <span className="text-2xl font-black text-[#d91b1b] block">01</span>
+                  <div className="w-10 h-10 rounded-lg bg-red-50 text-[#d91b1b] flex items-center justify-center group-hover:bg-[#d91b1b] group-hover:text-white transition-colors">
+                    <ArrowRight className="w-5 h-5 stroke-[2.5]" />
+                  </div>
+                </div>
+                <h3 className="text-base sm:text-lg font-extrabold text-slate-900 group-hover:text-[#08286b] transition-colors mb-2 leading-snug">
+                  Audit &amp; Diagnostic Assessment
+                </h3>
+                <p className="text-xs text-slate-600 leading-relaxed">
+                  Comprehensive baseline inspection of facility condition, statutory compliance, structural health, and maintenance liabilities.
+                </p>
+              </div>
+              <div className="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between text-[11px] font-bold text-slate-400 group-hover:text-red-600 transition-colors">
+                <span className="uppercase tracking-wider">Phase 01</span>
+                <span>Diagnostics</span>
+              </div>
+            </motion.div>
+
+            {/* Stage 2 */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.12, duration: 0.4 }}
+              className="p-6 rounded-xl bg-white border border-slate-200 flex flex-col justify-between hover:border-red-500/40 hover:shadow-md transition-all group"
+            >
+              <div>
+                <div className="flex items-center justify-between mb-5">
+                  <span className="text-2xl font-black text-[#d91b1b] block">02</span>
+                  <div className="w-10 h-10 rounded-lg bg-red-50 text-[#d91b1b] flex items-center justify-center group-hover:bg-[#d91b1b] group-hover:text-white transition-colors">
+                    <ArrowRight className="w-5 h-5 stroke-[2.5]" />
+                  </div>
+                </div>
+                <h3 className="text-base sm:text-lg font-extrabold text-slate-900 group-hover:text-[#08286b] transition-colors mb-2 leading-snug">
+                  Strategic Solution Design
+                </h3>
+                <p className="text-xs text-slate-600 leading-relaxed">
+                  Tailoring SLA frameworks, project work breakdown structures, procurement models, and lifecycle budgeting.
+                </p>
+              </div>
+              <div className="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between text-[11px] font-bold text-slate-400 group-hover:text-red-600 transition-colors">
+                <span className="uppercase tracking-wider">Phase 02</span>
+                <span>Solution Design</span>
+              </div>
+            </motion.div>
+
+            {/* Stage 3 */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.18, duration: 0.4 }}
+              className="p-6 rounded-xl bg-white border border-slate-200 flex flex-col justify-between hover:border-red-500/40 hover:shadow-md transition-all group"
+            >
+              <div>
+                <div className="flex items-center justify-between mb-5">
+                  <span className="text-2xl font-black text-[#d91b1b] block">03</span>
+                  <div className="w-10 h-10 rounded-lg bg-red-50 text-[#d91b1b] flex items-center justify-center group-hover:bg-[#d91b1b] group-hover:text-white transition-colors">
+                    <ArrowRight className="w-5 h-5 stroke-[2.5]" />
+                  </div>
+                </div>
+                <h3 className="text-base sm:text-lg font-extrabold text-slate-900 group-hover:text-[#08286b] transition-colors mb-2 leading-snug">
+                  Execution &amp; Project Controls
+                </h3>
+                <p className="text-xs text-slate-600 leading-relaxed">
+                  Rigorous management of scope, time, cost, safety (OHS), and quality on-site with real-time stakeholder tracking.
+                </p>
+              </div>
+              <div className="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between text-[11px] font-bold text-slate-400 group-hover:text-red-600 transition-colors">
+                <span className="uppercase tracking-wider">Phase 03</span>
+                <span>Project Controls</span>
+              </div>
+            </motion.div>
+
+            {/* Stage 4 */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.24, duration: 0.4 }}
+              className="p-6 rounded-xl bg-white border border-slate-200 flex flex-col justify-between hover:border-red-500/40 hover:shadow-md transition-all group"
+            >
+              <div>
+                <div className="flex items-center justify-between mb-5">
+                  <span className="text-2xl font-black text-[#d91b1b] block">04</span>
+                  <div className="w-10 h-10 rounded-lg bg-red-50 text-[#d91b1b] flex items-center justify-center group-hover:bg-[#d91b1b] group-hover:text-white transition-colors">
+                    <Check className="w-5 h-5 stroke-[2.5]" />
+                  </div>
+                </div>
+                <h3 className="text-base sm:text-lg font-extrabold text-slate-900 group-hover:text-[#08286b] transition-colors mb-2 leading-snug">
+                  Handover &amp; Optimization
+                </h3>
+                <p className="text-xs text-slate-600 leading-relaxed">
+                  Structured commissioning, as-built documentation, facility maintenance transition, and post-occupancy reviews.
+                </p>
+              </div>
+              <div className="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between text-[11px] font-bold text-slate-400 group-hover:text-red-600 transition-colors">
+                <span className="uppercase tracking-wider">Phase 04</span>
+                <span>Optimization</span>
+              </div>
             </motion.div>
           </div>
         </div>
       </section>
 
-      {/* 6. How EFMS Can Save Your Business Time & Money (6 Scenarios with Visual Photography) */}
-      <section className="bg-white py-20 px-4 sm:px-6 lg:px-8 border-b border-slate-200">
-        <div className="max-w-7xl mx-auto">
+      {/* 8. Client Testimonials (Scrolling Slides) */}
+      <section className="bg-white py-20 px-4 sm:px-6 lg:px-8 border-b border-slate-200 relative overflow-hidden">
+        {/* Subtle background decoration */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-full pointer-events-none">
+          <div className="absolute top-1/4 left-10 w-72 h-72 bg-red-500/5 rounded-full blur-3xl" />
+          <div className="absolute bottom-1/4 right-10 w-72 h-72 bg-blue-500/5 rounded-full blur-3xl" />
+        </div>
+
+        <div className="max-w-6xl mx-auto relative z-10">
+          {/* Section Header */}
           <div className="text-center max-w-3xl mx-auto mb-14">
             <span className="text-xs font-black tracking-widest text-[#d91b1b] uppercase block mb-2">
-              PRACTICAL BUSINESS VALUE
+              CLIENT TESTIMONIALS
             </span>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-slate-900 tracking-tight uppercase">
-              HOW EFMS CAN SAVE YOUR BUSINESS TIME &amp; MONEY
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-slate-900 tracking-tight leading-tight">
+              What Our Clients Say
             </h2>
-            <p className="text-sm font-semibold text-slate-600 mt-2">
-              Spend Less Time Managing Problems. Here is how we help in common real-world scenarios:
+            <p className="text-sm text-slate-600 mt-2 max-w-2xl mx-auto leading-relaxed">
+              Proven consistency, proactive service, and trusted built-environment solutions across South Africa.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {savingsScenarios.map((sc, idx) => (
-              <motion.div
-                key={idx}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: idx * 0.1, duration: 0.45 }}
-                className="bg-slate-50 border border-slate-200 rounded-xl overflow-hidden flex flex-col justify-between shadow-sm hover:shadow-lg transition-all group"
-              >
-                <div>
-                  {/* Photo Header */}
-                  <div className="h-36 relative overflow-hidden bg-slate-900">
-                    <img
-                      src={sc.image}
-                      alt={sc.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 to-transparent" />
-                    
-                    <div className="absolute bottom-2.5 left-3.5 inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded bg-red-600 text-white text-[10px] font-black uppercase">
-                      <span>{sc.scenario}</span>
-                    </div>
-                  </div>
+          {/* Testimonial Slides Container */}
+          <div
+            className="relative bg-slate-50 border border-slate-200/90 rounded-2xl p-6 sm:p-10 lg:p-14 shadow-sm"
+            onMouseEnter={() => setIsTestimonialAutoplay(false)}
+            onMouseLeave={() => setIsTestimonialAutoplay(true)}
+          >
+            {/* Left Prev Arrow Button */}
+            <button
+              onClick={prevTestimonial}
+              aria-label="Previous testimonial"
+              className="absolute left-2 sm:-left-5 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white hover:bg-[#d91b1b] text-slate-700 hover:text-white border border-slate-200 shadow-md flex items-center justify-center transition-all cursor-pointer z-20 group"
+            >
+              <ChevronLeft className="w-5 h-5 group-hover:-translate-x-0.5 transition-transform" />
+            </button>
 
-                  <div className="p-5">
-                    <h3 className="text-sm font-black text-slate-900 mb-2 leading-snug">{sc.title}</h3>
-                    <p className="text-xs text-slate-600 leading-relaxed mb-3">{sc.problem}</p>
-                  </div>
-                </div>
+            {/* Right Next Arrow Button */}
+            <button
+              onClick={nextTestimonial}
+              aria-label="Next testimonial"
+              className="absolute right-2 sm:-right-5 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white hover:bg-[#d91b1b] text-slate-700 hover:text-white border border-slate-200 shadow-md flex items-center justify-center transition-all cursor-pointer z-20 group"
+            >
+              <ChevronRight className="w-5 h-5 group-hover:translate-x-0.5 transition-transform" />
+            </button>
 
-                <div className="p-4 border-t border-slate-200 bg-sky-50/60">
-                  <span className="text-[11px] font-black text-sky-900 uppercase block mb-1">Practical Benefit:</span>
-                  <p className="text-xs font-semibold text-slate-800 leading-snug">{sc.benefit}</p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 7. Our Value Proposition (Full Width Dark Atmospheric Section) */}
-      <section className="bg-gradient-to-r from-[#050b1b] via-[#09132e] to-[#0c2460] text-white py-20 px-4 sm:px-6 lg:px-8 border-b border-slate-800 relative overflow-hidden">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-4xl h-80 bg-sky-500/10 rounded-full blur-3xl pointer-events-none" />
-        
-        <div className="max-w-4xl mx-auto text-center space-y-5 relative z-10">
-          <span className="text-xs font-black tracking-widest text-[#d91b1b] uppercase">OUR VALUE PROPOSITION</span>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-black tracking-tight leading-tight">
-            Professional Expertise. Practical Solutions. Reliable Support.
-          </h2>
-          <p className="text-sm sm:text-base text-slate-300 leading-relaxed font-normal max-w-2xl mx-auto">
-            At EFMS, we believe professional services should make your business easier to manage — not more complicated.
-          </p>
-          <p className="text-xs sm:text-sm text-slate-300 leading-relaxed max-w-3xl mx-auto">
-            Our combination of facilities management, construction delivery and consultancy solutions allows us to support clients at different stages of the property and project lifecycle.
-          </p>
-          <div className="pt-2 text-sm sm:text-base font-bold text-sky-400">
-            You focus on your business. We help you manage the facilities, projects and specialist requirements that keep it moving.
-          </div>
-        </div>
-      </section>
-
-      {/* 8. Who We Serve (Visual Sectors Showcase with Imagery) */}
-      <section className="bg-white py-20 px-4 sm:px-6 lg:px-8 border-b border-slate-200">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center max-w-3xl mx-auto mb-12">
-            <span className="text-xs font-black tracking-widest text-[#d91b1b] uppercase block mb-2">WHO WE SERVE</span>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-slate-900 tracking-tight">
-              Tailored Solutions Across Every Built-Environment Sector
-            </h2>
-            <p className="text-sm text-slate-600 mt-2">
-              Serving corporate property owners, institutions, contractors, and growing South African enterprises.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-5">
-            {whoWeServeCategories.map((item, idx) => {
-              const Icon = item.icon;
-              return (
+            {/* Slide Content with AnimatePresence */}
+            <div className="min-h-[260px] sm:min-h-[220px] flex flex-col justify-center items-center text-center px-4 sm:px-8">
+              <AnimatePresence mode="wait">
                 <motion.div
-                  key={idx}
+                  key={activeTestimonial}
                   initial={{ opacity: 0, y: 15 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: idx * 0.06, duration: 0.4 }}
-                  whileHover={{ y: -4 }}
-                  className="rounded-xl overflow-hidden bg-slate-50 border border-slate-200 shadow-sm hover:shadow-md hover:border-slate-300 transition-all flex flex-col justify-between group"
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -15 }}
+                  transition={{ duration: 0.35, ease: 'easeInOut' }}
+                  className="w-full flex flex-col items-center"
                 >
-                  <div className="h-28 relative overflow-hidden bg-slate-900">
-                    <img
-                      src={item.img}
-                      alt={item.title}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
-                    
-                    <div className="absolute bottom-2.5 left-3 flex items-center gap-1.5 text-white">
-                      <div className="w-6 h-6 rounded bg-red-600 flex items-center justify-center text-xs">
-                        <Icon className="w-3.5 h-3.5" />
-                      </div>
-                      <span className="text-xs font-black truncate">{item.title}</span>
-                    </div>
+                  {/* Decorative Stars */}
+                  <div className="flex items-center gap-1 mb-4 text-amber-400">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />
+                    ))}
                   </div>
 
-                  <div className="p-3.5">
-                    <p className="text-[11px] text-slate-600 leading-snug">{item.desc}</p>
+                  {/* Headline */}
+                  <h3 className="text-lg sm:text-xl md:text-2xl font-black italic text-[#08286b] mb-4 tracking-tight leading-snug">
+                    "{testimonials[activeTestimonial].headline}"
+                  </h3>
+
+                  {/* Main Quote */}
+                  <p className="text-sm sm:text-base md:text-lg italic text-slate-700 leading-relaxed max-w-3xl mx-auto mb-8 font-normal">
+                    "{testimonials[activeTestimonial].quote}"
+                  </p>
+
+                  {/* Author Attribution */}
+                  <div className="flex items-center justify-center gap-4 pt-4 border-t border-slate-200/80 w-full max-w-md">
+                    <div className="bg-white px-2.5 py-1.5 rounded-lg border border-slate-200 shadow-2xs flex items-center">
+                      <EurekaLogo className="h-6 w-auto" />
+                    </div>
+                    <div className="text-left">
+                      <h4 className="font-extrabold text-slate-900 text-sm sm:text-base leading-tight">
+                        {testimonials[activeTestimonial].author}
+                      </h4>
+                      <p className="text-xs text-slate-500 font-medium">
+                        {testimonials[activeTestimonial].role}
+                      </p>
+                    </div>
                   </div>
                 </motion.div>
+              </AnimatePresence>
+            </div>
+
+            {/* Pagination Dots */}
+            <div className="flex items-center justify-center gap-2 mt-8 pt-2">
+              {testimonials.map((item, idx) => (
+                <button
+                  key={item.id}
+                  onClick={() => setActiveTestimonial(idx)}
+                  aria-label={`Go to testimonial by ${item.author}`}
+                  className={`h-2.5 rounded-full transition-all cursor-pointer ${
+                    activeTestimonial === idx
+                      ? 'w-8 bg-[#d91b1b]'
+                      : 'w-2.5 bg-slate-300 hover:bg-slate-400'
+                  }`}
+                />
+              ))}
+            </div>
+
+            {/* Slide counter */}
+            <div className="text-center mt-3">
+              <span className="text-[11px] font-bold tracking-wider uppercase text-slate-400">
+                0{activeTestimonial + 1} / 0{testimonials.length}
+              </span>
+            </div>
+          </div>
+
+          {/* Quick Select Client Pills */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 mt-8">
+            {testimonials.map((t, idx) => {
+              const isActive = activeTestimonial === idx;
+              return (
+                <button
+                  key={t.id}
+                  onClick={() => setActiveTestimonial(idx)}
+                  className={`p-3 rounded-xl text-left border transition-all cursor-pointer ${
+                    isActive
+                      ? 'bg-white border-[#d91b1b] shadow-sm ring-1 ring-[#d91b1b]/20'
+                      : 'bg-white/60 hover:bg-white border-slate-200 hover:border-slate-300'
+                  }`}
+                >
+                  <div className="flex items-center justify-between mb-1">
+                    <span className={`text-[10px] font-black uppercase ${isActive ? 'text-[#d91b1b]' : 'text-slate-400'}`}>
+                      0{idx + 1}
+                    </span>
+                    {isActive && (
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#d91b1b]" />
+                    )}
+                  </div>
+                  <div className="font-extrabold text-xs text-slate-900 truncate">
+                    {t.author}
+                  </div>
+                  <div className="text-[10px] text-slate-500 truncate font-medium">
+                    {t.role}
+                  </div>
+                </button>
               );
             })}
-          </div>
-        </div>
-      </section>
-
-      {/* 9. Local & National Service Positioning */}
-      <section className="bg-slate-100 py-16 px-4 sm:px-6 lg:px-8 border-b border-slate-200">
-        <div className="max-w-4xl mx-auto text-center space-y-4">
-          <span className="text-xs font-black tracking-widest text-sky-800 uppercase">LOCAL &amp; NATIONAL SERVICE POSITIONING</span>
-          <h2 className="text-xl sm:text-2xl md:text-3xl font-black text-slate-900">
-            Supporting Clients in Gauteng &amp; Across South Africa
-          </h2>
-          <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-            Eureka Facilities Management Solutions is positioned to support clients in Gauteng and across South Africa, with services spanning facilities management, construction delivery and specialist consultancy.
-          </p>
-          <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-            Whether you are a small business requiring reliable facility support or an organisation managing a major construction project, EFMS can structure its professional support around your specific requirement.
-          </p>
-          <div className="pt-2 font-black text-sm sm:text-base text-[#d91b1b] tracking-wide uppercase">
-            Local requirement. National project. Professional support.
-          </div>
-        </div>
-      </section>
-
-      {/* 10. Call to Action Section (Document Page 16) */}
-      <section className="bg-slate-900 text-white py-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
-        <div className="max-w-4xl mx-auto text-center space-y-6 relative z-10">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-black tracking-tight">
-            Have a Facility, Construction Project or Property Challenge?
-          </h2>
-          <p className="text-xs sm:text-sm text-slate-300 leading-relaxed max-w-2xl mx-auto">
-            Let's discuss what you need. Whether you need ongoing facilities support, professional cleaning, pest control, a project manager, construction management, cost advice, contract support or delay analysis, EFMS can help you identify the right solution.
-          </p>
-
-          <div className="flex flex-wrap items-center justify-center gap-4 pt-2">
-            <button
-              onClick={() => onNavigate?.('contact')}
-              className="px-7 py-3.5 rounded-lg bg-[#d91b1b] hover:bg-red-700 text-white text-xs font-extrabold tracking-wider transition-all shadow-lg active:scale-95 cursor-pointer"
-            >
-              Request a Consultation
-            </button>
-            <button
-              onClick={() => onNavigate?.('contact')}
-              className="px-7 py-3.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-white text-xs font-extrabold tracking-wider border border-slate-700 transition-all cursor-pointer active:scale-95"
-            >
-              Request a Quote
-            </button>
-            <button
-              onClick={() => onNavigate?.('contact')}
-              className="px-7 py-3.5 rounded-lg bg-sky-700 hover:bg-sky-600 text-white text-xs font-extrabold tracking-wider transition-all cursor-pointer active:scale-95"
-            >
-              Discuss Your Project
-            </button>
           </div>
         </div>
       </section>
