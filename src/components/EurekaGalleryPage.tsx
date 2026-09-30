@@ -1,25 +1,16 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { EurekaHeader, NavPage } from './EurekaHeader';
 import { EurekaFooter } from './EurekaFooter';
 import {
   Image as ImageIcon,
-  Upload,
-  Plus,
   X,
   Maximize2,
   Filter,
   Search,
-  CheckCircle2,
   ArrowRight,
   ChevronLeft,
-  ChevronRight,
-  Building2,
-  HardHat,
-  FolderKanban,
-  Trash2,
-  Sparkles,
-  Layers
+  ChevronRight
 } from 'lucide-react';
 
 export type GalleryTab = 'ALL' | 'FACILITIES' | 'CONSTRUCTION' | 'CONSULTANCY';
@@ -30,103 +21,11 @@ export interface GalleryItem {
   category: 'FACILITIES' | 'CONSTRUCTION' | 'CONSULTANCY';
   categoryLabel: string;
   image: string;
-  value?: string;
-  location?: string;
   year?: string;
-  description?: string;
-  isUserUploaded?: boolean;
 }
 
 export interface EurekaGalleryPageProps {
   onNavigate?: (page: NavPage, subcategory?: 'all' | 'facilities' | 'construction' | 'consultancy') => void;
-}
-
-const LOCAL_STORAGE_KEY = 'eureka_gallery_user_uploads_v2';
-
-// Utility to format bytes
-function formatBytes(bytes: number, decimals = 1): string {
-  if (bytes === 0) return '0 B';
-  const k = 1024;
-  const dm = decimals < 0 ? 0 : decimals;
-  const sizes = ['B', 'KB', 'MB', 'GB'];
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
-  return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
-}
-
-// Client-side Canvas image optimizer and minifier
-async function optimizeAndMinifyImage(
-  file: File,
-  maxWidth = 1600,
-  maxHeight = 1200,
-  quality = 0.82
-): Promise<{
-  dataUrl: string;
-  originalSize: number;
-  optimizedSize: number;
-  savedPercent: number;
-}> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onerror = () => reject(new Error('Failed to read image file'));
-    reader.onload = (e) => {
-      const img = new Image();
-      img.onerror = () => reject(new Error('Failed to process image'));
-      img.onload = () => {
-        let { width, height } = img;
-
-        // Smart downscaling while preserving aspect ratio
-        if (width > maxWidth || height > maxHeight) {
-          const ratio = Math.min(maxWidth / width, maxHeight / height);
-          width = Math.round(width * ratio);
-          height = Math.round(height * ratio);
-        }
-
-        const canvas = document.createElement('canvas');
-        canvas.width = width;
-        canvas.height = height;
-
-        const ctx = canvas.getContext('2d');
-        if (!ctx) {
-          const rawUrl = e.target?.result as string;
-          return resolve({
-            dataUrl: rawUrl,
-            originalSize: file.size,
-            optimizedSize: file.size,
-            savedPercent: 0
-          });
-        }
-
-        // High quality bicubic resampling
-        ctx.imageSmoothingEnabled = true;
-        ctx.imageSmoothingQuality = 'high';
-        ctx.drawImage(img, 0, 0, width, height);
-
-        // Convert to WebP if browser supports, fallback to JPEG
-        let mimeType = 'image/jpeg';
-        try {
-          if (canvas.toDataURL('image/webp').startsWith('data:image/webp')) {
-            mimeType = 'image/webp';
-          }
-        } catch {
-          mimeType = 'image/jpeg';
-        }
-
-        const dataUrl = canvas.toDataURL(mimeType, quality);
-        const stringLength = dataUrl.length - dataUrl.indexOf(',') - 1;
-        const optimizedSize = Math.round((stringLength * 3) / 4);
-        const savedPercent = Math.max(0, Math.round(((file.size - optimizedSize) / file.size) * 100));
-
-        resolve({
-          dataUrl,
-          originalSize: file.size,
-          optimizedSize,
-          savedPercent
-        });
-      };
-      img.src = e.target?.result as string;
-    };
-    reader.readAsDataURL(file);
-  });
 }
 
 // Automatic discovery of static images placed in src/assets/images/GALLERY subfolders
@@ -190,153 +89,22 @@ function getStaticGalleryItems(): GalleryItem[] {
 export const EurekaGalleryPage: React.FC<EurekaGalleryPageProps> = ({ onNavigate }) => {
   const [activeTab, setActiveTab] = useState<GalleryTab>('ALL');
   const [searchQuery, setSearchQuery] = useState('');
-  const [galleryItems, setGalleryItems] = useState<GalleryItem[]>(getStaticGalleryItems);
+  const [galleryItems] = useState<GalleryItem[]>(getStaticGalleryItems);
   const [selectedPhoto, setSelectedPhoto] = useState<GalleryItem | null>(null);
-  const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
 
-  // Upload Form State
-  const [uploadTitle, setUploadTitle] = useState('');
-  const [uploadCategory, setUploadCategory] = useState<'FACILITIES' | 'CONSTRUCTION' | 'CONSULTANCY'>('FACILITIES');
-  const [uploadPreview, setUploadPreview] = useState<string | null>(null);
-  const [uploadError, setUploadError] = useState<string | null>(null);
-  const [isOptimizing, setIsOptimizing] = useState(false);
-  const [optimizationStats, setOptimizationStats] = useState<{
-    originalSize: string;
-    optimizedSize: string;
-    savedPercent: number;
-  } | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
-  // Load user uploads from localStorage on mount (checks both current and previous storage keys)
+  // Clear legacy client-side upload cache
   useEffect(() => {
     try {
-      const staticItems = getStaticGalleryItems();
-      const v2 = localStorage.getItem(LOCAL_STORAGE_KEY);
-      const v1 = localStorage.getItem('eureka_gallery_uploaded_items_v1');
-      const raw = v2 || v1;
-      if (raw) {
-        const parsed: any[] = JSON.parse(raw);
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          // Filter to user-uploaded items and normalize category
-          const userItems: GalleryItem[] = parsed
-            .filter((item) => item.isUserUploaded || item.id?.startsWith('user-upload-'))
-            .map((item) => ({
-              ...item,
-              category: item.category === 'PROJECTS' ? 'CONSULTANCY' : item.category,
-              categoryLabel: item.category === 'PROJECTS' ? 'Consultancy' : item.categoryLabel
-            }));
-          if (userItems.length > 0) {
-            setGalleryItems([...userItems, ...staticItems]);
-            localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(userItems));
-          } else {
-            setGalleryItems(staticItems);
-          }
-        }
-      } else {
-        setGalleryItems(staticItems);
-      }
-    } catch (e) {
-      console.warn('Could not load stored gallery items', e);
+      localStorage.removeItem('eureka_gallery_user_uploads_v2');
+      localStorage.removeItem('eureka_gallery_uploaded_items_v1');
+    } catch {
+      // ignore
     }
   }, []);
 
   const handleNav = (page: NavPage, subcategory?: 'all' | 'facilities' | 'construction' | 'consultancy') => {
     onNavigate?.(page, subcategory);
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
-  // Handle image file selection with instant auto-optimization & minification
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    if (!file.type.startsWith('image/')) {
-      setUploadError('Please select a valid image file (PNG, JPG, JPEG, WEBP).');
-      return;
-    }
-
-    if (file.size > 25 * 1024 * 1024) {
-      setUploadError('Image size exceeds 25MB. Please select a smaller photo.');
-      return;
-    }
-
-    setUploadError(null);
-    setIsOptimizing(true);
-    setOptimizationStats(null);
-
-    try {
-      // Auto-optimize & minify file on client side
-      const result = await optimizeAndMinifyImage(file, 1600, 1200, 0.82);
-      setUploadPreview(result.dataUrl);
-      setOptimizationStats({
-        originalSize: formatBytes(result.originalSize),
-        optimizedSize: formatBytes(result.optimizedSize),
-        savedPercent: result.savedPercent
-      });
-    } catch (err: any) {
-      setUploadError(err?.message || 'Error optimizing image. Please try another file.');
-    } finally {
-      setIsOptimizing(false);
-    }
-  };
-
-  // Submit new photo to gallery
-  const handleAddPhotoSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!uploadPreview) {
-      setUploadError('Please select or drop an image file.');
-      return;
-    }
-
-    const categoryLabels = {
-      FACILITIES: 'Facilities',
-      CONSTRUCTION: 'Construction',
-      CONSULTANCY: 'Consultancy'
-    };
-
-    const newItem: GalleryItem = {
-      id: `user-upload-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
-      title: uploadTitle.trim() || `${categoryLabels[uploadCategory]} Milestone`,
-      category: uploadCategory,
-      categoryLabel: categoryLabels[uploadCategory],
-      image: uploadPreview,
-      year: new Date().getFullYear().toString(),
-      isUserUploaded: true
-    };
-
-    const updatedList = [newItem, ...galleryItems];
-    setGalleryItems(updatedList);
-
-    // Persist in localStorage
-    try {
-      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(updatedList));
-    } catch (e) {
-      console.warn('Could not save to localStorage', e);
-    }
-
-    // Reset Form & Close Modal
-    setUploadTitle('');
-    setUploadPreview(null);
-    setUploadError(null);
-    setOptimizationStats(null);
-    setIsUploadModalOpen(false);
-  };
-
-  // Delete an uploaded image
-  const handleDeleteUploadedItem = (id: string, e: React.MouseEvent) => {
-    e.stopPropagation();
-    const updatedList = galleryItems.filter((item) => item.id !== id);
-    setGalleryItems(updatedList);
-
-    try {
-      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(updatedList));
-    } catch (err) {
-      console.warn('Could not update storage', err);
-    }
-
-    if (selectedPhoto?.id === id) {
-      setSelectedPhoto(null);
-    }
   };
 
   // Filter items based on Tab & Search Query
@@ -404,7 +172,7 @@ export const EurekaGalleryPage: React.FC<EurekaGalleryPageProps> = ({ onNavigate
             </h1>
 
             <p className="text-xs sm:text-sm text-slate-300 leading-relaxed max-w-2xl">
-              Visual photographic record of our completed and active project milestones.
+              Visual photographic record of our completed and active project milestones across facilities management, construction oversight, and specialist built environment consultancy.
             </p>
           </div>
         </div>
@@ -465,13 +233,13 @@ export const EurekaGalleryPage: React.FC<EurekaGalleryPageProps> = ({ onNavigate
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search title..."
+                  placeholder="Search project title..."
                   className="w-full pl-8 pr-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-red-500 transition-colors"
                 />
                 {searchQuery && (
                   <button
                     onClick={() => setSearchQuery('')}
-                    className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                    className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer"
                   >
                     <X className="w-3.5 h-3.5" />
                   </button>
@@ -482,29 +250,29 @@ export const EurekaGalleryPage: React.FC<EurekaGalleryPageProps> = ({ onNavigate
         </div>
       </section>
 
-      {/* 4. Gallery Grid / Empty State */}
+      {/* 4. Gallery Grid */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex-1 w-full space-y-8">
         {galleryItems.length === 0 ? (
           /* Empty Gallery State */
-          <div className="bg-white rounded-2xl p-10 sm:p-14 text-center border-2 border-dashed border-slate-300 max-w-xl mx-auto space-y-4 shadow-sm">
+          <div className="bg-white rounded-2xl p-10 sm:p-14 text-center border border-slate-200 max-w-xl mx-auto space-y-4 shadow-sm">
             <div className="w-16 h-16 bg-red-50 text-red-600 rounded-2xl flex items-center justify-center mx-auto shadow-xs">
               <ImageIcon className="w-8 h-8" />
             </div>
             <div className="space-y-1.5">
               <h3 className="text-lg font-black text-slate-900">
-                Gallery is ready for your project images
+                Project Visual Gallery
               </h3>
               <p className="text-xs text-slate-500 max-w-sm mx-auto leading-relaxed">
-                Click below to upload and auto-optimize your project photographs. Images are organized under the 4 category tabs: <strong>ALL</strong>, <strong>FACILITIES</strong>, <strong>CONSTRUCTION</strong>, and <strong>CONSULTANCY</strong>.
+                Visual photographic record of our completed and active project milestones.
               </p>
             </div>
             <div className="pt-2">
               <button
-                onClick={() => setIsUploadModalOpen(true)}
-                className="px-6 py-3 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-black uppercase tracking-wider shadow-md hover:shadow-lg transition-all flex items-center gap-2 mx-auto cursor-pointer"
+                onClick={() => handleNav('contact')}
+                className="px-6 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-black uppercase tracking-wider shadow-md hover:shadow-lg transition-all flex items-center gap-2 mx-auto cursor-pointer"
               >
-                <Upload className="w-4 h-4" />
-                <span>UPLOAD YOUR FIRST PHOTO</span>
+                <span>Inquire About Our Projects</span>
+                <ArrowRight className="w-4 h-4" />
               </button>
             </div>
           </div>
@@ -512,7 +280,7 @@ export const EurekaGalleryPage: React.FC<EurekaGalleryPageProps> = ({ onNavigate
           /* Search / Tab Filter with no matches */
           <div className="bg-white rounded-xl p-10 text-center border border-slate-200 text-slate-500 max-w-md mx-auto space-y-3">
             <Filter className="w-10 h-10 text-slate-400 mx-auto" />
-            <h3 className="text-base font-bold text-slate-900">No matching images</h3>
+            <h3 className="text-base font-bold text-slate-900">No matching photographs</h3>
             <p className="text-xs text-slate-500">
               No photos found for &quot;{searchQuery}&quot; under the {activeTab} tab.
             </p>
@@ -522,16 +290,9 @@ export const EurekaGalleryPage: React.FC<EurekaGalleryPageProps> = ({ onNavigate
                   setActiveTab('ALL');
                   setSearchQuery('');
                 }}
-                className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-lg text-xs font-bold"
+                className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-lg text-xs font-bold cursor-pointer transition-colors"
               >
-                Reset Filters
-              </button>
-              <button
-                onClick={() => setIsUploadModalOpen(true)}
-                className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-xs font-bold flex items-center gap-1.5"
-              >
-                <Upload className="w-3.5 h-3.5" />
-                <span>Upload Now</span>
+                Reset Search Filters
               </button>
             </div>
           </div>
@@ -562,14 +323,6 @@ export const EurekaGalleryPage: React.FC<EurekaGalleryPageProps> = ({ onNavigate
                     <span className="text-[10px] font-black uppercase tracking-wider text-white bg-red-600/90 px-2 py-0.5 rounded">
                       {item.categoryLabel}
                     </span>
-                    <button
-                      onClick={(e) => handleDeleteUploadedItem(item.id, e)}
-                      className="p-1 rounded bg-black/70 hover:bg-red-700 text-white transition-colors cursor-pointer"
-                      title="Remove image"
-                      aria-label="Delete image"
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                    </button>
                   </div>
 
                   <div className="flex items-center justify-between text-white gap-2">
@@ -585,169 +338,7 @@ export const EurekaGalleryPage: React.FC<EurekaGalleryPageProps> = ({ onNavigate
         )}
       </main>
 
-      {/* 5. Upload Image Modal with Auto-Minify */}
-      <AnimatePresence>
-        {isUploadModalOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm overflow-y-auto">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 10 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 10 }}
-              className="bg-white rounded-2xl shadow-2xl max-w-lg w-full border border-slate-200 overflow-hidden my-8"
-            >
-              {/* Modal Header */}
-              <div className="bg-[#09132e] text-white px-6 py-4 flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Upload className="w-5 h-5 text-red-400" />
-                  <h3 className="text-base font-black tracking-tight text-white">
-                    Upload Project Photograph
-                  </h3>
-                </div>
-                <button
-                  onClick={() => setIsUploadModalOpen(false)}
-                  className="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer"
-                  aria-label="Close modal"
-                >
-                  <X className="w-5 h-5" />
-                </button>
-              </div>
-
-              {/* Upload Form */}
-              <form onSubmit={handleAddPhotoSubmit} className="p-6 space-y-4">
-                {uploadError && (
-                  <div className="p-3 bg-red-50 border border-red-200 text-red-700 text-xs rounded-lg font-medium">
-                    {uploadError}
-                  </div>
-                )}
-
-                {/* File Dropzone / Selector */}
-                <div className="space-y-1.5">
-                  <label className="block text-xs font-bold text-slate-800">
-                    Image File <span className="text-red-500">*</span>
-                  </label>
-
-                  <div
-                    onClick={() => fileInputRef.current?.click()}
-                    className={`border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition-all ${
-                      uploadPreview
-                        ? 'border-emerald-500 bg-emerald-50/20'
-                        : 'border-slate-300 hover:border-red-500 bg-slate-50 hover:bg-red-50/20'
-                    }`}
-                  >
-                    <input
-                      ref={fileInputRef}
-                      type="file"
-                      accept="image/*"
-                      onChange={handleFileChange}
-                      className="hidden"
-                    />
-
-                    {isOptimizing ? (
-                      <div className="py-8 space-y-3">
-                        <div className="w-8 h-8 border-3 border-red-600 border-t-transparent rounded-full animate-spin mx-auto" />
-                        <div className="text-xs font-bold text-slate-800">
-                          Optimizing &amp; minifying image for faster upload...
-                        </div>
-                        <div className="text-[11px] text-slate-500">
-                          Downscaling resolution &amp; applying WebP/JPEG compression
-                        </div>
-                      </div>
-                    ) : uploadPreview ? (
-                      <div className="space-y-3">
-                        <div className="relative max-h-48 rounded-lg overflow-hidden border border-slate-200 inline-block">
-                          <img
-                            src={uploadPreview}
-                            alt="Upload preview"
-                            className="max-h-48 w-auto object-cover mx-auto"
-                          />
-                        </div>
-
-                        {optimizationStats && (
-                          <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-[11px] font-bold">
-                            <Sparkles className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                            <span>
-                              Minified: {optimizationStats.originalSize} &rarr; {optimizationStats.optimizedSize} ({optimizationStats.savedPercent}% smaller)
-                            </span>
-                          </div>
-                        )}
-
-                        <div className="text-xs font-bold text-emerald-700 flex items-center justify-center gap-1.5">
-                          <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                          <span>Image ready for instant upload! Click to change.</span>
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="space-y-2">
-                        <div className="w-12 h-12 bg-white rounded-full shadow-xs flex items-center justify-center mx-auto text-slate-400">
-                          <ImageIcon className="w-6 h-6 text-red-500" />
-                        </div>
-                        <div className="text-xs font-bold text-slate-700">
-                          Click to browse or drop your project image
-                        </div>
-                        <div className="text-[11px] text-slate-400">
-                          Auto-optimized &amp; minified on upload &bull; Supports PNG, JPG, JPEG, WEBP (up to 25MB)
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                {/* Category Selection (3 Target Categories) */}
-                <div className="space-y-1.5">
-                  <label className="block text-xs font-bold text-slate-800">
-                    Target Category <span className="text-red-500">*</span>
-                  </label>
-                  <div className="grid grid-cols-3 gap-2">
-                    {[
-                      { key: 'FACILITIES', label: 'Facilities', icon: Building2 },
-                      { key: 'CONSTRUCTION', label: 'Construction', icon: HardHat },
-                      { key: 'CONSULTANCY', label: 'Consultancy', icon: FolderKanban }
-                    ].map((cat) => {
-                      const Icon = cat.icon;
-                      const isSel = uploadCategory === cat.key;
-                      return (
-                        <button
-                          key={cat.key}
-                          type="button"
-                          onClick={() => setUploadCategory(cat.key as any)}
-                          className={`p-2.5 rounded-lg border text-xs font-bold flex flex-col items-center gap-1 transition-all cursor-pointer ${
-                            isSel
-                              ? 'border-red-600 bg-red-50/60 text-red-700 shadow-xs'
-                              : 'border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100'
-                          }`}
-                        >
-                          <Icon className={`w-4 h-4 ${isSel ? 'text-red-600' : 'text-slate-500'}`} />
-                          <span>{cat.label}</span>
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                {/* Modal Actions */}
-                <div className="pt-3 border-t border-slate-200 flex items-center justify-end gap-2">
-                  <button
-                    type="button"
-                    onClick={() => setIsUploadModalOpen(false)}
-                    className="px-4 py-2 rounded-lg text-xs font-bold text-slate-600 hover:bg-slate-100 cursor-pointer"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    className="px-5 py-2.5 rounded-lg text-xs font-black uppercase tracking-wider bg-red-600 hover:bg-red-700 text-white shadow-md transition-all flex items-center gap-1.5 cursor-pointer"
-                  >
-                    <Plus className="w-3.5 h-3.5" />
-                    <span>ADD TO GALLERY</span>
-                  </button>
-                </div>
-              </form>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
-
-      {/* 6. Clean Lightbox Modal */}
+      {/* 5. Clean Lightbox Modal */}
       <AnimatePresence>
         {selectedPhoto && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-slate-950/90 backdrop-blur-md">
@@ -816,7 +407,7 @@ export const EurekaGalleryPage: React.FC<EurekaGalleryPageProps> = ({ onNavigate
                   <div className="flex items-center gap-2 w-full sm:w-auto">
                     <button
                       onClick={() => setSelectedPhoto(null)}
-                      className="w-full sm:w-auto px-4 py-2 rounded-lg text-xs font-bold text-slate-400 hover:text-white hover:bg-slate-800"
+                      className="w-full sm:w-auto px-4 py-2 rounded-lg text-xs font-bold text-slate-400 hover:text-white hover:bg-slate-800 cursor-pointer"
                     >
                       Close
                     </button>
@@ -839,7 +430,7 @@ export const EurekaGalleryPage: React.FC<EurekaGalleryPageProps> = ({ onNavigate
         )}
       </AnimatePresence>
 
-      {/* 7. Bottom CTA */}
+      {/* 6. Bottom CTA */}
       <section className="bg-[#09132e] text-white py-12 border-t border-slate-800 mt-auto">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4">
           <span className="text-[11px] font-black tracking-widest text-red-400 bg-red-950/60 px-3 py-1 rounded-full uppercase border border-red-800/60">
@@ -866,7 +457,7 @@ export const EurekaGalleryPage: React.FC<EurekaGalleryPageProps> = ({ onNavigate
         </div>
       </section>
 
-      {/* 8. Footer */}
+      {/* 7. Footer */}
       <EurekaFooter currentPage="gallery" onNavigate={onNavigate} />
     </div>
   );
