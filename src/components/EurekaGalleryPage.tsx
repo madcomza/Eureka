@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { EurekaHeader, NavPage } from './EurekaHeader';
 import { EurekaFooter } from './EurekaFooter';
-import { ScrollReveal, StaggerContainer, StaggerItem } from './ScrollAnimation';
 import {
   Image as ImageIcon,
   Upload,
@@ -538,50 +537,51 @@ export const EurekaGalleryPage: React.FC<EurekaGalleryPageProps> = ({ onNavigate
           </div>
         ) : (
           /* Pure Clean Image Grid */
-          <StaggerContainer className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+          <div
+            key={`${activeTab}-${searchQuery}`}
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5"
+          >
             {filteredItems.map((item) => (
-              <StaggerItem key={item.id}>
-                <motion.div
-                  whileHover={{ y: -4 }}
-                  onClick={() => setSelectedPhoto(item)}
-                  className="bg-slate-900 rounded-xl overflow-hidden shadow-xs hover:shadow-xl transition-all duration-300 group cursor-pointer relative aspect-[4/3] border border-slate-200 hover:border-red-500"
-                >
-                  {/* Clean Image */}
-                  <img
-                    src={item.image}
-                    alt={item.title}
-                    loading="lazy"
-                    decoding="async"
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
+              <div
+                key={item.id}
+                onClick={() => setSelectedPhoto(item)}
+                className="bg-slate-900 rounded-xl overflow-hidden shadow-xs hover:shadow-xl transition-all duration-300 group cursor-pointer relative aspect-[4/3] border border-slate-200 hover:border-red-500 hover:-translate-y-1"
+              >
+                {/* Clean Image */}
+                <img
+                  src={item.image}
+                  alt={item.title}
+                  loading="lazy"
+                  decoding="async"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                />
 
-                  {/* Subtle Clean Hover Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-between p-3.5">
-                    <div className="flex items-center justify-between">
-                      <span className="text-[10px] font-black uppercase tracking-wider text-white bg-red-600/90 px-2 py-0.5 rounded">
-                        {item.categoryLabel}
-                      </span>
-                      <button
-                        onClick={(e) => handleDeleteUploadedItem(item.id, e)}
-                        className="p-1 rounded bg-black/70 hover:bg-red-700 text-white transition-colors"
-                        title="Remove image"
-                        aria-label="Delete image"
-                      >
-                        <Trash2 className="w-3.5 h-3.5" />
-                      </button>
-                    </div>
+                {/* Subtle Clean Hover Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-between p-3.5">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-black uppercase tracking-wider text-white bg-red-600/90 px-2 py-0.5 rounded">
+                      {item.categoryLabel}
+                    </span>
+                    <button
+                      onClick={(e) => handleDeleteUploadedItem(item.id, e)}
+                      className="p-1 rounded bg-black/70 hover:bg-red-700 text-white transition-colors cursor-pointer"
+                      title="Remove image"
+                      aria-label="Delete image"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
 
-                    <div className="flex items-center justify-between text-white gap-2">
-                      <span className="text-xs font-bold text-white line-clamp-1">{item.title}</span>
-                      <div className="p-1.5 rounded-full bg-white/20 backdrop-blur-sm text-white shrink-0">
-                        <Maximize2 className="w-3.5 h-3.5" />
-                      </div>
+                  <div className="flex items-center justify-between text-white gap-2">
+                    <span className="text-xs font-bold text-white line-clamp-1">{item.title}</span>
+                    <div className="p-1.5 rounded-full bg-white/20 backdrop-blur-sm text-white shrink-0">
+                      <Maximize2 className="w-3.5 h-3.5" />
                     </div>
                   </div>
-                </motion.div>
-              </StaggerItem>
+                </div>
+              </div>
             ))}
-          </StaggerContainer>
+          </div>
         )}
       </main>
 
