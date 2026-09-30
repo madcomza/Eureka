@@ -9,6 +9,7 @@ import fumigationImg from '../assets/images/Fumigation.jpeg';
 import { EurekaLogo } from './EurekaLogo';
 import { EurekaHeader } from './EurekaHeader';
 import { EurekaFooter } from './EurekaFooter';
+import { ScrollReveal, StaggerContainer, StaggerItem } from './ScrollAnimation';
 import {
   Phone,
   Mail,
@@ -291,7 +292,19 @@ export const EurekaWebsite: React.FC<EurekaWebsiteProps> = ({ onNavigate }) => {
 
       {/* 2. Hero Section (Animated Dynamic Slide Carousel with Floating Badges) */}
       <section id="home" className="relative bg-[#050b1b] text-white pt-16 pb-28 lg:pb-36 px-4 sm:px-6 lg:px-8 overflow-hidden">
-        {/* Background Gradient Mesh & Patterns */}
+        {/* Background Video */}
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover object-center pointer-events-none"
+        >
+          <source src="./video/Services Hero Section BG.mp4" type="video/mp4" />
+        </video>
+
+        {/* Background Video Overlay & Gradient Mesh */}
+        <div className="absolute inset-0 bg-gradient-to-r from-slate-950/90 via-slate-950/75 to-slate-950/60 pointer-events-none" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(14,116,144,0.15),transparent_40%),radial-gradient(circle_at_80%_80%,rgba(220,38,38,0.12),transparent_45%)] pointer-events-none" />
         <div className="absolute top-0 right-0 w-full h-full bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:4rem_4rem] pointer-events-none" />
         
@@ -465,34 +478,32 @@ export const EurekaWebsite: React.FC<EurekaWebsiteProps> = ({ onNavigate }) => {
 
       {/* 3.5 Animated Key Metrics & Governance Ticker Bar */}
       <section className="bg-slate-900 text-white py-10 px-4 sm:px-6 lg:px-8 border-y border-slate-800 relative overflow-hidden">
-        <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 lg:gap-8">
+        <StaggerContainer className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 lg:gap-8">
           {stats.map((st, idx) => (
-            <motion.div
-              key={idx}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: idx * 0.1, duration: 0.4 }}
-              className="p-4 rounded-xl bg-white/5 border border-white/10 hover:border-red-500/50 transition-colors"
-            >
-              <span className="text-3xl sm:text-4xl font-black text-red-500 block tracking-tight font-sans">
-                {st.value}
-              </span>
-              <span className="text-sm font-bold text-white block mt-1">
-                {st.label}
-              </span>
-              <span className="text-xs text-slate-400 block mt-0.5 font-normal">
-                {st.detail}
-              </span>
-            </motion.div>
+            <StaggerItem key={idx}>
+              <motion.div
+                whileHover={{ y: -4, borderColor: 'rgba(239, 68, 68, 0.6)' }}
+                className="p-4 rounded-xl bg-white/5 border border-white/10 transition-colors h-full"
+              >
+                <span className="text-3xl sm:text-4xl font-black text-red-500 block tracking-tight font-sans">
+                  {st.value}
+                </span>
+                <span className="text-sm font-bold text-white block mt-1">
+                  {st.label}
+                </span>
+                <span className="text-xs text-slate-400 block mt-0.5 font-normal">
+                  {st.detail}
+                </span>
+              </motion.div>
+            </StaggerItem>
           ))}
-        </div>
+        </StaggerContainer>
       </section>
 
       {/* 4. Three Solution Pillars Overview Cards (Enriched with Rich Photography & Animations) */}
-      <section className="bg-slate-50 py-20 px-4 sm:px-6 lg:px-8 border-b border-slate-200">
+      <section className="bg-slate-50 py-20 px-4 sm:px-6 lg:px-8 border-b border-slate-200 overflow-hidden">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center max-w-3xl mx-auto mb-14">
+          <ScrollReveal direction="up" className="text-center max-w-3xl mx-auto mb-14">
             <span className="text-xs font-black tracking-widest text-[#d91b1b] uppercase block mb-2">
               OUR THREE CORE SOLUTION AREAS
             </span>
@@ -502,78 +513,75 @@ export const EurekaWebsite: React.FC<EurekaWebsiteProps> = ({ onNavigate }) => {
             <p className="text-sm text-slate-600 mt-2 max-w-2xl mx-auto">
               From everyday property maintenance to capital project execution and expert contractual dispute resolution.
             </p>
-          </div>
+          </ScrollReveal>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <StaggerContainer className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {coreSolutions.map((sol, idx) => (
-              <motion.article
-                key={sol.id}
-                initial={{ opacity: 0, y: 25 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: idx * 0.15, duration: 0.5 }}
-                whileHover={{ y: -6 }}
-                className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl hover:border-slate-300 transition-all flex flex-col justify-between group"
-              >
-                <div>
-                  {/* Card Image Header with Zoom on Hover */}
-                  <div className="relative h-48 sm:h-52 overflow-hidden bg-slate-900">
-                    <img
-                      src={sol.image}
-                      alt={sol.title}
-                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                    />
-                  </div>
-
-                  {/* Card Body */}
-                  <div className="p-6">
-                    <div className="flex items-center justify-between gap-2 mb-2.5">
-                      <span className="text-[11px] font-extrabold text-red-600 uppercase tracking-wider">
-                        Solution {sol.num}
-                      </span>
-                      <span className="bg-red-50 text-red-700 text-[10px] font-black uppercase px-2.5 py-0.5 rounded border border-red-200">
-                        {sol.badge}
-                      </span>
+              <StaggerItem key={sol.id}>
+                <motion.article
+                  whileHover={{ y: -6 }}
+                  className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl hover:border-slate-300 transition-all flex flex-col justify-between group h-full"
+                >
+                  <div>
+                    {/* Card Image Header with Zoom on Hover */}
+                    <div className="relative h-48 sm:h-52 overflow-hidden bg-slate-900">
+                      <img
+                        src={sol.image}
+                        alt={sol.title}
+                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                      />
                     </div>
-                    <h3 className="text-lg font-black text-slate-900 tracking-tight leading-tight mb-2">
-                      {sol.title}
-                    </h3>
-                    <p className="text-xs font-semibold text-slate-800 leading-relaxed mb-3">
-                      {sol.subtitle}
-                    </p>
-                    <p className="text-xs text-slate-600 leading-relaxed mb-5">
-                      {sol.desc}
-                    </p>
 
-                    <div className="border-t border-slate-100 pt-4 mb-2">
-                      <span className="text-[11px] font-black uppercase tracking-wider text-slate-500 block mb-2.5">
-                        Key Capabilities Included:
-                      </span>
-                      <ul className="space-y-2 text-xs text-slate-700">
-                        {sol.services.map((srv, sIdx) => (
-                          <li key={sIdx} className="flex items-start gap-2">
-                            <CheckCircle2 className="w-3.5 h-3.5 text-red-600 shrink-0 mt-0.5" />
-                            <span>{srv}</span>
-                          </li>
-                        ))}
-                      </ul>
+                    {/* Card Body */}
+                    <div className="p-6">
+                      <div className="flex items-center justify-between gap-2 mb-2.5">
+                        <span className="text-[11px] font-extrabold text-red-600 uppercase tracking-wider">
+                          Solution {sol.num}
+                        </span>
+                        <span className="bg-red-50 text-red-700 text-[10px] font-black uppercase px-2.5 py-0.5 rounded border border-red-200">
+                          {sol.badge}
+                        </span>
+                      </div>
+                      <h3 className="text-lg font-black text-slate-900 tracking-tight leading-tight mb-2">
+                        {sol.title}
+                      </h3>
+                      <p className="text-xs font-semibold text-slate-800 leading-relaxed mb-3">
+                        {sol.subtitle}
+                      </p>
+                      <p className="text-xs text-slate-600 leading-relaxed mb-5">
+                        {sol.desc}
+                      </p>
+
+                      <div className="border-t border-slate-100 pt-4 mb-2">
+                        <span className="text-[11px] font-black uppercase tracking-wider text-slate-500 block mb-2.5">
+                          Key Capabilities Included:
+                        </span>
+                        <ul className="space-y-2 text-xs text-slate-700">
+                          {sol.services.map((srv, sIdx) => (
+                            <li key={sIdx} className="flex items-start gap-2">
+                              <CheckCircle2 className="w-3.5 h-3.5 text-red-600 shrink-0 mt-0.5" />
+                              <span>{srv}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                {/* Card CTA Footer */}
-                <div className="p-6 pt-0 border-t border-slate-100 mt-4">
-                  <button
-                    onClick={() => onNavigate?.('solutions', sol.id as SolutionSubcategory)}
-                    className="w-full py-2.5 px-4 rounded-lg bg-slate-50 group-hover:bg-[#08286b] text-slate-800 group-hover:text-white text-xs font-black tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm"
-                  >
-                    <span>EXPLORE {sol.title.toUpperCase()}</span>
-                    <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
-                  </button>
-                </div>
-              </motion.article>
+                  {/* Card CTA Footer */}
+                  <div className="p-6 pt-0 border-t border-slate-100 mt-4">
+                    <button
+                      onClick={() => onNavigate?.('solutions', sol.id as SolutionSubcategory)}
+                      className="w-full py-2.5 px-4 rounded-lg bg-slate-50 group-hover:bg-[#08286b] text-slate-800 group-hover:text-white text-xs font-black tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm active:scale-98"
+                    >
+                      <span>EXPLORE {sol.title.toUpperCase()}</span>
+                      <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                    </button>
+                  </div>
+                </motion.article>
+              </StaggerItem>
             ))}
-          </div>
+          </StaggerContainer>
         </div>
       </section>
 
@@ -668,9 +676,9 @@ export const EurekaWebsite: React.FC<EurekaWebsiteProps> = ({ onNavigate }) => {
       </section>
 
       {/* 5. Why Businesses Choose EFMS (Split into 2 Columns: Accordion + Fumigation Visual) */}
-      <section className="bg-slate-50 py-20 px-4 sm:px-6 lg:px-8 border-b border-slate-200">
+      <section className="bg-slate-50 py-20 px-4 sm:px-6 lg:px-8 border-b border-slate-200 overflow-hidden">
         <div className="max-w-7xl mx-auto">
-          <div className="max-w-3xl mb-12">
+          <ScrollReveal direction="up" className="max-w-3xl mb-12">
             <span className="text-xs font-black tracking-widest text-[#d91b1b] uppercase block mb-2">
               WHY CHOOSE EUREKA?
             </span>
@@ -680,11 +688,11 @@ export const EurekaWebsite: React.FC<EurekaWebsiteProps> = ({ onNavigate }) => {
             <p className="text-sm text-slate-600 mt-2">
               From everyday operational needs to complex construction projects, EFMS combines professional governance with hands-on delivery.
             </p>
-          </div>
+          </ScrollReveal>
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
             {/* Column 1: Accordion Format of the 7 Why Choose Points */}
-            <div className="lg:col-span-7 space-y-3">
+            <ScrollReveal direction="right" duration={0.6} className="lg:col-span-7 space-y-3">
               {whyChoosePoints.map((point, idx) => {
                 const IconComp = point.icon;
                 const isOpen = openWhyChooseIndex === idx;
@@ -755,10 +763,10 @@ export const EurekaWebsite: React.FC<EurekaWebsiteProps> = ({ onNavigate }) => {
                   </div>
                 );
               })}
-            </div>
+            </ScrollReveal>
 
             {/* Column 2: Fumigation Image & Partner Callout */}
-            <div className="lg:col-span-5 flex flex-col gap-6 lg:sticky lg:top-24">
+            <ScrollReveal direction="left" duration={0.6} className="lg:col-span-5 flex flex-col gap-6 lg:sticky lg:top-24">
               <div className="relative rounded-2xl overflow-hidden shadow-xl border border-slate-200 bg-slate-900 group">
                 <img
                   src={fumigationImg}
@@ -776,7 +784,7 @@ export const EurekaWebsite: React.FC<EurekaWebsiteProps> = ({ onNavigate }) => {
                 <span>REQUEST A CONSULTATION</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
-            </div>
+            </ScrollReveal>
           </div>
         </div>
       </section>
@@ -850,10 +858,10 @@ export const EurekaWebsite: React.FC<EurekaWebsiteProps> = ({ onNavigate }) => {
       </section>
 
       {/* 7. How We Deliver: Our Structured Delivery Framework */}
-      <section className="bg-slate-50 py-20 px-4 sm:px-6 lg:px-8 border-b border-slate-200">
+      <section className="bg-slate-50 py-20 px-4 sm:px-6 lg:px-8 border-b border-slate-200 overflow-hidden">
         <div className="max-w-7xl mx-auto">
           {/* Section Heading & Eyebrow */}
-          <div className="text-center max-w-3xl mx-auto mb-14">
+          <ScrollReveal direction="up" className="text-center max-w-3xl mx-auto mb-14">
             <span className="text-xs font-black tracking-widest text-[#d91b1b] uppercase block mb-2">
               HOW WE DELIVER
             </span>
@@ -863,122 +871,106 @@ export const EurekaWebsite: React.FC<EurekaWebsiteProps> = ({ onNavigate }) => {
             <p className="text-sm text-slate-600 mt-2 max-w-2xl mx-auto leading-relaxed">
               A proven four-stage methodology ensuring risk mitigation, statutory compliance, and cost efficiency.
             </p>
-          </div>
+          </ScrollReveal>
 
           {/* Four Stage Cards Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <StaggerContainer className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {/* Stage 1 */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.06, duration: 0.4 }}
-              className="p-6 rounded-xl bg-white border border-slate-200 flex flex-col justify-between hover:border-red-500/40 hover:shadow-md transition-all group"
-            >
-              <div>
-                <div className="flex items-center justify-between mb-5">
-                  <span className="text-2xl font-black text-[#d91b1b] block">01</span>
-                  <div className="w-10 h-10 rounded-lg bg-red-50 text-[#d91b1b] flex items-center justify-center group-hover:bg-[#d91b1b] group-hover:text-white transition-colors">
-                    <ArrowRight className="w-5 h-5 stroke-[2.5]" />
+            <StaggerItem>
+              <div className="p-6 rounded-xl bg-white border border-slate-200 flex flex-col justify-between hover:border-red-500/40 hover:shadow-md transition-all group h-full">
+                <div>
+                  <div className="flex items-center justify-between mb-5">
+                    <span className="text-2xl font-black text-[#d91b1b] block">01</span>
+                    <div className="w-10 h-10 rounded-lg bg-red-50 text-[#d91b1b] flex items-center justify-center group-hover:bg-[#d91b1b] group-hover:text-white transition-colors">
+                      <ArrowRight className="w-5 h-5 stroke-[2.5]" />
+                    </div>
                   </div>
+                  <h3 className="text-base sm:text-lg font-extrabold text-slate-900 group-hover:text-[#08286b] transition-colors mb-2 leading-snug">
+                    Audit &amp; Diagnostic Assessment
+                  </h3>
+                  <p className="text-xs text-slate-600 leading-relaxed">
+                    Comprehensive baseline inspection of facility condition, statutory compliance, structural health, and maintenance liabilities.
+                  </p>
                 </div>
-                <h3 className="text-base sm:text-lg font-extrabold text-slate-900 group-hover:text-[#08286b] transition-colors mb-2 leading-snug">
-                  Audit &amp; Diagnostic Assessment
-                </h3>
-                <p className="text-xs text-slate-600 leading-relaxed">
-                  Comprehensive baseline inspection of facility condition, statutory compliance, structural health, and maintenance liabilities.
-                </p>
+                <div className="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between text-[11px] font-bold text-slate-400 group-hover:text-red-600 transition-colors">
+                  <span className="uppercase tracking-wider">Phase 01</span>
+                  <span>Diagnostics</span>
+                </div>
               </div>
-              <div className="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between text-[11px] font-bold text-slate-400 group-hover:text-red-600 transition-colors">
-                <span className="uppercase tracking-wider">Phase 01</span>
-                <span>Diagnostics</span>
-              </div>
-            </motion.div>
+            </StaggerItem>
 
             {/* Stage 2 */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.12, duration: 0.4 }}
-              className="p-6 rounded-xl bg-white border border-slate-200 flex flex-col justify-between hover:border-red-500/40 hover:shadow-md transition-all group"
-            >
-              <div>
-                <div className="flex items-center justify-between mb-5">
-                  <span className="text-2xl font-black text-[#d91b1b] block">02</span>
-                  <div className="w-10 h-10 rounded-lg bg-red-50 text-[#d91b1b] flex items-center justify-center group-hover:bg-[#d91b1b] group-hover:text-white transition-colors">
-                    <ArrowRight className="w-5 h-5 stroke-[2.5]" />
+            <StaggerItem>
+              <div className="p-6 rounded-xl bg-white border border-slate-200 flex flex-col justify-between hover:border-red-500/40 hover:shadow-md transition-all group h-full">
+                <div>
+                  <div className="flex items-center justify-between mb-5">
+                    <span className="text-2xl font-black text-[#d91b1b] block">02</span>
+                    <div className="w-10 h-10 rounded-lg bg-red-50 text-[#d91b1b] flex items-center justify-center group-hover:bg-[#d91b1b] group-hover:text-white transition-colors">
+                      <ArrowRight className="w-5 h-5 stroke-[2.5]" />
+                    </div>
                   </div>
+                  <h3 className="text-base sm:text-lg font-extrabold text-slate-900 group-hover:text-[#08286b] transition-colors mb-2 leading-snug">
+                    Strategic Solution Design
+                  </h3>
+                  <p className="text-xs text-slate-600 leading-relaxed">
+                    Tailoring SLA frameworks, project work breakdown structures, procurement models, and lifecycle budgeting.
+                  </p>
                 </div>
-                <h3 className="text-base sm:text-lg font-extrabold text-slate-900 group-hover:text-[#08286b] transition-colors mb-2 leading-snug">
-                  Strategic Solution Design
-                </h3>
-                <p className="text-xs text-slate-600 leading-relaxed">
-                  Tailoring SLA frameworks, project work breakdown structures, procurement models, and lifecycle budgeting.
-                </p>
+                <div className="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between text-[11px] font-bold text-slate-400 group-hover:text-red-600 transition-colors">
+                  <span className="uppercase tracking-wider">Phase 02</span>
+                  <span>Solution Design</span>
+                </div>
               </div>
-              <div className="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between text-[11px] font-bold text-slate-400 group-hover:text-red-600 transition-colors">
-                <span className="uppercase tracking-wider">Phase 02</span>
-                <span>Solution Design</span>
-              </div>
-            </motion.div>
+            </StaggerItem>
 
             {/* Stage 3 */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.18, duration: 0.4 }}
-              className="p-6 rounded-xl bg-white border border-slate-200 flex flex-col justify-between hover:border-red-500/40 hover:shadow-md transition-all group"
-            >
-              <div>
-                <div className="flex items-center justify-between mb-5">
-                  <span className="text-2xl font-black text-[#d91b1b] block">03</span>
-                  <div className="w-10 h-10 rounded-lg bg-red-50 text-[#d91b1b] flex items-center justify-center group-hover:bg-[#d91b1b] group-hover:text-white transition-colors">
-                    <ArrowRight className="w-5 h-5 stroke-[2.5]" />
+            <StaggerItem>
+              <div className="p-6 rounded-xl bg-white border border-slate-200 flex flex-col justify-between hover:border-red-500/40 hover:shadow-md transition-all group h-full">
+                <div>
+                  <div className="flex items-center justify-between mb-5">
+                    <span className="text-2xl font-black text-[#d91b1b] block">03</span>
+                    <div className="w-10 h-10 rounded-lg bg-red-50 text-[#d91b1b] flex items-center justify-center group-hover:bg-[#d91b1b] group-hover:text-white transition-colors">
+                      <ArrowRight className="w-5 h-5 stroke-[2.5]" />
+                    </div>
                   </div>
+                  <h3 className="text-base sm:text-lg font-extrabold text-slate-900 group-hover:text-[#08286b] transition-colors mb-2 leading-snug">
+                    Execution &amp; Project Controls
+                  </h3>
+                  <p className="text-xs text-slate-600 leading-relaxed">
+                    Rigorous management of scope, time, cost, safety (OHS), and quality on-site with real-time stakeholder tracking.
+                  </p>
                 </div>
-                <h3 className="text-base sm:text-lg font-extrabold text-slate-900 group-hover:text-[#08286b] transition-colors mb-2 leading-snug">
-                  Execution &amp; Project Controls
-                </h3>
-                <p className="text-xs text-slate-600 leading-relaxed">
-                  Rigorous management of scope, time, cost, safety (OHS), and quality on-site with real-time stakeholder tracking.
-                </p>
+                <div className="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between text-[11px] font-bold text-slate-400 group-hover:text-red-600 transition-colors">
+                  <span className="uppercase tracking-wider">Phase 03</span>
+                  <span>Project Controls</span>
+                </div>
               </div>
-              <div className="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between text-[11px] font-bold text-slate-400 group-hover:text-red-600 transition-colors">
-                <span className="uppercase tracking-wider">Phase 03</span>
-                <span>Project Controls</span>
-              </div>
-            </motion.div>
+            </StaggerItem>
 
             {/* Stage 4 */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.24, duration: 0.4 }}
-              className="p-6 rounded-xl bg-white border border-slate-200 flex flex-col justify-between hover:border-red-500/40 hover:shadow-md transition-all group"
-            >
-              <div>
-                <div className="flex items-center justify-between mb-5">
-                  <span className="text-2xl font-black text-[#d91b1b] block">04</span>
-                  <div className="w-10 h-10 rounded-lg bg-red-50 text-[#d91b1b] flex items-center justify-center group-hover:bg-[#d91b1b] group-hover:text-white transition-colors">
-                    <Check className="w-5 h-5 stroke-[2.5]" />
+            <StaggerItem>
+              <div className="p-6 rounded-xl bg-white border border-slate-200 flex flex-col justify-between hover:border-red-500/40 hover:shadow-md transition-all group h-full">
+                <div>
+                  <div className="flex items-center justify-between mb-5">
+                    <span className="text-2xl font-black text-[#d91b1b] block">04</span>
+                    <div className="w-10 h-10 rounded-lg bg-red-50 text-[#d91b1b] flex items-center justify-center group-hover:bg-[#d91b1b] group-hover:text-white transition-colors">
+                      <Check className="w-5 h-5 stroke-[2.5]" />
+                    </div>
                   </div>
+                  <h3 className="text-base sm:text-lg font-extrabold text-slate-900 group-hover:text-[#08286b] transition-colors mb-2 leading-snug">
+                    Handover &amp; Optimization
+                  </h3>
+                  <p className="text-xs text-slate-600 leading-relaxed">
+                    Structured commissioning, as-built documentation, facility maintenance transition, and post-occupancy reviews.
+                  </p>
                 </div>
-                <h3 className="text-base sm:text-lg font-extrabold text-slate-900 group-hover:text-[#08286b] transition-colors mb-2 leading-snug">
-                  Handover &amp; Optimization
-                </h3>
-                <p className="text-xs text-slate-600 leading-relaxed">
-                  Structured commissioning, as-built documentation, facility maintenance transition, and post-occupancy reviews.
-                </p>
+                <div className="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between text-[11px] font-bold text-slate-400 group-hover:text-red-600 transition-colors">
+                  <span className="uppercase tracking-wider">Phase 04</span>
+                  <span>Optimization</span>
+                </div>
               </div>
-              <div className="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between text-[11px] font-bold text-slate-400 group-hover:text-red-600 transition-colors">
-                <span className="uppercase tracking-wider">Phase 04</span>
-                <span>Optimization</span>
-              </div>
-            </motion.div>
-          </div>
+            </StaggerItem>
+          </StaggerContainer>
         </div>
       </section>
 
@@ -992,7 +984,7 @@ export const EurekaWebsite: React.FC<EurekaWebsiteProps> = ({ onNavigate }) => {
 
         <div className="max-w-6xl mx-auto relative z-10">
           {/* Section Header */}
-          <div className="text-center max-w-3xl mx-auto mb-14">
+          <ScrollReveal direction="up" className="text-center max-w-3xl mx-auto mb-14">
             <span className="text-xs font-black tracking-widest text-[#d91b1b] uppercase block mb-2">
               CLIENT TESTIMONIALS
             </span>
@@ -1002,14 +994,18 @@ export const EurekaWebsite: React.FC<EurekaWebsiteProps> = ({ onNavigate }) => {
             <p className="text-sm text-slate-600 mt-2 max-w-2xl mx-auto leading-relaxed">
               Proven consistency, proactive service, and trusted built-environment solutions across South Africa.
             </p>
-          </div>
+          </ScrollReveal>
 
           {/* Testimonial Slides Container */}
-          <div
+          <ScrollReveal
+            direction="zoom"
+            duration={0.6}
             className="relative bg-slate-50 border border-slate-200/90 rounded-2xl p-6 sm:p-10 lg:p-14 shadow-sm"
-            onMouseEnter={() => setIsTestimonialAutoplay(false)}
-            onMouseLeave={() => setIsTestimonialAutoplay(true)}
           >
+            <div
+              onMouseEnter={() => setIsTestimonialAutoplay(false)}
+              onMouseLeave={() => setIsTestimonialAutoplay(true)}
+            >
             {/* Left Prev Arrow Button */}
             <button
               onClick={prevTestimonial}
@@ -1096,7 +1092,8 @@ export const EurekaWebsite: React.FC<EurekaWebsiteProps> = ({ onNavigate }) => {
                 0{activeTestimonial + 1} / 0{testimonials.length}
               </span>
             </div>
-          </div>
+            </div>
+          </ScrollReveal>
 
           {/* Quick Select Client Pills */}
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 mt-8">

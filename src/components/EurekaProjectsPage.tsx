@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 import { EurekaHeader, NavPage } from './EurekaHeader';
 import { EurekaFooter } from './EurekaFooter';
+import { ScrollReveal, StaggerContainer, StaggerItem } from './ScrollAnimation';
 import {
   Building2,
   HardHat,
@@ -36,6 +38,9 @@ import quantitySurveying from '../assets/images/Quantity Surveying.jpg';
 import delayAnalysis from '../assets/images/Specialist Delay & Programme.jpg';
 import contractAdvisory from '../assets/images/Construction Contract Advisory.jpg';
 import facilitiesSolutions from '../assets/images/facilities_and_property_solutions.jpg';
+import roofRehabilitation from '../assets/images/Roof Rehabilitation.jpeg';
+import waterReticulation from '../assets/images/Water Reticulation.jpg';
+import herbariumImg from '../assets/images/Herbarium.jpg';
 
 export interface EurekaProjectsPageProps {
   onNavigate?: (page: NavPage, subcategory?: 'all' | 'facilities' | 'construction' | 'consultancy') => void;
@@ -70,7 +75,7 @@ export const EurekaProjectsPage: React.FC<EurekaProjectsPageProps> = ({ onNaviga
       rolesResponsibilities: 'Managed roof rehabilitation works including programme, cost, quality, NEC3 contract administration, Compensation Events, stakeholder coordination, HSE compliance and project reporting.',
       category: 'facilities',
       categoryLabel: 'Facilities & Property',
-      image: facilitiesSolutions
+      image: roofRehabilitation
     },
     {
       id: 'gauteng-roads-zwartkop',
@@ -88,7 +93,7 @@ export const EurekaProjectsPage: React.FC<EurekaProjectsPageProps> = ({ onNaviga
       rolesResponsibilities: 'Managed NEC3 contract administration, programme delivery, Compensation Events, contractor coordination, risk management and project reporting for critical water infrastructure upgrades.',
       category: 'construction',
       categoryLabel: 'Construction Delivery',
-      image: publicSectorMunicipalities
+      image: waterReticulation
     },
     {
       id: 'sanbi-herbarium',
@@ -97,7 +102,7 @@ export const EurekaProjectsPage: React.FC<EurekaProjectsPageProps> = ({ onNaviga
       rolesResponsibilities: 'Provided contract administration, programme, cost and quality management, stakeholder coordination, certification of works and project close-out.',
       category: 'facilities',
       categoryLabel: 'Facilities & Property',
-      image: publicSectorInfra
+      image: herbariumImg
     },
 
     // --- Screenshot 02 ---
@@ -164,7 +169,7 @@ export const EurekaProjectsPage: React.FC<EurekaProjectsPageProps> = ({ onNaviga
       rolesResponsibilities: 'Prepared technical due diligence for the expansion of the wastewater treatment facility, including technical input into financial and legal assessments.',
       category: 'consultancy',
       categoryLabel: 'Consultancy',
-      image: contractAdvisory
+      image: waterReticulation
     },
     {
       id: 'computershare-due-diligence',
@@ -211,7 +216,7 @@ export const EurekaProjectsPage: React.FC<EurekaProjectsPageProps> = ({ onNaviga
       rolesResponsibilities: 'Managed construction of a 45 ML/day wastewater treatment plant, coordinating programme, quality and contractor performance.',
       category: 'construction',
       categoryLabel: 'Construction Delivery',
-      image: undercoverParking
+      image: waterReticulation
     },
     {
       id: 'prasa-vereeniging',
@@ -266,10 +271,23 @@ export const EurekaProjectsPage: React.FC<EurekaProjectsPageProps> = ({ onNaviga
       <EurekaHeader currentPage="projects" onNavigate={onNavigate} />
 
       {/* 2. Hero Banner Section */}
-      <section className="relative bg-gradient-to-br from-[#061024] via-[#0b1c42] to-[#040a18] text-white py-14 lg:py-18 border-b-4 border-red-600 overflow-hidden">
-        <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:16px_16px]" />
+      <section className="relative bg-[#050b1b] text-white py-14 lg:py-18 border-b-4 border-red-600 overflow-hidden">
+        {/* Background Video */}
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover object-center pointer-events-none"
+        >
+          <source src="./video/Services Hero Section BG.mp4" type="video/mp4" />
+        </video>
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Video Overlay: Darker on left, totally clear on right */}
+        <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/70 to-transparent pointer-events-none" />
+        <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none" />
+
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-10">
           <div className="max-w-3xl space-y-3">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-500/20 text-red-400 border border-red-500/30 text-xs font-black tracking-wider uppercase">
               <Award className="w-3.5 h-3.5" />
@@ -286,24 +304,32 @@ export const EurekaProjectsPage: React.FC<EurekaProjectsPageProps> = ({ onNaviga
           </div>
 
           {/* Metrics Bar */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-8 pt-6 border-t border-slate-800/80">
-            <div className="bg-slate-900/60 p-3.5 rounded-xl border border-slate-800">
-              <div className="text-xl sm:text-2xl font-black text-red-500">R2.4B+</div>
-              <div className="text-[11px] text-slate-400 mt-0.5">Tracked Project Value</div>
-            </div>
-            <div className="bg-slate-900/60 p-3.5 rounded-xl border border-slate-800">
-              <div className="text-xl sm:text-2xl font-black text-sky-400">17+ Major Projects</div>
-              <div className="text-[11px] text-slate-400 mt-0.5">Delivered &amp; Managed</div>
-            </div>
-            <div className="bg-slate-900/60 p-3.5 rounded-xl border border-slate-800">
-              <div className="text-xl sm:text-2xl font-black text-emerald-400">NEC3, JBCC, GCC</div>
-              <div className="text-[11px] text-slate-400 mt-0.5">Contract Administration</div>
-            </div>
-            <div className="bg-slate-900/60 p-3.5 rounded-xl border border-slate-800">
-              <div className="text-xl sm:text-2xl font-black text-amber-400">SACPCMP</div>
-              <div className="text-[11px] text-slate-400 mt-0.5">Pr. CPM Governance</div>
-            </div>
-          </div>
+          <StaggerContainer className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-8 pt-6 border-t border-slate-800/80">
+            <StaggerItem>
+              <div className="bg-slate-900/60 p-3.5 rounded-xl border border-slate-800 hover:border-red-500/50 transition-colors">
+                <div className="text-xl sm:text-2xl font-black text-red-500">R2.4B+</div>
+                <div className="text-[11px] text-slate-400 mt-0.5">Tracked Project Value</div>
+              </div>
+            </StaggerItem>
+            <StaggerItem>
+              <div className="bg-slate-900/60 p-3.5 rounded-xl border border-slate-800 hover:border-sky-500/50 transition-colors">
+                <div className="text-xl sm:text-2xl font-black text-sky-400">17+ Major Projects</div>
+                <div className="text-[11px] text-slate-400 mt-0.5">Delivered &amp; Managed</div>
+              </div>
+            </StaggerItem>
+            <StaggerItem>
+              <div className="bg-slate-900/60 p-3.5 rounded-xl border border-slate-800 hover:border-emerald-500/50 transition-colors">
+                <div className="text-xl sm:text-2xl font-black text-emerald-400">NEC3, JBCC, GCC</div>
+                <div className="text-[11px] text-slate-400 mt-0.5">Contract Administration</div>
+              </div>
+            </StaggerItem>
+            <StaggerItem>
+              <div className="bg-slate-900/60 p-3.5 rounded-xl border border-slate-800 hover:border-amber-500/50 transition-colors">
+                <div className="text-xl sm:text-2xl font-black text-amber-400">SACPCMP</div>
+                <div className="text-[11px] text-slate-400 mt-0.5">Pr. CPM Governance</div>
+              </div>
+            </StaggerItem>
+          </StaggerContainer>
         </div>
       </section>
 
@@ -351,31 +377,42 @@ export const EurekaProjectsPage: React.FC<EurekaProjectsPageProps> = ({ onNaviga
                 />
               </div>
 
-              {/* Toggle Cards vs Table */}
-              <div className="flex items-center bg-slate-100 p-1 rounded-lg border border-slate-200 shrink-0">
+              {/* Toggle Cards vs Table & Gallery Link */}
+              <div className="flex items-center gap-1.5 shrink-0">
+                <div className="flex items-center bg-slate-100 p-1 rounded-lg border border-slate-200">
+                  <button
+                    onClick={() => setViewMode('table')}
+                    className={`px-2.5 py-1 rounded text-xs font-bold flex items-center gap-1 cursor-pointer transition-colors ${
+                      viewMode === 'table'
+                        ? 'bg-white text-slate-900 shadow-xs'
+                        : 'text-slate-600 hover:text-slate-900'
+                    }`}
+                    title="Tabular Matrix View (as provided in document)"
+                  >
+                    <TableIcon className="w-3.5 h-3.5" />
+                    <span className="hidden sm:inline">Table View</span>
+                  </button>
+                  <button
+                    onClick={() => setViewMode('cards')}
+                    className={`px-2.5 py-1 rounded text-xs font-bold flex items-center gap-1 cursor-pointer transition-colors ${
+                      viewMode === 'cards'
+                        ? 'bg-white text-slate-900 shadow-xs'
+                        : 'text-slate-600 hover:text-slate-900'
+                    }`}
+                    title="Card Gallery View"
+                  >
+                    <LayoutGrid className="w-3.5 h-3.5" />
+                    <span className="hidden sm:inline">Card View</span>
+                  </button>
+                </div>
+
                 <button
-                  onClick={() => setViewMode('table')}
-                  className={`px-2.5 py-1 rounded text-xs font-bold flex items-center gap-1 cursor-pointer transition-colors ${
-                    viewMode === 'table'
-                      ? 'bg-white text-slate-900 shadow-xs'
-                      : 'text-slate-600 hover:text-slate-900'
-                  }`}
-                  title="Tabular Matrix View (as provided in document)"
+                  onClick={() => handleNav('gallery')}
+                  className="px-3 py-1.5 bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer"
+                  title="Open Visual Photo Gallery"
                 >
-                  <TableIcon className="w-3.5 h-3.5" />
-                  <span className="hidden sm:inline">Table View</span>
-                </button>
-                <button
-                  onClick={() => setViewMode('cards')}
-                  className={`px-2.5 py-1 rounded text-xs font-bold flex items-center gap-1 cursor-pointer transition-colors ${
-                    viewMode === 'cards'
-                      ? 'bg-white text-slate-900 shadow-xs'
-                      : 'text-slate-600 hover:text-slate-900'
-                  }`}
-                  title="Card Gallery View"
-                >
-                  <LayoutGrid className="w-3.5 h-3.5" />
-                  <span className="hidden sm:inline">Card View</span>
+                  <Eye className="w-3.5 h-3.5" />
+                  <span className="hidden md:inline">Photo Gallery &rarr;</span>
                 </button>
               </div>
             </div>
@@ -437,59 +474,61 @@ export const EurekaProjectsPage: React.FC<EurekaProjectsPageProps> = ({ onNaviga
 
         {/* CARDS GRID VIEW */}
         {viewMode === 'cards' && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredProjects.map((item) => (
-              <div
-                key={item.id}
-                className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-xs hover:shadow-lg transition-all flex flex-col justify-between group"
-              >
-                <div className="relative h-48 bg-slate-100 overflow-hidden">
-                  <img
-                    src={item.image}
-                    alt={item.project}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                  <button
-                    onClick={() => setSelectedProject(item)}
-                    className="absolute inset-0 flex items-center justify-center bg-[#07132e]/40 opacity-0 group-hover:opacity-100 transition-opacity text-white text-xs font-bold gap-1.5 cursor-pointer"
-                  >
-                    <div className="p-2.5 bg-red-600 rounded-full shadow-lg">
-                      <Maximize2 className="w-4 h-4 text-white" />
-                    </div>
-                  </button>
-                </div>
-
-                <div className="p-5 flex-1 flex flex-col justify-between space-y-3">
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between gap-2">
-                      <span className="px-2.5 py-0.5 rounded text-[10px] font-black uppercase tracking-wider bg-slate-100 text-slate-800 border border-slate-200">
-                        {item.categoryLabel}
-                      </span>
-                      {item.valueDisplay && (
-                        <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-red-50 text-red-700 border border-red-200">
-                          {item.valueDisplay}
-                        </span>
-                      )}
-                    </div>
-                    <h2 className="text-sm sm:text-base font-black text-slate-900 group-hover:text-red-600 transition-colors leading-snug">
-                      {item.project}
-                    </h2>
-                    <p className="text-xs text-slate-600 leading-relaxed">
-                      {item.rolesResponsibilities}
-                    </p>
+              <StaggerItem key={item.id}>
+                <motion.div
+                  whileHover={{ y: -5 }}
+                  className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-xs hover:shadow-lg transition-all flex flex-col justify-between group h-full"
+                >
+                  <div className="relative h-48 bg-slate-100 overflow-hidden">
+                    <img
+                      src={item.image}
+                      alt={item.project}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                    <button
+                      onClick={() => setSelectedProject(item)}
+                      className="absolute inset-0 flex items-center justify-center bg-[#07132e]/40 opacity-0 group-hover:opacity-100 transition-opacity text-white text-xs font-bold gap-1.5 cursor-pointer"
+                    >
+                      <div className="p-2.5 bg-red-600 rounded-full shadow-lg">
+                        <Maximize2 className="w-4 h-4 text-white" />
+                      </div>
+                    </button>
                   </div>
 
-                  <button
-                    onClick={() => setSelectedProject(item)}
-                    className="w-full py-2 bg-slate-100 hover:bg-[#09132e] hover:text-white text-slate-800 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer mt-2"
-                  >
-                    <Eye className="w-3.5 h-3.5" />
-                    <span>VIEW PROJECT DETAILS</span>
-                  </button>
-                </div>
-              </div>
+                  <div className="p-5 flex-1 flex flex-col justify-between space-y-3">
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="px-2.5 py-0.5 rounded text-[10px] font-black uppercase tracking-wider bg-slate-100 text-slate-800 border border-slate-200">
+                          {item.categoryLabel}
+                        </span>
+                        {item.valueDisplay && (
+                          <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-red-50 text-red-700 border border-red-200">
+                            {item.valueDisplay}
+                          </span>
+                        )}
+                      </div>
+                      <h2 className="text-sm sm:text-base font-black text-slate-900 group-hover:text-red-600 transition-colors leading-snug">
+                        {item.project}
+                      </h2>
+                      <p className="text-xs text-slate-600 leading-relaxed">
+                        {item.rolesResponsibilities}
+                      </p>
+                    </div>
+
+                    <button
+                      onClick={() => setSelectedProject(item)}
+                      className="w-full py-2 bg-slate-100 hover:bg-[#09132e] hover:text-white text-slate-800 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer mt-2"
+                    >
+                      <Eye className="w-3.5 h-3.5" />
+                      <span>VIEW PROJECT DETAILS</span>
+                    </button>
+                  </div>
+                </motion.div>
+              </StaggerItem>
             ))}
-          </div>
+          </StaggerContainer>
         )}
 
         {filteredProjects.length === 0 && (

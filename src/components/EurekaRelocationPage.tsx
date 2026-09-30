@@ -19,7 +19,6 @@ import {
   ChevronDown,
   Calendar,
   AlertTriangle,
-  Award,
   Users,
   FileCheck,
   Sparkles,
@@ -85,7 +84,7 @@ export const EurekaRelocationPage: React.FC<EurekaRelocationPageProps> = ({
           playsInline
           className="absolute inset-0 w-full h-full object-cover object-center pointer-events-none"
         >
-          <source src="./Services Hero Section BG.mp4" type="video/mp4" />
+          <source src="./video/Services Hero Section BG.mp4" type="video/mp4" />
         </video>
 
         {/* Video Overlay: Darker on left, totally clear on right */}
@@ -414,32 +413,6 @@ export const EurekaRelocationPage: React.FC<EurekaRelocationPageProps> = ({
                   className="w-full h-auto max-h-[640px] object-cover object-center group-hover:scale-105 transition-transform duration-700"
                   loading="lazy"
                 />
-              </div>
-
-              {/* Accreditations & Key Specs Card */}
-              <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-xs space-y-2.5">
-                <div className="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
-                  <Award className="w-4 h-4 text-blue-600" />
-                  <span>Relocation Standards &amp; Accreditations</span>
-                </div>
-                <div className="grid grid-cols-2 gap-2 text-xs">
-                  <div className="bg-slate-50 p-2 rounded-lg border border-slate-100">
-                    <div className="text-[10px] text-slate-500 font-medium">GIT Insurance Cover</div>
-                    <div className="font-bold text-blue-900 mt-0.5">R 5,000,000 Included</div>
-                  </div>
-                  <div className="bg-slate-50 p-2 rounded-lg border border-slate-100">
-                    <div className="text-[10px] text-slate-500 font-medium">Workstation Capacity</div>
-                    <div className="font-bold text-blue-900 mt-0.5">500+ Desks/Weekend</div>
-                  </div>
-                  <div className="bg-slate-50 p-2 rounded-lg border border-slate-100">
-                    <div className="text-[10px] text-slate-500 font-medium">Rigging Compliance</div>
-                    <div className="font-bold text-blue-900 mt-0.5">OHSA &amp; SABS Certified</div>
-                  </div>
-                  <div className="bg-slate-50 p-2 rounded-lg border border-slate-100">
-                    <div className="text-[10px] text-slate-500 font-medium">Moving Crews</div>
-                    <div className="font-bold text-blue-900 mt-0.5">100% Vetted &amp; Permanent</div>
-                  </div>
-                </div>
               </div>
 
               {/* Quick Consultation Booking Card */}

@@ -282,6 +282,9 @@ export const EurekaFooter: React.FC<EurekaFooterProps> = ({
             <button onClick={() => handleNav('projects')} className="hover:text-white transition-colors">
               Projects
             </button>
+            <button onClick={() => handleNav('gallery')} className="hover:text-white transition-colors">
+              Gallery
+            </button>
             <button onClick={() => handleNav('pricing')} className="hover:text-white transition-colors">
               Pricing
             </button>

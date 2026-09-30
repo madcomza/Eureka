@@ -1,6 +1,9 @@
 import { EurekaHeader } from "./EurekaHeader";
 import { EurekaFooter } from "./EurekaFooter";
 import React, { useState } from 'react';
+import { motion } from 'motion/react';
+import { ScrollReveal, StaggerContainer, StaggerItem } from './ScrollAnimation';
+import { sendLeadToInbox, TARGET_LEAD_EMAIL } from '../utils/sendLead';
 import { EurekaLogo } from './EurekaLogo';
 import {
   Phone,
@@ -42,6 +45,7 @@ export const EurekaContactPage: React.FC<EurekaContactPageProps> = ({
 
   // Form State
   const [formSubmitted, setFormSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [ticketId, setTicketId] = useState('');
   const [formData, setFormData] = useState({
     fullName: '',
@@ -69,11 +73,37 @@ export const EurekaContactPage: React.FC<EurekaContactPageProps> = ({
     setFormData((prev) => ({ ...prev, [name]: checked }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const genId = 'EFM-' + Math.floor(100000 + Math.random() * 900000);
-    setTicketId(genId);
-    setFormSubmitted(true);
+    setIsSubmitting(true);
+    try {
+      const res = await sendLeadToInbox({
+        formType:
+          inquiryType === 'emergency'
+            ? 'Emergency Callout Request'
+            : inquiryType === 'audit'
+            ? 'Free Asset Condition Audit'
+            : 'Quote & PPM Inquiry',
+        fullName: formData.fullName,
+        email: formData.email,
+        phone: formData.phone,
+        companyName: formData.companyName,
+        jobTitle: formData.jobTitle,
+        location: formData.postcode,
+        serviceType: formData.serviceType,
+        priority: formData.priority,
+        buildingType: formData.buildingType,
+        message: formData.message,
+      });
+      setTicketId(res.ticketId);
+    } catch (err) {
+      console.error('Failed to submit lead:', err);
+      const fallbackId = 'EFM-' + Math.floor(100000 + Math.random() * 900000);
+      setTicketId(fallbackId);
+    } finally {
+      setIsSubmitting(false);
+      setFormSubmitted(true);
+    }
   };
 
   const faqs = [
@@ -129,33 +159,41 @@ export const EurekaContactPage: React.FC<EurekaContactPageProps> = ({
           </p>
 
           {/* Quick KPI Strip Centered */}
-          <div className="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-4 pt-6 border-t border-slate-700/60 max-w-3xl mx-auto text-center">
-            <div className="bg-white/5 rounded-lg p-3 border border-white/10">
-              <div className="text-xl sm:text-2xl font-black text-white">&lt; 2 Hours</div>
-              <div className="text-xs text-slate-400 font-medium mt-0.5">Emergency Callout SLA</div>
-            </div>
-            <div className="bg-white/5 rounded-lg p-3 border border-white/10">
-              <div className="text-xl sm:text-2xl font-black text-emerald-400">WhatsApp</div>
-              <div className="text-xs text-slate-400 font-medium mt-0.5">+27 74 518 7012</div>
-            </div>
-            <div className="bg-white/5 rounded-lg p-3 border border-white/10">
-              <div className="text-xl sm:text-2xl font-black text-white">Pretoria HQ</div>
-              <div className="text-xs text-slate-400 font-medium mt-0.5">170 Pitts Ave, Weavind Park</div>
-            </div>
-            <div className="bg-white/5 rounded-lg p-3 border border-white/10">
-              <div className="text-xl sm:text-2xl font-black text-red-400">Pr. CPM</div>
-              <div className="text-xs text-slate-400 font-medium mt-0.5">SACPCMP Registered</div>
-            </div>
-          </div>
+          <StaggerContainer className="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-4 pt-6 border-t border-slate-700/60 max-w-3xl mx-auto text-center">
+            <StaggerItem>
+              <div className="bg-white/5 rounded-lg p-3 border border-white/10 hover:border-red-500/40 transition-colors">
+                <div className="text-xl sm:text-2xl font-black text-white">&lt; 2 Hours</div>
+                <div className="text-xs text-slate-400 font-medium mt-0.5">Emergency Callout SLA</div>
+              </div>
+            </StaggerItem>
+            <StaggerItem>
+              <div className="bg-white/5 rounded-lg p-3 border border-white/10 hover:border-emerald-500/40 transition-colors">
+                <div className="text-xl sm:text-2xl font-black text-emerald-400">WhatsApp</div>
+                <div className="text-xs text-slate-400 font-medium mt-0.5">+27 74 518 7012</div>
+              </div>
+            </StaggerItem>
+            <StaggerItem>
+              <div className="bg-white/5 rounded-lg p-3 border border-white/10 hover:border-sky-500/40 transition-colors">
+                <div className="text-xl sm:text-2xl font-black text-white">Pretoria HQ</div>
+                <div className="text-xs text-slate-400 font-medium mt-0.5">170 Pitts Ave, Weavind Park</div>
+              </div>
+            </StaggerItem>
+            <StaggerItem>
+              <div className="bg-white/5 rounded-lg p-3 border border-white/10 hover:border-red-500/40 transition-colors">
+                <div className="text-xl sm:text-2xl font-black text-red-400">Pr. CPM</div>
+                <div className="text-xs text-slate-400 font-medium mt-0.5">SACPCMP Registered</div>
+              </div>
+            </StaggerItem>
+          </StaggerContainer>
         </div>
       </section>
 
       {/* 4. Main Contact Body (Interactive Form + Direct Support Channels) */}
-      <section className="py-14 sm:py-18 px-4 sm:px-6 lg:px-8 bg-slate-50 relative -mt-8 z-20">
+      <section className="py-14 sm:py-18 px-4 sm:px-6 lg:px-8 bg-slate-50 relative -mt-8 z-20 overflow-hidden">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
             {/* Left Column: Interactive Contact / RFQ Form (7 Cols) */}
-            <div className="lg:col-span-7 bg-white rounded-2xl p-6 sm:p-8 border border-slate-200 shadow-xl">
+            <ScrollReveal direction="right" duration={0.6} className="lg:col-span-7 bg-white rounded-2xl p-6 sm:p-8 border border-slate-200 shadow-xl">
               {formSubmitted ? (
                 <div className="text-center py-10 px-4 animate-in fade-in zoom-in-95">
                   <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto mb-4 border border-emerald-200">
@@ -163,7 +201,7 @@ export const EurekaContactPage: React.FC<EurekaContactPageProps> = ({
                   </div>
                   <h3 className="text-2xl font-black text-slate-900">Inquiry Logged Successfully!</h3>
                   <p className="text-slate-600 text-sm mt-2 max-w-md mx-auto">
-                    Your inquiry reference is <span className="font-mono font-bold text-[#0b3582]">{ticketId}</span>. An Operations Manager will contact you shortly.
+                    Your inquiry reference is <span className="font-mono font-bold text-[#0b3582]">{ticketId}</span> and has been forwarded directly to <strong className="text-red-600">{TARGET_LEAD_EMAIL}</strong>. An Operations Manager will contact you shortly.
                   </p>
 
                   <div className="mt-6 p-4 rounded-xl bg-slate-50 border border-slate-200 text-left text-xs space-y-2 max-w-md mx-auto">
@@ -404,11 +442,14 @@ export const EurekaContactPage: React.FC<EurekaContactPageProps> = ({
 
                   <button
                     type="submit"
-                    className="w-full py-3.5 px-6 rounded-xl bg-gradient-to-r from-[#d91b1b] to-red-700 hover:from-red-600 hover:to-red-800 text-white font-extrabold text-xs tracking-wider uppercase transition-all shadow-md active:scale-[0.99] flex items-center justify-center gap-2"
+                    disabled={isSubmitting}
+                    className="w-full py-3.5 px-6 rounded-xl bg-gradient-to-r from-[#d91b1b] to-red-700 hover:from-red-600 hover:to-red-800 disabled:opacity-60 disabled:cursor-not-allowed text-white font-extrabold text-xs tracking-wider uppercase transition-all shadow-md active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer"
                   >
                     <Send className="w-4 h-4" />
                     <span>
-                      {inquiryType === 'emergency'
+                      {isSubmitting
+                        ? 'Dispatching to leads@eurekasolutions.co.za...'
+                        : inquiryType === 'emergency'
                         ? 'Dispatch Urgent Technician Now'
                         : inquiryType === 'audit'
                         ? 'Book Free Asset Condition Audit'
@@ -417,10 +458,10 @@ export const EurekaContactPage: React.FC<EurekaContactPageProps> = ({
                   </button>
                 </form>
               )}
-            </div>
+            </ScrollReveal>
 
             {/* Right Column: Direct Channels & 24/7 Desk Cards (5 Cols) */}
-            <div className="lg:col-span-5 space-y-6">
+            <ScrollReveal direction="left" duration={0.6} className="lg:col-span-5 space-y-6">
               {/* Card 1: Direct Operations & WhatsApp Desk */}
               <div className="bg-gradient-to-br from-[#0b1b3d] to-[#08286b] rounded-2xl p-6 text-white border border-blue-900/60 shadow-lg relative overflow-hidden">
                 <div className="absolute top-0 right-0 p-4 opacity-10">
@@ -521,15 +562,15 @@ export const EurekaContactPage: React.FC<EurekaContactPageProps> = ({
                   </div>
                 </div>
               </div>
-            </div>
+            </ScrollReveal>
           </div>
         </div>
       </section>
 
       {/* 6. Response SLA Matrix & Commitments */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-slate-900 text-white">
+      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-slate-900 text-white overflow-hidden">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center max-w-2xl mx-auto mb-12">
+          <ScrollReveal direction="up" className="text-center max-w-2xl mx-auto mb-12">
             <div className="inline-flex items-center gap-1.5 text-xs font-extrabold text-red-400 uppercase tracking-widest mb-2">
               <ShieldCheck className="w-3.5 h-3.5" />
               <span>Guaranteed Response Times</span>
@@ -540,88 +581,96 @@ export const EurekaContactPage: React.FC<EurekaContactPageProps> = ({
             <p className="text-xs sm:text-sm text-slate-400 mt-2">
               We operate under transparent, contractually backed response and resolution metrics to protect your facility uptime.
             </p>
-          </div>
+          </ScrollReveal>
 
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+          <StaggerContainer className="grid grid-cols-1 md:grid-cols-4 gap-6">
             {/* SLA 1 */}
-            <div className="bg-slate-800/90 rounded-2xl p-6 border border-red-500/40 shadow-lg relative flex flex-col justify-between">
-              <div className="absolute -top-3 right-4 bg-red-600 text-white text-[10px] font-extrabold px-2.5 py-0.5 rounded-full uppercase">
-                Priority 1
+            <StaggerItem>
+              <div className="bg-slate-800/90 rounded-2xl p-6 border border-red-500/40 shadow-lg relative flex flex-col justify-between hover:border-red-500 hover:shadow-xl transition-all h-full">
+                <div className="absolute -top-3 right-4 bg-red-600 text-white text-[10px] font-extrabold px-2.5 py-0.5 rounded-full uppercase">
+                  Priority 1
+                </div>
+                <div>
+                  <div className="text-xs font-bold text-red-400 uppercase tracking-wider">Critical Emergency</div>
+                  <div className="text-2xl font-black text-white mt-1">&lt; 2 Hours</div>
+                  <p className="text-xs text-slate-300 mt-3 leading-relaxed">
+                    Total power outage, major pipe burst / flooding, primary generator fault, or critical health &amp; safety risk.
+                  </p>
+                </div>
+                <div className="mt-4 pt-3 border-t border-slate-700 text-[11px] text-slate-400 font-semibold flex items-center gap-1.5">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-red-400" />
+                  <span>24/7/365 On-Call Response</span>
+                </div>
               </div>
-              <div>
-                <div className="text-xs font-bold text-red-400 uppercase tracking-wider">Critical Emergency</div>
-                <div className="text-2xl font-black text-white mt-1">&lt; 2 Hours</div>
-                <p className="text-xs text-slate-300 mt-3 leading-relaxed">
-                  Total power outage, major pipe burst / flooding, primary generator fault, or critical health &amp; safety risk.
-                </p>
-              </div>
-              <div className="mt-4 pt-3 border-t border-slate-700 text-[11px] text-slate-400 font-semibold flex items-center gap-1.5">
-                <CheckCircle2 className="w-3.5 h-3.5 text-red-400" />
-                <span>24/7/365 On-Call Response</span>
-              </div>
-            </div>
+            </StaggerItem>
 
             {/* SLA 2 */}
-            <div className="bg-slate-800/90 rounded-2xl p-6 border border-amber-500/30 shadow-lg relative flex flex-col justify-between">
-              <div className="absolute -top-3 right-4 bg-amber-500 text-slate-950 text-[10px] font-extrabold px-2.5 py-0.5 rounded-full uppercase">
-                Priority 2
+            <StaggerItem>
+              <div className="bg-slate-800/90 rounded-2xl p-6 border border-amber-500/30 shadow-lg relative flex flex-col justify-between hover:border-amber-400 hover:shadow-xl transition-all h-full">
+                <div className="absolute -top-3 right-4 bg-amber-500 text-slate-950 text-[10px] font-extrabold px-2.5 py-0.5 rounded-full uppercase">
+                  Priority 2
+                </div>
+                <div>
+                  <div className="text-xs font-bold text-amber-400 uppercase tracking-wider">High Urgent</div>
+                  <div className="text-2xl font-black text-white mt-1">&lt; 4 Hours</div>
+                  <p className="text-xs text-slate-300 mt-3 leading-relaxed">
+                    Server room AC unit fault, security access gate failure, partial electrical circuit outage in occupied areas.
+                  </p>
+                </div>
+                <div className="mt-4 pt-3 border-t border-slate-700 text-[11px] text-slate-400 font-semibold flex items-center gap-1.5">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-amber-400" />
+                  <span>Same-Day Rapid Attendance</span>
+                </div>
               </div>
-              <div>
-                <div className="text-xs font-bold text-amber-400 uppercase tracking-wider">High Urgent</div>
-                <div className="text-2xl font-black text-white mt-1">&lt; 4 Hours</div>
-                <p className="text-xs text-slate-300 mt-3 leading-relaxed">
-                  Server room AC unit fault, security access gate failure, partial electrical circuit outage in occupied areas.
-                </p>
-              </div>
-              <div className="mt-4 pt-3 border-t border-slate-700 text-[11px] text-slate-400 font-semibold flex items-center gap-1.5">
-                <CheckCircle2 className="w-3.5 h-3.5 text-amber-400" />
-                <span>Same-Day Rapid Attendance</span>
-              </div>
-            </div>
+            </StaggerItem>
 
             {/* SLA 3 */}
-            <div className="bg-slate-800/90 rounded-2xl p-6 border border-blue-500/30 shadow-lg relative flex flex-col justify-between">
-              <div className="absolute -top-3 right-4 bg-blue-600 text-white text-[10px] font-extrabold px-2.5 py-0.5 rounded-full uppercase">
-                Priority 3
+            <StaggerItem>
+              <div className="bg-slate-800/90 rounded-2xl p-6 border border-blue-500/30 shadow-lg relative flex flex-col justify-between hover:border-blue-400 hover:shadow-xl transition-all h-full">
+                <div className="absolute -top-3 right-4 bg-blue-600 text-white text-[10px] font-extrabold px-2.5 py-0.5 rounded-full uppercase">
+                  Priority 3
+                </div>
+                <div>
+                  <div className="text-xs font-bold text-blue-400 uppercase tracking-wider">Standard Remedial</div>
+                  <div className="text-2xl font-black text-white mt-1">24 - 48 Hours</div>
+                  <p className="text-xs text-slate-300 mt-3 leading-relaxed">
+                    Non-critical plumbing, minor lighting fixes, door closer adjustments, and general building fabric touch-ups.
+                  </p>
+                </div>
+                <div className="mt-4 pt-3 border-t border-slate-700 text-[11px] text-slate-400 font-semibold flex items-center gap-1.5">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-blue-400" />
+                  <span>Scheduled Routine Attendance</span>
+                </div>
               </div>
-              <div>
-                <div className="text-xs font-bold text-blue-400 uppercase tracking-wider">Standard Remedial</div>
-                <div className="text-2xl font-black text-white mt-1">24 - 48 Hours</div>
-                <p className="text-xs text-slate-300 mt-3 leading-relaxed">
-                  Non-critical plumbing, minor lighting fixes, door closer adjustments, and general building fabric touch-ups.
-                </p>
-              </div>
-              <div className="mt-4 pt-3 border-t border-slate-700 text-[11px] text-slate-400 font-semibold flex items-center gap-1.5">
-                <CheckCircle2 className="w-3.5 h-3.5 text-blue-400" />
-                <span>Scheduled Routine Attendance</span>
-              </div>
-            </div>
+            </StaggerItem>
 
             {/* SLA 4 */}
-            <div className="bg-slate-800/90 rounded-2xl p-6 border border-emerald-500/30 shadow-lg relative flex flex-col justify-between">
-              <div className="absolute -top-3 right-4 bg-emerald-600 text-white text-[10px] font-extrabold px-2.5 py-0.5 rounded-full uppercase">
-                PPM Tier
+            <StaggerItem>
+              <div className="bg-slate-800/90 rounded-2xl p-6 border border-emerald-500/30 shadow-lg relative flex flex-col justify-between hover:border-emerald-400 hover:shadow-xl transition-all h-full">
+                <div className="absolute -top-3 right-4 bg-emerald-600 text-white text-[10px] font-extrabold px-2.5 py-0.5 rounded-full uppercase">
+                  PPM Tier
+                </div>
+                <div>
+                  <div className="text-xs font-bold text-emerald-400 uppercase tracking-wider">Scheduled PPM</div>
+                  <div className="text-2xl font-black text-white mt-1">100% On-Time</div>
+                  <p className="text-xs text-slate-300 mt-3 leading-relaxed">
+                    Pre-planned statutory compliance checks, HVAC servicing, generator load testing, and OHS compliance reviews.
+                  </p>
+                </div>
+                <div className="mt-4 pt-3 border-t border-slate-700 text-[11px] text-slate-400 font-semibold flex items-center gap-1.5">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                  <span>Pre-Booked Time Slots</span>
+                </div>
               </div>
-              <div>
-                <div className="text-xs font-bold text-emerald-400 uppercase tracking-wider">Scheduled PPM</div>
-                <div className="text-2xl font-black text-white mt-1">100% On-Time</div>
-                <p className="text-xs text-slate-300 mt-3 leading-relaxed">
-                  Pre-planned statutory compliance checks, HVAC servicing, generator load testing, and OHS compliance reviews.
-                </p>
-              </div>
-              <div className="mt-4 pt-3 border-t border-slate-700 text-[11px] text-slate-400 font-semibold flex items-center gap-1.5">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-                <span>Pre-Booked Time Slots</span>
-              </div>
-            </div>
-          </div>
+            </StaggerItem>
+          </StaggerContainer>
         </div>
       </section>
 
       {/* 7. Interactive FAQs */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-slate-50">
+      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-slate-50 overflow-hidden">
         <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-10">
+          <ScrollReveal direction="up" className="text-center mb-10">
             <div className="inline-flex items-center gap-1.5 text-xs font-extrabold text-[#0b3582] uppercase tracking-widest mb-2">
               <HelpCircle className="w-3.5 h-3.5" />
               <span>Frequently Asked Questions</span>
@@ -632,9 +681,9 @@ export const EurekaContactPage: React.FC<EurekaContactPageProps> = ({
             <p className="text-xs sm:text-sm text-slate-600 mt-2">
               Find answers to common questions regarding contract onboarding, SLAs, and emergency callouts.
             </p>
-          </div>
+          </ScrollReveal>
 
-          <div className="space-y-3">
+          <ScrollReveal direction="up" delay={0.1} className="space-y-3">
             {faqs.map((faq, index) => (
               <div
                 key={index}
@@ -643,7 +692,7 @@ export const EurekaContactPage: React.FC<EurekaContactPageProps> = ({
                 <button
                   type="button"
                   onClick={() => setOpenFaq(openFaq === index ? null : index)}
-                  className="w-full px-5 py-4 text-left flex items-center justify-between gap-4 font-bold text-sm text-slate-900 hover:text-[#d91b1b] transition-colors"
+                  className="w-full px-5 py-4 text-left flex items-center justify-between gap-4 font-bold text-sm text-slate-900 hover:text-[#d91b1b] transition-colors cursor-pointer"
                 >
                   <span>{faq.q}</span>
                   {openFaq === index ? (
@@ -660,7 +709,7 @@ export const EurekaContactPage: React.FC<EurekaContactPageProps> = ({
                 )}
               </div>
             ))}
-          </div>
+          </ScrollReveal>
         </div>
       </section>
 

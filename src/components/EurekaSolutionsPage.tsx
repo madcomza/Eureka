@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { motion } from 'motion/react';
+import { ScrollReveal, StaggerContainer, StaggerItem } from './ScrollAnimation';
 import { EurekaLogo } from './EurekaLogo';
 import { EurekaHeader } from './EurekaHeader';
 import { EurekaFooter } from './EurekaFooter';
@@ -84,7 +86,7 @@ export const EurekaSolutionsPage: React.FC<EurekaSolutionsPageProps> = ({
           playsInline
           className="absolute inset-0 w-full h-full object-cover object-center pointer-events-none"
         >
-          <source src="./Services Hero Section BG.mp4" type="video/mp4" />
+          <source src="./video/Services Hero Section BG.mp4" type="video/mp4" />
         </video>
 
         {/* Video Overlay: Darker on left, totally clear on right */}
@@ -99,46 +101,52 @@ export const EurekaSolutionsPage: React.FC<EurekaSolutionsPageProps> = ({
           </p>
 
           {/* Quick Subcategory Pills */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-3xl mx-auto mt-10">
-            <button
-              onClick={() => handleSubcategoryChange('facilities')}
-              className={`p-3.5 rounded-lg border text-left transition-all cursor-pointer ${
-                activeSubcategory === 'facilities'
-                  ? 'bg-sky-950/80 border-sky-400 text-white ring-2 ring-sky-500/50'
-                  : 'bg-slate-900/60 border-slate-700/60 text-slate-300 hover:border-sky-400/50 hover:bg-slate-900/80'
-              }`}
-            >
-              <span className="text-[11px] font-bold text-sky-400 uppercase tracking-wider block">SOLUTION 01</span>
-              <span className="text-sm font-extrabold text-white">Facilities &amp; Property</span>
-              <span className="text-[11px] text-slate-400 block mt-0.5">Maintenance, cleaning, hygiene, pest control &amp; relocations</span>
-            </button>
+          <StaggerContainer className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-3xl mx-auto mt-10">
+            <StaggerItem>
+              <button
+                onClick={() => handleSubcategoryChange('facilities')}
+                className={`w-full p-3.5 rounded-lg border text-left transition-all cursor-pointer h-full ${
+                  activeSubcategory === 'facilities'
+                    ? 'bg-sky-950/80 border-sky-400 text-white ring-2 ring-sky-500/50'
+                    : 'bg-slate-900/60 border-slate-700/60 text-slate-300 hover:border-sky-400/50 hover:bg-slate-900/80'
+                }`}
+              >
+                <span className="text-[11px] font-bold text-sky-400 uppercase tracking-wider block">SOLUTION 01</span>
+                <span className="text-sm font-extrabold text-white">Facilities &amp; Property</span>
+                <span className="text-[11px] text-slate-400 block mt-0.5">Maintenance, cleaning, hygiene, pest control &amp; relocations</span>
+              </button>
+            </StaggerItem>
 
-            <button
-              onClick={() => handleSubcategoryChange('construction')}
-              className={`p-3.5 rounded-lg border text-left transition-all cursor-pointer ${
-                activeSubcategory === 'construction'
-                  ? 'bg-red-950/80 border-red-500 text-white ring-2 ring-red-500/50'
-                  : 'bg-slate-900/60 border-slate-700/60 text-slate-300 hover:border-red-500/50 hover:bg-slate-900/80'
-              }`}
-            >
-              <span className="text-[11px] font-bold text-red-400 uppercase tracking-wider block">SOLUTION 02</span>
-              <span className="text-sm font-extrabold text-white">Construction Delivery</span>
-              <span className="text-[11px] text-slate-400 block mt-0.5">Construction management, project management &amp; freelance</span>
-            </button>
+            <StaggerItem>
+              <button
+                onClick={() => handleSubcategoryChange('construction')}
+                className={`w-full p-3.5 rounded-lg border text-left transition-all cursor-pointer h-full ${
+                  activeSubcategory === 'construction'
+                    ? 'bg-red-950/80 border-red-500 text-white ring-2 ring-red-500/50'
+                    : 'bg-slate-900/60 border-slate-700/60 text-slate-300 hover:border-red-500/50 hover:bg-slate-900/80'
+                }`}
+              >
+                <span className="text-[11px] font-bold text-red-400 uppercase tracking-wider block">SOLUTION 02</span>
+                <span className="text-sm font-extrabold text-white">Construction Delivery</span>
+                <span className="text-[11px] text-slate-400 block mt-0.5">Construction management, project management &amp; freelance</span>
+              </button>
+            </StaggerItem>
 
-            <button
-              onClick={() => handleSubcategoryChange('consultancy')}
-              className={`p-3.5 rounded-lg border text-left transition-all cursor-pointer ${
-                activeSubcategory === 'consultancy'
-                  ? 'bg-slate-800 border-white text-white ring-2 ring-white/50'
-                  : 'bg-slate-900/60 border-slate-700/60 text-slate-300 hover:border-slate-400 hover:bg-slate-900/80'
-              }`}
-            >
-              <span className="text-[11px] font-bold text-slate-300 uppercase tracking-wider block">SOLUTION 03</span>
-              <span className="text-sm font-extrabold text-white">Consultancy Solutions</span>
-              <span className="text-[11px] text-slate-400 block mt-0.5">Quantity surveying, claims, delay analysis &amp; contracts</span>
-            </button>
-          </div>
+            <StaggerItem>
+              <button
+                onClick={() => handleSubcategoryChange('consultancy')}
+                className={`w-full p-3.5 rounded-lg border text-left transition-all cursor-pointer h-full ${
+                  activeSubcategory === 'consultancy'
+                    ? 'bg-slate-800 border-white text-white ring-2 ring-white/50'
+                    : 'bg-slate-900/60 border-slate-700/60 text-slate-300 hover:border-slate-400 hover:bg-slate-900/80'
+                }`}
+              >
+                <span className="text-[11px] font-bold text-slate-300 uppercase tracking-wider block">SOLUTION 03</span>
+                <span className="text-sm font-extrabold text-white">Consultancy Solutions</span>
+                <span className="text-[11px] text-slate-400 block mt-0.5">Quantity surveying, claims, delay analysis &amp; contracts</span>
+              </button>
+            </StaggerItem>
+          </StaggerContainer>
         </div>
       </section>
 

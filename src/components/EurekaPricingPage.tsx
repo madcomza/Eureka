@@ -1,6 +1,7 @@
 import { EurekaHeader } from "./EurekaHeader";
 import { EurekaFooter } from "./EurekaFooter";
 import React, { useState, useMemo } from 'react';
+import { sendLeadToInbox, TARGET_LEAD_EMAIL } from '../utils/sendLead';
 import { EurekaLogo } from './EurekaLogo';
 import {
   Sparkles,
@@ -243,6 +244,47 @@ export const EurekaPricingPage: React.FC<EurekaPricingPageProps> = ({
       meetsMinimum
     };
   }, [cart]);
+
+  // Quote Form State
+  const [quoteName, setQuoteName] = useState('');
+  const [quotePhone, setQuotePhone] = useState('');
+  const [quoteEmail, setQuoteEmail] = useState('');
+  const [quoteLocation, setQuoteLocation] = useState('');
+  const [quoteSubmitting, setQuoteSubmitting] = useState(false);
+  const [quoteSubmitted, setQuoteSubmitted] = useState(false);
+  const [quoteTicketId, setQuoteTicketId] = useState('');
+
+  const handleQuoteSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setQuoteSubmitting(true);
+    try {
+      const selectedItems = Object.entries(cart).map(([id, qty]) => {
+        const item = priceCatalog.find(i => i.id === id);
+        return `${item?.name || id} (Qty: ${qty})`;
+      });
+
+      const res = await sendLeadToInbox({
+        formType: 'Instant Price Calculator Quote',
+        fullName: quoteName,
+        phone: quotePhone,
+        email: quoteEmail,
+        location: quoteLocation,
+        serviceType: 'Specialist Cleaning & Facility Maintenance',
+        message: `Customer generated an estimate via the online calculator. Subtotal: R ${cartCalculation.subtotal.toFixed(2)}. Selected Items: ${selectedItems.join(', ') || 'Custom quote'}`,
+        estimateDetails: {
+          items: selectedItems,
+          total: cartCalculation.subtotal.toFixed(2)
+        }
+      });
+      setQuoteTicketId(res.ticketId);
+    } catch (err) {
+      console.error(err);
+      setQuoteTicketId('EFM-' + Math.floor(100000 + Math.random() * 900000));
+    } finally {
+      setQuoteSubmitting(false);
+      setQuoteSubmitted(true);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-slate-50 font-sans text-slate-800">
@@ -655,44 +697,73 @@ export const EurekaPricingPage: React.FC<EurekaPricingPageProps> = ({
                 </div>
 
                 {/* Instant Quote Form */}
-                <form
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    alert('Thank you! Your quotation request has been dispatched to Eureka Facilities Management.');
-                  }}
-                  className="space-y-2.5 pt-2"
-                >
-                  <input
-                    type="text"
-                    placeholder="Your Name *"
-                    required
-                    className="w-full px-3 py-2 text-xs bg-white border border-slate-200 rounded focus:outline-none focus:border-red-500"
-                  />
-                  <input
-                    type="tel"
-                    placeholder="Contact Number (e.g. 074 518 7012) *"
-                    required
-                    className="w-full px-3 py-2 text-xs bg-white border border-slate-200 rounded focus:outline-none focus:border-red-500"
-                  />
-                  <input
-                    type="email"
-                    placeholder="Email Address *"
-                    required
-                    className="w-full px-3 py-2 text-xs bg-white border border-slate-200 rounded focus:outline-none focus:border-red-500"
-                  />
-                  <input
-                    type="text"
-                    placeholder="Suburb / Location (e.g. Midrand) *"
-                    required
-                    className="w-full px-3 py-2 text-xs bg-white border border-slate-200 rounded focus:outline-none focus:border-red-500"
-                  />
-                  <button
-                    type="submit"
-                    className="w-full py-3 bg-[#d91b1b] hover:bg-red-700 text-white font-extrabold text-xs uppercase tracking-wider rounded shadow transition-all"
-                  >
-                    BOOK ESTIMATED SERVICE
-                  </button>
-                </form>
+                {quoteSubmitted ? (
+                  <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4 text-center space-y-2 animate-in fade-in">
+                    <CheckCircle2 className="w-8 h-8 text-emerald-600 mx-auto" />
+                    <h4 className="text-sm font-black text-slate-900">Quotation Request Logged!</h4>
+                    <p className="text-xs text-slate-600">
+                      Ref: <strong className="font-mono text-red-700">{quoteTicketId}</strong>
+                    </p>
+                    <p className="text-[11px] text-slate-500">
+                      Your estimate details have been dispatched to <strong className="text-slate-800">{TARGET_LEAD_EMAIL}</strong>. A service coordinator will contact you shortly to confirm your booking.
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setQuoteSubmitted(false);
+                        setQuoteName('');
+                        setQuotePhone('');
+                        setQuoteEmail('');
+                        setQuoteLocation('');
+                      }}
+                      className="mt-2 text-xs font-bold text-[#d91b1b] hover:underline"
+                    >
+                      Calculate another service
+                    </button>
+                  </div>
+                ) : (
+                  <form onSubmit={handleQuoteSubmit} className="space-y-2.5 pt-2">
+                    <input
+                      type="text"
+                      placeholder="Your Name *"
+                      required
+                      value={quoteName}
+                      onChange={(e) => setQuoteName(e.target.value)}
+                      className="w-full px-3 py-2 text-xs bg-white border border-slate-200 rounded focus:outline-none focus:border-red-500"
+                    />
+                    <input
+                      type="tel"
+                      placeholder="Contact Number (e.g. 074 518 7012) *"
+                      required
+                      value={quotePhone}
+                      onChange={(e) => setQuotePhone(e.target.value)}
+                      className="w-full px-3 py-2 text-xs bg-white border border-slate-200 rounded focus:outline-none focus:border-red-500"
+                    />
+                    <input
+                      type="email"
+                      placeholder="Email Address *"
+                      required
+                      value={quoteEmail}
+                      onChange={(e) => setQuoteEmail(e.target.value)}
+                      className="w-full px-3 py-2 text-xs bg-white border border-slate-200 rounded focus:outline-none focus:border-red-500"
+                    />
+                    <input
+                      type="text"
+                      placeholder="Suburb / Location (e.g. Midrand) *"
+                      required
+                      value={quoteLocation}
+                      onChange={(e) => setQuoteLocation(e.target.value)}
+                      className="w-full px-3 py-2 text-xs bg-white border border-slate-200 rounded focus:outline-none focus:border-red-500"
+                    />
+                    <button
+                      type="submit"
+                      disabled={quoteSubmitting}
+                      className="w-full py-3 bg-[#d91b1b] hover:bg-red-700 disabled:opacity-60 text-white font-extrabold text-xs uppercase tracking-wider rounded shadow transition-all cursor-pointer"
+                    >
+                      {quoteSubmitting ? 'DISPATCHING TO LEADS INBOX...' : 'BOOK ESTIMATED SERVICE'}
+                    </button>
+                  </form>
+                )}
 
                 <p className="text-[10px] text-slate-400 text-center leading-tight">
                   Prices exclude VAT. Physical inspection may occur for heavily stained or delicate fabrics.

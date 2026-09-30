@@ -1,8 +1,10 @@
 import React from 'react';
+import { motion } from 'motion/react';
 import monwabisiImg from '../assets/images/monwabisi-makinana.jpg';
 import aboutUsImg from '../assets/images/about_us.jpg';
 import { EurekaHeader, NavPage } from './EurekaHeader';
 import { EurekaFooter } from './EurekaFooter';
+import { ScrollReveal, StaggerContainer, StaggerItem } from './ScrollAnimation';
 import {
   Award,
   ShieldCheck,
@@ -75,10 +77,10 @@ export const EurekaAboutPage: React.FC<EurekaAboutPageProps> = ({ onNavigate }) 
       </section>
 
       {/* 1. About EFMS Core Story Section (Document Page 2) */}
-      <section className="py-16 sm:py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      <section className="py-16 sm:py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto overflow-hidden">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           {/* Visual Column */}
-          <div className="lg:col-span-5 relative">
+          <ScrollReveal direction="right" duration={0.65} className="lg:col-span-5 relative">
             <div className="rounded-xl overflow-hidden shadow-2xl border border-slate-200 relative group">
               <img
                 src={aboutUsImg}
@@ -88,16 +90,19 @@ export const EurekaAboutPage: React.FC<EurekaAboutPageProps> = ({ onNavigate }) 
               <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-transparent to-transparent"></div>
             </div>
 
-            <div className="absolute -bottom-6 -right-4 sm:-right-6 bg-red-600 text-white p-5 rounded-lg shadow-xl border border-red-500/40 flex flex-col items-center">
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              className="absolute -bottom-6 -right-4 sm:-right-6 bg-red-600 text-white p-5 rounded-lg shadow-xl border border-red-500/40 flex flex-col items-center"
+            >
               <span className="text-3xl font-black leading-none">13+</span>
               <span className="text-[11px] font-bold uppercase tracking-wider text-center mt-1">
                 Years Proven<br />Experience
               </span>
-            </div>
-          </div>
+            </motion.div>
+          </ScrollReveal>
 
           {/* Content Column */}
-          <div className="lg:col-span-7">
+          <ScrollReveal direction="left" duration={0.65} className="lg:col-span-7">
             <span className="text-xs font-extrabold uppercase tracking-widest text-red-600 block mb-2">
               ABOUT EUREKA FACILITIES MANAGEMENT SOLUTIONS
             </span>
@@ -119,21 +124,21 @@ export const EurekaAboutPage: React.FC<EurekaAboutPageProps> = ({ onNavigate }) 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <button
                   onClick={() => onNavigate?.('solutions', 'facilities')}
-                  className="p-3 bg-white rounded border border-slate-200 hover:border-sky-400 text-left transition-colors cursor-pointer"
+                  className="p-3 bg-white rounded border border-slate-200 hover:border-sky-400 text-left transition-colors cursor-pointer hover:shadow-xs active:scale-98"
                 >
                   <span className="text-[11px] font-bold text-sky-600 block uppercase">Pillar 01</span>
                   <span className="text-xs font-black text-slate-900">Facilities &amp; Property</span>
                 </button>
                 <button
                   onClick={() => onNavigate?.('solutions', 'construction')}
-                  className="p-3 bg-white rounded border border-slate-200 hover:border-red-400 text-left transition-colors cursor-pointer"
+                  className="p-3 bg-white rounded border border-slate-200 hover:border-red-400 text-left transition-colors cursor-pointer hover:shadow-xs active:scale-98"
                 >
                   <span className="text-[11px] font-bold text-red-600 block uppercase">Pillar 02</span>
                   <span className="text-xs font-black text-slate-900">Construction Delivery</span>
                 </button>
                 <button
                   onClick={() => onNavigate?.('solutions', 'consultancy')}
-                  className="p-3 bg-white rounded border border-slate-200 hover:border-slate-800 text-left transition-colors cursor-pointer"
+                  className="p-3 bg-white rounded border border-slate-200 hover:border-slate-800 text-left transition-colors cursor-pointer hover:shadow-xs active:scale-98"
                 >
                   <span className="text-[11px] font-bold text-slate-700 block uppercase">Pillar 03</span>
                   <span className="text-xs font-black text-slate-900">Consultancy Solutions</span>
@@ -148,14 +153,14 @@ export const EurekaAboutPage: React.FC<EurekaAboutPageProps> = ({ onNavigate }) 
                 Provide dependable professional support that helps clients protect their assets, control costs, reduce disruption and achieve better project outcomes.
               </p>
             </div>
-          </div>
+          </ScrollReveal>
         </div>
       </section>
 
       {/* 2. Meet the Owner & Director Section (Document Page 3) */}
-      <section className="bg-[#081129] text-white py-16 sm:py-20 px-4 sm:px-6 lg:px-8">
+      <section className="bg-[#081129] text-white py-16 sm:py-20 px-4 sm:px-6 lg:px-8 overflow-hidden">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center max-w-3xl mx-auto mb-14">
+          <ScrollReveal direction="up" className="text-center max-w-3xl mx-auto mb-14">
             <span className="text-xs font-black tracking-widest text-[#d91b1b] uppercase block mb-2">
               ABOUT THE OWNER &amp; DIRECTOR
             </span>
@@ -165,11 +170,11 @@ export const EurekaAboutPage: React.FC<EurekaAboutPageProps> = ({ onNavigate }) 
             <p className="text-sm font-bold text-red-400 mt-1">
               Monwabisi Makinana, Pr. CPM, PMP®
             </p>
-          </div>
+          </ScrollReveal>
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
             {/* Director Photo & Credentials Badge */}
-            <div className="lg:col-span-4">
+            <ScrollReveal direction="right" duration={0.6} className="lg:col-span-4">
               <div className="bg-slate-900 border border-white/10 rounded-xl overflow-hidden shadow-2xl p-5 text-center">
                 <div className="relative w-full max-w-[280px] mx-auto aspect-[3/4] rounded-lg overflow-hidden border-2 border-red-600/80 shadow-2xl mb-5 group bg-slate-950">
                   <img
@@ -198,10 +203,10 @@ export const EurekaAboutPage: React.FC<EurekaAboutPageProps> = ({ onNavigate }) 
                   </div>
                 </div>
               </div>
-            </div>
+            </ScrollReveal>
 
             {/* Director Bio & Qualifications */}
-            <div className="lg:col-span-8 space-y-8">
+            <ScrollReveal direction="left" duration={0.6} className="lg:col-span-8 space-y-8">
               <div className="space-y-4">
                 <p className="text-sm sm:text-base font-normal text-slate-200 leading-relaxed">
                   Eureka Facilities Management Solutions is led by <strong>Monwabisi Makinana</strong>, a professionally registered Construction Project Manager and certified Project Management Professional with more than 13 years of professional experience.
@@ -220,19 +225,21 @@ export const EurekaAboutPage: React.FC<EurekaAboutPageProps> = ({ onNavigate }) 
                   <GraduationCap className="w-4 h-4 text-red-500" />
                   <span>Academic &amp; Professional Qualifications</span>
                 </h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                <StaggerContainer className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                   {qualificationsList.map((q, idx) => (
-                    <div key={idx} className="p-3 rounded bg-white/5 border border-white/5 flex items-start gap-2.5">
-                      <div className="w-4 h-4 rounded-full bg-red-600/30 text-red-400 flex items-center justify-center text-[10px] font-black shrink-0 mt-0.5">
-                        ✓
+                    <StaggerItem key={idx}>
+                      <div className="p-3 rounded bg-white/5 border border-white/5 flex items-start gap-2.5 hover:border-red-500/30 transition-colors">
+                        <div className="w-4 h-4 rounded-full bg-red-600/30 text-red-400 flex items-center justify-center text-[10px] font-black shrink-0 mt-0.5">
+                          ✓
+                        </div>
+                        <div>
+                          <span className="text-xs font-bold text-white block">{q.title}</span>
+                          <span className="text-[11px] text-slate-400 block">{q.institution}</span>
+                        </div>
                       </div>
-                      <div>
-                        <span className="text-xs font-bold text-white block">{q.title}</span>
-                        <span className="text-[11px] text-slate-400 block">{q.institution}</span>
-                      </div>
-                    </div>
+                    </StaggerItem>
                   ))}
-                </div>
+                </StaggerContainer>
               </div>
 
               {/* Experience That Gives Clients Confidence */}
@@ -245,24 +252,29 @@ export const EurekaAboutPage: React.FC<EurekaAboutPageProps> = ({ onNavigate }) 
                 </p>
 
                 {/* Project Values Showcase */}
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                <StaggerContainer className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                   {projectValues.map((pv, idx) => (
-                    <div key={idx} className="bg-slate-900/80 border border-white/10 p-3 rounded text-center">
-                      <span className="text-base font-black text-red-400 block">{pv.value}</span>
-                      <span className="text-[10px] text-slate-400 font-medium block mt-0.5">{pv.label}</span>
-                    </div>
+                    <StaggerItem key={idx}>
+                      <motion.div
+                        whileHover={{ y: -3 }}
+                        className="bg-slate-900/80 border border-white/10 hover:border-red-500/40 p-3 rounded text-center transition-colors shadow-sm"
+                      >
+                        <span className="text-base font-black text-red-400 block">{pv.value}</span>
+                        <span className="text-[10px] text-slate-400 font-medium block mt-0.5">{pv.label}</span>
+                      </motion.div>
+                    </StaggerItem>
                   ))}
-                </div>
+                </StaggerContainer>
               </div>
-            </div>
+            </ScrollReveal>
           </div>
         </div>
       </section>
 
       {/* 3. A Professional Approach Built on Accountability (Document Page 4) */}
-      <section className="py-16 sm:py-20 px-4 sm:px-6 lg:px-8 bg-slate-50 border-b border-slate-200">
+      <section className="py-16 sm:py-20 px-4 sm:px-6 lg:px-8 bg-slate-50 border-b border-slate-200 overflow-hidden">
         <div className="max-w-7xl mx-auto">
-          <div className="max-w-3xl mb-12">
+          <ScrollReveal direction="up" className="max-w-3xl mb-12">
             <span className="text-xs font-black tracking-widest text-[#d91b1b] uppercase block mb-2">
               FOUNDATIONAL GOVERNANCE
             </span>
@@ -272,61 +284,69 @@ export const EurekaAboutPage: React.FC<EurekaAboutPageProps> = ({ onNavigate }) 
             <p className="text-sm text-slate-600 mt-2">
               Clients need more than someone who simply coordinates tasks. They need someone who understands scope, programme, cost, quality, risk, contracts, stakeholders and compliance. That is the strength Monwabisi brings to EFMS.
             </p>
-          </div>
+          </ScrollReveal>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {/* Box 1: Contract Expertise */}
-            <div className="p-6 rounded-lg bg-white border border-slate-200 shadow-sm flex flex-col justify-between">
-              <div>
-                <Scale className="w-6 h-6 text-[#d91b1b] mb-4" />
-                <h3 className="text-base font-extrabold text-slate-900 mb-2">Standard Contracts</h3>
-                <p className="text-xs text-slate-600 leading-relaxed mb-4">
-                  In-depth practical experience across all major South African &amp; international forms of contract:
-                </p>
-                <ul className="space-y-1 text-xs font-semibold text-slate-700">
-                  {contractTypes.map((c, i) => (
-                    <li key={i} className="flex items-center gap-1.5">
-                      <span className="text-red-600 font-bold">•</span>
-                      <span>{c}</span>
-                    </li>
-                  ))}
-                </ul>
+            <StaggerItem>
+              <div className="p-6 rounded-lg bg-white border border-slate-200 shadow-sm flex flex-col justify-between hover:shadow-md hover:border-red-400/50 transition-all h-full">
+                <div>
+                  <Scale className="w-6 h-6 text-[#d91b1b] mb-4" />
+                  <h3 className="text-base font-extrabold text-slate-900 mb-2">Standard Contracts</h3>
+                  <p className="text-xs text-slate-600 leading-relaxed mb-4">
+                    In-depth practical experience across all major South African &amp; international forms of contract:
+                  </p>
+                  <ul className="space-y-1 text-xs font-semibold text-slate-700">
+                    {contractTypes.map((c, i) => (
+                      <li key={i} className="flex items-center gap-1.5">
+                        <span className="text-red-600 font-bold">•</span>
+                        <span>{c}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </div>
-            </div>
+            </StaggerItem>
 
             {/* Box 2: Commercial & Risk */}
-            <div className="p-6 rounded-lg bg-white border border-slate-200 shadow-sm flex flex-col justify-between">
-              <div>
-                <ShieldCheck className="w-6 h-6 text-[#08286b] mb-4" />
-                <h3 className="text-base font-extrabold text-slate-900 mb-2">Commercial &amp; Risk</h3>
-                <p className="text-xs text-slate-600 leading-relaxed">
-                  Rigorous commercial management, risk identification, procurement, and tender administration to protect your bottom line from unexpected cost overruns.
-                </p>
+            <StaggerItem>
+              <div className="p-6 rounded-lg bg-white border border-slate-200 shadow-sm flex flex-col justify-between hover:shadow-md hover:border-sky-400/50 transition-all h-full">
+                <div>
+                  <ShieldCheck className="w-6 h-6 text-[#08286b] mb-4" />
+                  <h3 className="text-base font-extrabold text-slate-900 mb-2">Commercial &amp; Risk</h3>
+                  <p className="text-xs text-slate-600 leading-relaxed">
+                    Rigorous commercial management, risk identification, procurement, and tender administration to protect your bottom line from unexpected cost overruns.
+                  </p>
+                </div>
               </div>
-            </div>
+            </StaggerItem>
 
             {/* Box 3: Quality & HSE */}
-            <div className="p-6 rounded-lg bg-white border border-slate-200 shadow-sm flex flex-col justify-between">
-              <div>
-                <CheckCircle2 className="w-6 h-6 text-sky-600 mb-4" />
-                <h3 className="text-base font-extrabold text-slate-900 mb-2">Quality &amp; HSE Compliance</h3>
-                <p className="text-xs text-slate-600 leading-relaxed">
-                  Comprehensive Quality Assurance (QA/QC) and Health, Safety, and Environment (HSE) management that meets statutory South African standards.
-                </p>
+            <StaggerItem>
+              <div className="p-6 rounded-lg bg-white border border-slate-200 shadow-sm flex flex-col justify-between hover:shadow-md hover:border-sky-400/50 transition-all h-full">
+                <div>
+                  <CheckCircle2 className="w-6 h-6 text-sky-600 mb-4" />
+                  <h3 className="text-base font-extrabold text-slate-900 mb-2">Quality &amp; HSE Compliance</h3>
+                  <p className="text-xs text-slate-600 leading-relaxed">
+                    Comprehensive Quality Assurance (QA/QC) and Health, Safety, and Environment (HSE) management that meets statutory South African standards.
+                  </p>
+                </div>
               </div>
-            </div>
+            </StaggerItem>
 
             {/* Box 4: Practical Execution */}
-            <div className="p-6 rounded-lg bg-white border border-slate-200 shadow-sm flex flex-col justify-between">
-              <div>
-                <HardHat className="w-6 h-6 text-[#d91b1b] mb-4" />
-                <h3 className="text-base font-extrabold text-slate-900 mb-2">Hands-On Thinking</h3>
-                <p className="text-xs text-slate-600 leading-relaxed">
-                  With EFMS, clients get professional expertise combined with practical, hands-on project thinking. Real project experience that translates into tangible results.
-                </p>
+            <StaggerItem>
+              <div className="p-6 rounded-lg bg-white border border-slate-200 shadow-sm flex flex-col justify-between hover:shadow-md hover:border-red-400/50 transition-all h-full">
+                <div>
+                  <HardHat className="w-6 h-6 text-[#d91b1b] mb-4" />
+                  <h3 className="text-base font-extrabold text-slate-900 mb-2">Hands-On Thinking</h3>
+                  <p className="text-xs text-slate-600 leading-relaxed">
+                    With EFMS, clients get professional expertise combined with practical, hands-on project thinking. Real project experience that translates into tangible results.
+                  </p>
+                </div>
               </div>
-            </div>
-          </div>
+            </StaggerItem>
+          </StaggerContainer>
         </div>
       </section>
 

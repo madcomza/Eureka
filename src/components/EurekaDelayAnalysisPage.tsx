@@ -122,7 +122,7 @@ export const EurekaDelayAnalysisPage: React.FC<EurekaDelayAnalysisPageProps> = (
           playsInline
           className="absolute inset-0 w-full h-full object-cover object-center pointer-events-none"
         >
-          <source src="./Services Hero Section BG.mp4" type="video/mp4" />
+          <source src="./video/Services Hero Section BG.mp4" type="video/mp4" />
         </video>
 
         {/* Video Overlay: Darker on left, totally clear on right */}

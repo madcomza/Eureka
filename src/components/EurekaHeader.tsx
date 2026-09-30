@@ -448,19 +448,31 @@ export const EurekaHeader: React.FC<EurekaHeaderProps> = ({
               )}
             </div>
 
-            {/* 6. PROJECTS */}
-            <button
+            {/* 6. PROJECTS (Hidden for now as requested) */}
+            {/* <button
               onClick={() => handleNav('projects')}
               className={`transition-colors cursor-pointer pb-1 ${
-                currentPage === 'projects' || currentPage === 'gallery'
+                currentPage === 'projects'
                   ? 'text-[#d91b1b] border-b-2 border-[#d91b1b]'
                   : 'hover:text-[#d91b1b]'
               }`}
             >
               PROJECTS
+            </button> */}
+
+            {/* 7. GALLERY */}
+            <button
+              onClick={() => handleNav('gallery')}
+              className={`transition-colors cursor-pointer pb-1 ${
+                currentPage === 'gallery'
+                  ? 'text-[#d91b1b] border-b-2 border-[#d91b1b]'
+                  : 'hover:text-[#d91b1b]'
+              }`}
+            >
+              GALLERY
             </button>
 
-            {/* 7. PRICING */}
+            {/* 8. PRICING */}
             <button
               onClick={() => handleNav('pricing')}
               className={`transition-colors cursor-pointer pb-1 ${
@@ -695,13 +707,22 @@ export const EurekaHeader: React.FC<EurekaHeaderProps> = ({
                 )}
               </div>
 
-              <button
+              {/* <button
                 onClick={() => handleNav('projects')}
                 className={`w-full text-left px-3 py-2 rounded-md text-sm font-bold ${
-                  currentPage === 'projects' || currentPage === 'gallery' ? 'bg-red-50 text-red-600' : 'text-slate-800'
+                  currentPage === 'projects' ? 'bg-red-50 text-red-600' : 'text-slate-800'
                 }`}
               >
                 Projects
+              </button> */}
+
+              <button
+                onClick={() => handleNav('gallery')}
+                className={`w-full text-left px-3 py-2 rounded-md text-sm font-bold ${
+                  currentPage === 'gallery' ? 'bg-red-50 text-red-600' : 'text-slate-800'
+                }`}
+              >
+                Gallery
               </button>
 
               <button

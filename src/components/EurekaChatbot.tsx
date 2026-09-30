@@ -23,6 +23,7 @@ import {
   CornerDownRight
 } from 'lucide-react';
 import { ActivePage } from '../App';
+import { sendLeadToInbox, TARGET_LEAD_EMAIL } from '../utils/sendLead';
 
 interface Message {
   id: string;
@@ -475,7 +476,7 @@ export const EurekaChatbot: React.FC<EurekaChatbotProps> = ({
   };
 
   // Handle Direct Escalation Form Submission
-  const handleEscalationSubmit = (e: React.FormEvent) => {
+  const handleEscalationSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!escEmail && !escPhone) return;
 
@@ -483,19 +484,32 @@ export const EurekaChatbot: React.FC<EurekaChatbotProps> = ({
 
     const ticketRef = `EFMS-ESC-${Math.floor(100000 + Math.random() * 900000)}`;
 
+    try {
+      await sendLeadToInbox({
+        formType: `Chatbot Escalation (${escCategory.toUpperCase()})`,
+        fullName: escName || 'Chat Visitor',
+        email: escEmail,
+        phone: escPhone,
+        message: escMessage,
+        serviceType: escCategory.toUpperCase()
+      });
+    } catch (err) {
+      console.error('Escalation send error:', err);
+    }
+
     // Prepare mailto fallback string
     const subject = encodeURIComponent(`[${ticketRef}] Technical Query Escalation from ${escName || 'Client'}`);
     const body = encodeURIComponent(
       `Hello Monwabisi & EFMS Team,\n\nI am escalating a query from the website chatbot assistant:\n\nName: ${escName || 'N/A'}\nEmail: ${escEmail || 'N/A'}\nPhone: ${escPhone || 'N/A'}\nCategory: ${escCategory.toUpperCase()}\n\nQuery / Project Details:\n${escMessage || 'Please review my request and contact me regarding EFMS solutions.'}\n\nTicket Reference: ${ticketRef}\nTimestamp: ${new Date().toISOString()}`
     );
 
-    const mailtoUrl = `mailto:info@eurekasolutions.co.za?subject=${subject}&body=${body}`;
+    const mailtoUrl = `mailto:${TARGET_LEAD_EMAIL}?subject=${subject}&body=${body}`;
 
     // Add confirmation message to chat
     const confirmMsg: Message = {
       id: `bot-esc-confirm-${Date.now()}`,
       sender: 'bot',
-      text: `✅ **Email Escalation Recorded Successfully!**\n\n• **Reference Number:** \`${ticketRef}\`\n• **Name:** ${escName || 'Client'}\n• **Contact:** ${escEmail || escPhone}\n• **Status:** Dispatched to \`info@eurekasolutions.co.za\`\n\nOur engineering and management team typically responds within **2 to 4 business hours**. For emergency building facilities or critical claims, feel free to call directly at **+27 74 518 7012**.`,
+      text: `✅ **Email Escalation Recorded Successfully!**\n\n• **Reference Number:** \`${ticketRef}\`\n• **Name:** ${escName || 'Client'}\n• **Contact:** ${escEmail || escPhone}\n• **Status:** Dispatched to \`${TARGET_LEAD_EMAIL}\`\n\nOur engineering and management team typically responds within **2 to 4 business hours**. For emergency building facilities or critical claims, feel free to call directly at **+27 74 518 7012**.`,
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       suggestions: [
         'Open Pre-filled Email Client ↗',
@@ -544,7 +558,7 @@ export const EurekaChatbot: React.FC<EurekaChatbotProps> = ({
         {!isOpen && !hasOpenedBefore && (
           <div
             onClick={toggleChat}
-            className="mb-2.5 px-3.5 py-2 bg-slate-900/95 backdrop-blur-md text-white text-xs font-medium rounded-full shadow-xl border border-slate-700/80 cursor-pointer flex items-center gap-2.5 animate-bounce hover:bg-slate-800 transition-all"
+            className="mb-16 px-3.5 py-2 bg-slate-900/95 backdrop-blur-md text-white text-xs font-medium rounded-full shadow-xl border border-slate-700/80 cursor-pointer flex items-center gap-2.5 animate-bounce hover:bg-slate-800 transition-all"
           >
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
             <span>Have questions? Ask EFMS Consultant</span>
