@@ -23,12 +23,12 @@ import {
   Layers
 } from 'lucide-react';
 
-export type GalleryTab = 'ALL' | 'FACILITIES' | 'CONSTRUCTION' | 'PROJECTS';
+export type GalleryTab = 'ALL' | 'FACILITIES' | 'CONSTRUCTION' | 'CONSULTANCY';
 
 export interface GalleryItem {
   id: string;
   title: string;
-  category: 'FACILITIES' | 'CONSTRUCTION' | 'PROJECTS';
+  category: 'FACILITIES' | 'CONSTRUCTION' | 'CONSULTANCY';
   categoryLabel: string;
   image: string;
   value?: string;
@@ -130,16 +130,74 @@ async function optimizeAndMinifyImage(
   });
 }
 
+// Automatic discovery of static images placed in src/assets/images/GALLERY subfolders
+const staticFacilitiesImages = import.meta.glob<string>(
+  '../assets/images/GALLERY/FACILITIES/*.{png,jpg,jpeg,webp,svg,PNG,JPG,JPEG,WEBP,SVG}',
+  { eager: true, import: 'default' }
+);
+const staticConstructionImages = import.meta.glob<string>(
+  '../assets/images/GALLERY/CONSTRUCTION/*.{png,jpg,jpeg,webp,svg,PNG,JPG,JPEG,WEBP,SVG}',
+  { eager: true, import: 'default' }
+);
+const staticConsultancyImages = import.meta.glob<string>(
+  '../assets/images/GALLERY/CONSULTANCY/*.{png,jpg,jpeg,webp,svg,PNG,JPG,JPEG,WEBP,SVG}',
+  { eager: true, import: 'default' }
+);
+
+function getStaticGalleryItems(): GalleryItem[] {
+  const items: GalleryItem[] = [];
+
+  const parseFileName = (path: string) => {
+    const filename = path.split('/').pop() || '';
+    return filename.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' ');
+  };
+
+  Object.entries(staticFacilitiesImages).forEach(([path, imgUrl]) => {
+    items.push({
+      id: `static-fac-${path}`,
+      title: parseFileName(path),
+      category: 'FACILITIES',
+      categoryLabel: 'Facilities',
+      image: imgUrl,
+      year: 'Project Record'
+    });
+  });
+
+  Object.entries(staticConstructionImages).forEach(([path, imgUrl]) => {
+    items.push({
+      id: `static-con-${path}`,
+      title: parseFileName(path),
+      category: 'CONSTRUCTION',
+      categoryLabel: 'Construction',
+      image: imgUrl,
+      year: 'Project Record'
+    });
+  });
+
+  Object.entries(staticConsultancyImages).forEach(([path, imgUrl]) => {
+    items.push({
+      id: `static-consult-${path}`,
+      title: parseFileName(path),
+      category: 'CONSULTANCY',
+      categoryLabel: 'Consultancy',
+      image: imgUrl,
+      year: 'Project Record'
+    });
+  });
+
+  return items;
+}
+
 export const EurekaGalleryPage: React.FC<EurekaGalleryPageProps> = ({ onNavigate }) => {
   const [activeTab, setActiveTab] = useState<GalleryTab>('ALL');
   const [searchQuery, setSearchQuery] = useState('');
-  const [galleryItems, setGalleryItems] = useState<GalleryItem[]>([]);
+  const [galleryItems, setGalleryItems] = useState<GalleryItem[]>(getStaticGalleryItems);
   const [selectedPhoto, setSelectedPhoto] = useState<GalleryItem | null>(null);
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
 
   // Upload Form State
   const [uploadTitle, setUploadTitle] = useState('');
-  const [uploadCategory, setUploadCategory] = useState<'FACILITIES' | 'CONSTRUCTION' | 'PROJECTS'>('FACILITIES');
+  const [uploadCategory, setUploadCategory] = useState<'FACILITIES' | 'CONSTRUCTION' | 'CONSULTANCY'>('FACILITIES');
   const [uploadPreview, setUploadPreview] = useState<string | null>(null);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [isOptimizing, setIsOptimizing] = useState(false);
@@ -150,15 +208,33 @@ export const EurekaGalleryPage: React.FC<EurekaGalleryPageProps> = ({ onNavigate
   } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Load user uploads from localStorage on mount
+  // Load user uploads from localStorage on mount (checks both current and previous storage keys)
   useEffect(() => {
     try {
-      const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
-      if (stored) {
-        const parsed: GalleryItem[] = JSON.parse(stored);
-        if (Array.isArray(parsed)) {
-          setGalleryItems(parsed);
+      const staticItems = getStaticGalleryItems();
+      const v2 = localStorage.getItem(LOCAL_STORAGE_KEY);
+      const v1 = localStorage.getItem('eureka_gallery_uploaded_items_v1');
+      const raw = v2 || v1;
+      if (raw) {
+        const parsed: any[] = JSON.parse(raw);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          // Filter to user-uploaded items and normalize category
+          const userItems: GalleryItem[] = parsed
+            .filter((item) => item.isUserUploaded || item.id?.startsWith('user-upload-'))
+            .map((item) => ({
+              ...item,
+              category: item.category === 'PROJECTS' ? 'CONSULTANCY' : item.category,
+              categoryLabel: item.category === 'PROJECTS' ? 'Consultancy' : item.categoryLabel
+            }));
+          if (userItems.length > 0) {
+            setGalleryItems([...userItems, ...staticItems]);
+            localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(userItems));
+          } else {
+            setGalleryItems(staticItems);
+          }
         }
+      } else {
+        setGalleryItems(staticItems);
       }
     } catch (e) {
       console.warn('Could not load stored gallery items', e);
@@ -216,7 +292,7 @@ export const EurekaGalleryPage: React.FC<EurekaGalleryPageProps> = ({ onNavigate
     const categoryLabels = {
       FACILITIES: 'Facilities',
       CONSTRUCTION: 'Construction',
-      PROJECTS: 'Projects'
+      CONSULTANCY: 'Consultancy'
     };
 
     const newItem: GalleryItem = {
@@ -318,43 +394,30 @@ export const EurekaGalleryPage: React.FC<EurekaGalleryPageProps> = ({ onNavigate
         <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none" />
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-10">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-            <div className="max-w-3xl space-y-3">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-500/20 text-red-400 border border-red-500/30 text-xs font-black tracking-wider uppercase">
-                <ImageIcon className="w-3.5 h-3.5" />
-                <span>PROJECT VISUAL GALLERY</span>
-              </div>
-
-              <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white leading-tight">
-                Project Photo Gallery
-              </h1>
-
-              <p className="text-xs sm:text-sm text-slate-300 leading-relaxed max-w-2xl">
-                Visual photographic record of our completed and active project milestones.
-              </p>
+          <div className="max-w-3xl space-y-3">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-500/20 text-red-400 border border-red-500/30 text-xs font-black tracking-wider uppercase">
+              <ImageIcon className="w-3.5 h-3.5" />
+              <span>PROJECT VISUAL GALLERY</span>
             </div>
 
-            {/* Quick Upload Action Button in Hero */}
-            <div className="shrink-0">
-              <button
-                onClick={() => setIsUploadModalOpen(true)}
-                className="px-5 py-3 rounded-xl text-xs font-black tracking-wider uppercase bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white shadow-lg hover:shadow-red-600/30 transition-all flex items-center gap-2 cursor-pointer border border-red-400/30 active:scale-95"
-              >
-                <Upload className="w-4 h-4" />
-                <span>UPLOAD PROJECT IMAGE</span>
-              </button>
-            </div>
+            <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white leading-tight">
+              Project Photo Gallery
+            </h1>
+
+            <p className="text-xs sm:text-sm text-slate-300 leading-relaxed max-w-2xl">
+              Visual photographic record of our completed and active project milestones.
+            </p>
           </div>
         </div>
       </section>
 
-      {/* 3. Filter Tabs (4 Tab Buttons: ALL, FACILITIES, CONSTRUCTION, PROJECTS) & Search Bar */}
+      {/* 3. Filter Tabs (4 Tab Buttons: ALL, FACILITIES, CONSTRUCTION, CONSULTANCY) & Search Bar */}
       <section className="sticky top-20 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 py-3.5 shadow-xs">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
-            {/* 4 Interactive Tab Buttons: ALL, FACILITIES, CONSTRUCTION, PROJECTS */}
+            {/* 4 Interactive Tab Buttons: ALL, FACILITIES, CONSTRUCTION, CONSULTANCY */}
             <div className="flex items-center gap-1.5 overflow-x-auto pb-1 md:pb-0 scrollbar-none">
-              {(['ALL', 'FACILITIES', 'CONSTRUCTION', 'PROJECTS'] as GalleryTab[]).map((tab) => {
+              {(['ALL', 'FACILITIES', 'CONSTRUCTION', 'CONSULTANCY'] as GalleryTab[]).map((tab) => {
                 const count =
                   tab === 'ALL'
                     ? galleryItems.length
@@ -364,7 +427,7 @@ export const EurekaGalleryPage: React.FC<EurekaGalleryPageProps> = ({ onNavigate
                   ALL: 'ALL',
                   FACILITIES: 'FACILITIES',
                   CONSTRUCTION: 'CONSTRUCTION',
-                  PROJECTS: 'PROJECTS'
+                  CONSULTANCY: 'CONSULTANCY'
                 };
 
                 const isActive = activeTab === tab;
@@ -395,9 +458,9 @@ export const EurekaGalleryPage: React.FC<EurekaGalleryPageProps> = ({ onNavigate
               })}
             </div>
 
-            {/* Right: Search & Upload Trigger */}
-            <div className="flex items-center gap-2 w-full md:w-auto">
-              <div className="relative flex-1 md:w-64">
+            {/* Right: Search */}
+            <div className="flex items-center w-full md:w-auto">
+              <div className="relative w-full md:w-64">
                 <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
                 <input
                   type="text"
@@ -415,15 +478,6 @@ export const EurekaGalleryPage: React.FC<EurekaGalleryPageProps> = ({ onNavigate
                   </button>
                 )}
               </div>
-
-              <button
-                onClick={() => setIsUploadModalOpen(true)}
-                className="px-3.5 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer shrink-0 shadow-xs"
-                title="Upload New Photo"
-              >
-                <Plus className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">Add Image</span>
-              </button>
             </div>
           </div>
         </div>
@@ -442,7 +496,7 @@ export const EurekaGalleryPage: React.FC<EurekaGalleryPageProps> = ({ onNavigate
                 Gallery is ready for your project images
               </h3>
               <p className="text-xs text-slate-500 max-w-sm mx-auto leading-relaxed">
-                Click below to upload and auto-optimize your project photographs. Images are organized under the 4 category tabs: <strong>ALL</strong>, <strong>FACILITIES</strong>, <strong>CONSTRUCTION</strong>, and <strong>PROJECTS</strong>.
+                Click below to upload and auto-optimize your project photographs. Images are organized under the 4 category tabs: <strong>ALL</strong>, <strong>FACILITIES</strong>, <strong>CONSTRUCTION</strong>, and <strong>CONSULTANCY</strong>.
               </p>
             </div>
             <div className="pt-2">
@@ -497,6 +551,7 @@ export const EurekaGalleryPage: React.FC<EurekaGalleryPageProps> = ({ onNavigate
                     src={item.image}
                     alt={item.title}
                     loading="lazy"
+                    decoding="async"
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   />
 
@@ -646,7 +701,7 @@ export const EurekaGalleryPage: React.FC<EurekaGalleryPageProps> = ({ onNavigate
                     {[
                       { key: 'FACILITIES', label: 'Facilities', icon: Building2 },
                       { key: 'CONSTRUCTION', label: 'Construction', icon: HardHat },
-                      { key: 'PROJECTS', label: 'Projects', icon: FolderKanban }
+                      { key: 'CONSULTANCY', label: 'Consultancy', icon: FolderKanban }
                     ].map((cat) => {
                       const Icon = cat.icon;
                       const isSel = uploadCategory === cat.key;
@@ -729,6 +784,7 @@ export const EurekaGalleryPage: React.FC<EurekaGalleryPageProps> = ({ onNavigate
                   <img
                     src={selectedPhoto.image}
                     alt={selectedPhoto.title}
+                    decoding="async"
                     className="max-h-[72vh] w-auto max-w-full object-contain mx-auto"
                   />
 
