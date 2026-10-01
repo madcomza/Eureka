@@ -2,6 +2,8 @@ import { EurekaHeader } from "./EurekaHeader";
 import { EurekaFooter } from "./EurekaFooter";
 import React, { useState, useMemo } from 'react';
 import { sendLeadToInbox, TARGET_LEAD_EMAIL } from '../utils/sendLead';
+import { AntiSpamShield } from './AntiSpamShield';
+import { initializeAntiSpam, validateHumanSubmission, AntiSpamState } from '../utils/antiSpam';
 import { EurekaLogo } from './EurekaLogo';
 import {
   Sparkles,
@@ -253,9 +255,25 @@ export const EurekaPricingPage: React.FC<EurekaPricingPageProps> = ({
   const [quoteSubmitting, setQuoteSubmitting] = useState(false);
   const [quoteSubmitted, setQuoteSubmitted] = useState(false);
   const [quoteTicketId, setQuoteTicketId] = useState('');
+  const [quoteSpamState, setQuoteSpamState] = useState<AntiSpamState>(initializeAntiSpam);
+  const [quoteSpamError, setQuoteSpamError] = useState<string | null>(null);
 
   const handleQuoteSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Anti-Bot & Spam Validation
+    const spamCheck = validateHumanSubmission(quoteSpamState);
+    if (!spamCheck.isValid) {
+      if (spamCheck.isBot) {
+        setQuoteTicketId('EFM-' + Math.floor(100000 + Math.random() * 900000));
+        setQuoteSubmitted(true);
+        return;
+      }
+      setQuoteSpamError(spamCheck.errorMessage || 'Please complete anti-spam verification.');
+      return;
+    }
+    setQuoteSpamError(null);
+
     setQuoteSubmitting(true);
     try {
       const selectedItems = Object.entries(cart).map(([id, qty]) => {
@@ -271,6 +289,9 @@ export const EurekaPricingPage: React.FC<EurekaPricingPageProps> = ({
         location: quoteLocation,
         serviceType: 'Specialist Cleaning & Facility Maintenance',
         message: `Customer generated an estimate via the online calculator. Subtotal: R ${cartCalculation.subtotal.toFixed(2)}. Selected Items: ${selectedItems.join(', ') || 'Custom quote'}`,
+        website_url: quoteSpamState.honeypot,
+        company_fax_number: quoteSpamState.honeypotFax,
+        form_rendered_at: quoteSpamState.formRenderTime,
         estimateDetails: {
           items: selectedItems,
           total: cartCalculation.subtotal.toFixed(2)
@@ -715,6 +736,8 @@ export const EurekaPricingPage: React.FC<EurekaPricingPageProps> = ({
                         setQuotePhone('');
                         setQuoteEmail('');
                         setQuoteLocation('');
+                        setQuoteSpamState(initializeAntiSpam());
+                        setQuoteSpamError(null);
                       }}
                       className="mt-2 text-xs font-bold text-[#d91b1b] hover:underline"
                     >
@@ -755,6 +778,18 @@ export const EurekaPricingPage: React.FC<EurekaPricingPageProps> = ({
                       onChange={(e) => setQuoteLocation(e.target.value)}
                       className="w-full px-3 py-2 text-xs bg-white border border-slate-200 rounded focus:outline-none focus:border-red-500"
                     />
+
+                    {/* Anti-Spam & Bot Protection Shield */}
+                    <div className="space-y-1 pt-1">
+                      <AntiSpamShield state={quoteSpamState} onChange={setQuoteSpamState} />
+                      {quoteSpamError && (
+                        <div className="p-2 rounded bg-red-50 border border-red-200 text-red-700 text-[11px] font-semibold flex items-center gap-1.5">
+                          <AlertCircle className="w-3.5 h-3.5 shrink-0 text-red-600" />
+                          <span>{quoteSpamError}</span>
+                        </div>
+                      )}
+                    </div>
+
                     <button
                       type="submit"
                       disabled={quoteSubmitting}

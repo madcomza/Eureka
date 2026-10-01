@@ -34,6 +34,36 @@ if (!$data || !is_array($data)) {
     $data = $_POST;
 }
 
+// --- ANTI-BOT & SPAM DEFENSE CHECKS ---
+$hp1 = trim((string)($data['website_url'] ?? ''));
+$hp2 = trim((string)($data['company_fax_number'] ?? ''));
+if (!empty($hp1) || !empty($hp2)) {
+    // Spambot filled the hidden honeypot trap. Silently drop to prevent inbox pollution.
+    http_response_code(200);
+    echo json_encode([
+        "success" => true,
+        "message" => "Inquiry received.",
+        "ticketId" => "EFM-" . rand(100000, 999999),
+        "simulated" => true
+    ]);
+    exit;
+}
+
+// Velocity check: Headless bots submit milliseconds after loading
+if (!empty($data['form_rendered_at'])) {
+    $renderedAt = intval($data['form_rendered_at']);
+    if ($renderedAt > 0 && ((time() * 1000) - $renderedAt < 2000)) {
+        http_response_code(200);
+        echo json_encode([
+            "success" => true,
+            "message" => "Inquiry received.",
+            "ticketId" => "EFM-" . rand(100000, 999999),
+            "simulated" => true
+        ]);
+        exit;
+    }
+}
+
 // Helper to sanitize text
 function clean_input($val) {
     if (is_array($val)) {

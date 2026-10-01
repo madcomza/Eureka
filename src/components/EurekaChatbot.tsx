@@ -24,6 +24,8 @@ import {
 } from 'lucide-react';
 import { ActivePage } from '../App';
 import { sendLeadToInbox, TARGET_LEAD_EMAIL } from '../utils/sendLead';
+import { AntiSpamShield } from './AntiSpamShield';
+import { initializeAntiSpam, validateHumanSubmission, AntiSpamState } from '../utils/antiSpam';
 
 interface Message {
   id: string;
@@ -242,6 +244,8 @@ export const EurekaChatbot: React.FC<EurekaChatbotProps> = ({
   const [escMessage, setEscMessage] = useState('');
   const [escSubmitted, setEscSubmitted] = useState(false);
   const [escCategory, setEscCategory] = useState<'general' | 'facilities' | 'construction' | 'claims'>('general');
+  const [chatSpamState, setChatSpamState] = useState<AntiSpamState>(initializeAntiSpam);
+  const [chatSpamError, setChatSpamError] = useState<string | null>(null);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -480,6 +484,18 @@ export const EurekaChatbot: React.FC<EurekaChatbotProps> = ({
     e.preventDefault();
     if (!escEmail && !escPhone) return;
 
+    // Anti-Spam Validation
+    const spamCheck = validateHumanSubmission(chatSpamState);
+    if (!spamCheck.isValid) {
+      if (spamCheck.isBot) {
+        setEscSubmitted(true);
+        return;
+      }
+      setChatSpamError(spamCheck.errorMessage || 'Please verify you are human to submit.');
+      return;
+    }
+    setChatSpamError(null);
+
     setEscSubmitted(true);
 
     const ticketRef = `EFMS-ESC-${Math.floor(100000 + Math.random() * 900000)}`;
@@ -491,7 +507,10 @@ export const EurekaChatbot: React.FC<EurekaChatbotProps> = ({
         email: escEmail,
         phone: escPhone,
         message: escMessage,
-        serviceType: escCategory.toUpperCase()
+        serviceType: escCategory.toUpperCase(),
+        website_url: chatSpamState.honeypot,
+        company_fax_number: chatSpamState.honeypotFax,
+        form_rendered_at: chatSpamState.formRenderTime,
       });
     } catch (err) {
       console.error('Escalation send error:', err);
@@ -778,6 +797,17 @@ export const EurekaChatbot: React.FC<EurekaChatbotProps> = ({
                                   onChange={(e) => setEscMessage(e.target.value)}
                                   className="w-full bg-slate-800 border border-slate-700 rounded px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-amber-400 resize-none"
                                 />
+                              </div>
+
+                              {/* Anti-Spam & Bot Protection Shield */}
+                              <div className="space-y-1">
+                                <AntiSpamShield state={chatSpamState} onChange={setChatSpamState} dark={true} />
+                                {chatSpamError && (
+                                  <div className="p-1.5 rounded bg-red-950/70 border border-red-500/50 text-red-300 text-[10px] font-semibold flex items-center gap-1.5">
+                                    <AlertCircle className="w-3 h-3 shrink-0 text-red-400" />
+                                    <span>{chatSpamError}</span>
+                                  </div>
+                                )}
                               </div>
 
                               <button

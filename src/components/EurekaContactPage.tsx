@@ -4,6 +4,8 @@ import React, { useState } from 'react';
 import { motion } from 'motion/react';
 import { ScrollReveal, StaggerContainer, StaggerItem } from './ScrollAnimation';
 import { sendLeadToInbox, TARGET_LEAD_EMAIL } from '../utils/sendLead';
+import { AntiSpamShield } from './AntiSpamShield';
+import { initializeAntiSpam, validateHumanSubmission, AntiSpamState } from '../utils/antiSpam';
 import { EurekaLogo } from './EurekaLogo';
 import {
   Phone,
@@ -47,6 +49,8 @@ export const EurekaContactPage: React.FC<EurekaContactPageProps> = ({
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [ticketId, setTicketId] = useState('');
+  const [spamState, setSpamState] = useState<AntiSpamState>(initializeAntiSpam);
+  const [spamError, setSpamError] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     fullName: '',
     companyName: '',
@@ -54,7 +58,7 @@ export const EurekaContactPage: React.FC<EurekaContactPageProps> = ({
     email: '',
     phone: '',
     postcode: '',
-    serviceType: 'Total Facilities Management (TFM)',
+    serviceType: 'Cleaning',
     priority: 'Standard (PPM / Quote Inquiry)',
     buildingType: 'Commercial Office',
     message: '',
@@ -75,6 +79,21 @@ export const EurekaContactPage: React.FC<EurekaContactPageProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Anti-Bot & Spam Protection Validation
+    const spamCheck = validateHumanSubmission(spamState);
+    if (!spamCheck.isValid) {
+      if (spamCheck.isBot) {
+        // Silently simulate success for bots to prevent them adapting
+        setTicketId('EFM-' + Math.floor(100000 + Math.random() * 900000));
+        setFormSubmitted(true);
+        return;
+      }
+      setSpamError(spamCheck.errorMessage || 'Please verify you are human before submitting.');
+      return;
+    }
+    setSpamError(null);
+
     setIsSubmitting(true);
     try {
       const res = await sendLeadToInbox({
@@ -94,6 +113,9 @@ export const EurekaContactPage: React.FC<EurekaContactPageProps> = ({
         priority: formData.priority,
         buildingType: formData.buildingType,
         message: formData.message,
+        website_url: spamState.honeypot,
+        company_fax_number: spamState.honeypotFax,
+        form_rendered_at: spamState.formRenderTime,
       });
       setTicketId(res.ticketId);
     } catch (err) {
@@ -226,6 +248,8 @@ export const EurekaContactPage: React.FC<EurekaContactPageProps> = ({
                       type="button"
                       onClick={() => {
                         setFormSubmitted(false);
+                        setSpamState(initializeAntiSpam());
+                        setSpamError(null);
                         setFormData({
                           fullName: '',
                           companyName: '',
@@ -233,7 +257,7 @@ export const EurekaContactPage: React.FC<EurekaContactPageProps> = ({
                           email: '',
                           phone: '',
                           postcode: '',
-                          serviceType: 'Total Facilities Management (TFM)',
+                          serviceType: 'Cleaning',
                           priority: 'Standard (PPM / Quote Inquiry)',
                           buildingType: 'Commercial Office',
                           message: '',
@@ -376,15 +400,18 @@ export const EurekaContactPage: React.FC<EurekaContactPageProps> = ({
                         onChange={handleInputChange}
                         className="w-full px-3.5 py-2.5 text-xs rounded-lg border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-[#0b3582] focus:border-transparent"
                       >
-                        <option value="Total Facilities Management (TFM)">Total Facilities Management (TFM)</option>
-                        <option value="HVAC & Air Conditioning Maintenance">HVAC &amp; Air Conditioning Maintenance</option>
-                        <option value="Electrical & Power Systems">Electrical &amp; Power Systems (Backup Generators &amp; Solar)</option>
-                        <option value="Construction & Project Management">Construction &amp; Project Management (Pr. CPM)</option>
-                        <option value="Fire Safety & Compliance">Fire Safety &amp; Compliance</option>
-                        <option value="Plumbing & Water Hygiene">Plumbing &amp; Water Hygiene</option>
-                        <option value="24/7 Reactive Maintenance & Callouts">24/7 Reactive Maintenance &amp; Callouts</option>
-                        <option value="Building Fabric & Refurbishments">Building Fabric &amp; Refurbishments</option>
-                        <option value="Statutory OHS & Asset Audit">Statutory OHS &amp; Asset Condition Audit</option>
+                        <option value="Cleaning">Cleaning</option>
+                        <option value="Pest Control">Pest Control</option>
+                        <option value="Soil Treatment">Soil Treatment</option>
+                        <option value="Relocation">Relocation</option>
+                        <option value="Facilities Management">Facilities Management</option>
+                        <option value="Construction Management">Construction Management</option>
+                        <option value="Project Management">Project Management</option>
+                        <option value="Freelance Project Management">Freelance Project Management</option>
+                        <option value="Consultancy & Advisory">Consultancy &amp; Advisory</option>
+                        <option value="Quantity Surveying">Quantity Surveying</option>
+                        <option value="Claims & Contracts">Claims &amp; Contracts</option>
+                        <option value="Forensic Delay Analysis">Forensic Delay Analysis</option>
                       </select>
                     </div>
 
@@ -438,6 +465,17 @@ export const EurekaContactPage: React.FC<EurekaContactPageProps> = ({
                         I agree to Eureka Facilities Management Solutions contacting me regarding this quote, audit, or service inquiry in accordance with POPIA regulations.
                       </span>
                     </label>
+                  </div>
+
+                  {/* Anti-Spam & Bot Protection Shield */}
+                  <div className="space-y-1 pt-1">
+                    <AntiSpamShield state={spamState} onChange={setSpamState} />
+                    {spamError && (
+                      <div className="p-2 rounded-lg bg-red-50 border border-red-200 text-red-700 text-xs font-semibold flex items-center gap-1.5">
+                        <AlertCircle className="w-3.5 h-3.5 shrink-0 text-red-600" />
+                        <span>{spamError}</span>
+                      </div>
+                    )}
                   </div>
 
                   <button

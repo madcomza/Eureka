@@ -10,6 +10,9 @@ export interface LeadPayload {
   priority?: string;
   buildingType?: string;
   message?: string;
+  website_url?: string;
+  company_fax_number?: string;
+  form_rendered_at?: number;
   estimateDetails?: {
     items?: string[];
     total?: string | number;
