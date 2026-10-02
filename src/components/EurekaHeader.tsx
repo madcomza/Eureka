@@ -45,7 +45,9 @@ export type NavPage =
   | 'projects'
   | 'gallery'
   | 'pricing'
-  | 'contact';
+  | 'contact'
+  | 'privacy-policy'
+  | 'terms-conditions';
 
 export interface EurekaHeaderProps {
   currentPage?: NavPage | string;

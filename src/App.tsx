@@ -20,6 +20,8 @@ import { EurekaPricingPage } from './components/EurekaPricingPage';
 import { EurekaProjectsPage } from './components/EurekaProjectsPage';
 import { EurekaGalleryPage } from './components/EurekaGalleryPage';
 import { EurekaContactPage } from './components/EurekaContactPage';
+import { EurekaPrivacyPolicyPage } from './components/EurekaPrivacyPolicyPage';
+import { EurekaTermsConditionsPage } from './components/EurekaTermsConditionsPage';
 import { EurekaChatbot } from './components/EurekaChatbot';
 
 export type ActivePage =
@@ -41,7 +43,9 @@ export type ActivePage =
   | 'projects'
   | 'gallery'
   | 'pricing'
-  | 'contact';
+  | 'contact'
+  | 'privacy-policy'
+  | 'terms-conditions';
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState<ActivePage>('home');
@@ -133,6 +137,12 @@ export default function App() {
           )}
           {currentPage === 'contact' && (
             <EurekaContactPage onNavigate={handleNavigate} />
+          )}
+          {currentPage === 'privacy-policy' && (
+            <EurekaPrivacyPolicyPage onNavigate={handleNavigate} />
+          )}
+          {currentPage === 'terms-conditions' && (
+            <EurekaTermsConditionsPage onNavigate={handleNavigate} />
           )}
         </motion.div>
       </AnimatePresence>

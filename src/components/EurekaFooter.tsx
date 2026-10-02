@@ -269,27 +269,40 @@ export const EurekaFooter: React.FC<EurekaFooterProps> = ({
               MadCom
             </a>
           </div>
-          <div className="flex items-center gap-4">
-            <button onClick={() => handleNav('home')} className="hover:text-white transition-colors">
+          <div className="flex flex-wrap items-center justify-center sm:justify-end gap-x-4 gap-y-1.5">
+            <button onClick={() => handleNav('home')} className="hover:text-white transition-colors cursor-pointer">
               Home
             </button>
-            <button onClick={() => handleNav('about')} className="hover:text-white transition-colors">
+            <button onClick={() => handleNav('about')} className="hover:text-white transition-colors cursor-pointer">
               About
             </button>
-            <button onClick={() => handleNav('solutions', 'all')} className="hover:text-white transition-colors">
+            <button onClick={() => handleNav('solutions', 'all')} className="hover:text-white transition-colors cursor-pointer">
               Solutions
             </button>
-            <button onClick={() => handleNav('projects')} className="hover:text-white transition-colors">
+            <button onClick={() => handleNav('projects')} className="hover:text-white transition-colors cursor-pointer">
               Projects
             </button>
-            <button onClick={() => handleNav('gallery')} className="hover:text-white transition-colors">
+            <button onClick={() => handleNav('gallery')} className="hover:text-white transition-colors cursor-pointer">
               Gallery
             </button>
-            <button onClick={() => handleNav('pricing')} className="hover:text-white transition-colors">
+            <button onClick={() => handleNav('pricing')} className="hover:text-white transition-colors cursor-pointer">
               Pricing
             </button>
-            <button onClick={() => handleNav('contact')} className="hover:text-white transition-colors">
+            <button onClick={() => handleNav('contact')} className="hover:text-white transition-colors cursor-pointer">
               Contact
+            </button>
+            <span className="text-slate-600 hidden sm:inline">&bull;</span>
+            <button
+              onClick={() => handleNav('privacy-policy')}
+              className="hover:text-red-400 transition-colors font-medium cursor-pointer"
+            >
+              Privacy Policy
+            </button>
+            <button
+              onClick={() => handleNav('terms-conditions')}
+              className="hover:text-red-400 transition-colors font-medium cursor-pointer"
+            >
+              Terms &amp; Conditions
             </button>
           </div>
         </div>
