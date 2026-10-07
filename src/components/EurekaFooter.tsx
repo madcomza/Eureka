@@ -60,9 +60,9 @@ export const EurekaFooter: React.FC<EurekaFooterProps> = ({
                 BSc (Hons) QS &bull; PGDip PM &bull; Pr. CPM (SACPCMP) &bull; PMP® (PMI)
               </p>
               <div className="pt-2 border-t border-slate-800/80 text-[10px] text-slate-400 flex flex-wrap gap-x-3 gap-y-1 font-mono">
-                <span>CIPC: 2024/701047/07</span>
-                <span>SACPCMP: D/3313/2023</span>
-                <span>PMI: 3968600</span>
+                <span>CIPC: 2022/525367/07</span>
+                <span>SACPCMP: D/3218/2024</span>
+                <span>PMI: 4330831</span>
               </div>
             </div>
           </div>
@@ -208,8 +208,8 @@ export const EurekaFooter: React.FC<EurekaFooterProps> = ({
 
               <div className="flex items-center gap-2">
                 <Phone className="w-3.5 h-3.5 text-red-400 shrink-0" />
-                <a href="tel:+27745187012" className="hover:text-white transition-colors">
-                  +27 74 518 7012
+                <a href="tel:+27608809635" className="hover:text-white transition-colors">
+                  +27 60 880 9635
                 </a>
               </div>
 

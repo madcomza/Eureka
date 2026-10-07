@@ -165,7 +165,7 @@ export const EurekaTermsConditionsPage: React.FC<EurekaTermsConditionsPageProps>
               </p>
               <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-1 text-xs">
                 <div><strong>Company:</strong> Eureka Facilities Management Solutions (Pty) Ltd</div>
-                <div><strong>Registration No:</strong> 2024/701047/07</div>
+                <div><strong>Registration No:</strong> 2022/525367/07</div>
                 <div><strong>Registered Office:</strong> 170 Pitts Avenue, Weavind Park, Pretoria, 0184, South Africa</div>
                 <div><strong>Managing Director:</strong> Monwabisi Makinana (Pr. CPM &bull; PMP®)</div>
               </div>

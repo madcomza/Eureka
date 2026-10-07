@@ -52,9 +52,22 @@ export default function App() {
   const [currentPage, setCurrentPage] = useState<ActivePage>('home');
   const [currentSubcategory, setCurrentSubcategory] = useState<'all' | 'facilities' | 'construction' | 'consultancy'>('all');
 
-  // Scroll to top upon page navigation
+  // Scroll to top upon page navigation and enforce canonical URL
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // Explicitly guarantee user-selected canonical URL is set in DOM
+    try {
+      let canonicalTag = document.querySelector('link[rel="canonical"]');
+      if (!canonicalTag) {
+        canonicalTag = document.createElement('link');
+        canonicalTag.setAttribute('rel', 'canonical');
+        document.head.appendChild(canonicalTag);
+      }
+      canonicalTag.setAttribute('href', 'https://eurekasolutions.co.za/');
+    } catch {
+      // safe fallback
+    }
   }, [currentPage]);
 
   const handleNavigate = (page: ActivePage, subcategory?: 'all' | 'facilities' | 'construction' | 'consultancy') => {

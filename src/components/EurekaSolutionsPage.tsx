@@ -977,10 +977,10 @@ export const EurekaSolutionsPage: React.FC<EurekaSolutionsPageProps> = ({
               REQUEST A CONSULTATION
             </button>
             <a
-              href="tel:+27745187012"
+              href="tel:+27608809635"
               className="px-5 py-3 rounded bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold border border-slate-700 transition-all"
             >
-              CALL +27 74 518 7012
+              CALL +27 60 880 9635
             </a>
           </div>
         </div>

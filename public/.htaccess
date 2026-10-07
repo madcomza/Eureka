@@ -1,6 +1,17 @@
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /
+
+  # 1. Enforce HTTPS 301 Permanent Redirect (Resolves HTTP vs HTTPS duplicate canonical)
+  RewriteCond %{HTTPS} !=on [OR]
+  RewriteCond %{HTTP:X-Forwarded-Proto} =http
+  RewriteRule ^(.*)$ https://eurekasolutions.co.za/$1 [R=301,L]
+
+  # 2. Enforce Canonical non-www Domain (Redirects www.eurekasolutions.co.za to https://eurekasolutions.co.za/)
+  RewriteCond %{HTTP_HOST} ^www\.eurekasolutions\.co\.za$ [NC]
+  RewriteRule ^(.*)$ https://eurekasolutions.co.za/$1 [R=301,L]
+
+  # 3. Single Page Application (SPA) client-side routing fallback
   RewriteRule ^index\.html$ - [L]
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
@@ -20,7 +31,14 @@
   ExpiresByType application/javascript "access plus 1 month"
 </IfModule>
 
-# Explicitly ensure indexing for search engine crawlers & robots
+# Search Engine Indexing & Canonical Link Directives
 <IfModule mod_headers.c>
+  # Googlebot & Search Engine Canonical HTTP Header
+  Header set Link '<https://eurekasolutions.co.za/>; rel="canonical"'
+
+  # Explicitly allow Google crawler indexing
   Header set X-Robots-Tag "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
+
+  # HTTP Strict Transport Security (HSTS)
+  Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
 </IfModule>

@@ -112,11 +112,11 @@ export const EurekaHeader: React.FC<EurekaHeaderProps> = ({
           {/* Right: Direct Contact & Hotline */}
           <div className="flex items-center gap-4 sm:gap-6 text-[11px] sm:text-xs">
             <a
-              href="tel:+27745187012"
+              href="tel:+27608809635"
               className="flex items-center gap-1.5 text-slate-200 hover:text-red-400 font-semibold transition-colors"
             >
               <Phone className="w-3 h-3 text-red-400" />
-              <span>+27 74 518 7012</span>
+              <span>+27 60 880 9635</span>
             </a>
             <a
               href="mailto:info@eurekasolutions.co.za"

@@ -166,10 +166,10 @@ export const EurekaPrivacyPolicyPage: React.FC<EurekaPrivacyPolicyPageProps> = (
               <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-1 text-xs">
                 <div><strong>Full Registered Name:</strong> Eureka Facilities Management Solutions (Pty) Ltd</div>
                 <div><strong>Trading As:</strong> EFMS / Eureka Solutions</div>
-                <div><strong>CIPC Registration Number:</strong> 2024/701047/07</div>
+                <div><strong>CIPC Registration Number:</strong> 2022/525367/07</div>
                 <div><strong>Physical Registered Office:</strong> 170 Pitts Avenue, Weavind Park, Pretoria, 0184, Gauteng, Republic of South Africa</div>
                 <div><strong>Primary Email:</strong> info@eurekasolutions.co.za</div>
-                <div><strong>Direct Telephone:</strong> +27 74 518 7012</div>
+                <div><strong>Direct Telephone:</strong> +27 60 880 9635</div>
               </div>
             </section>
 

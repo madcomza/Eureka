@@ -147,7 +147,7 @@ export const EurekaContactPage: React.FC<EurekaContactPageProps> = ({
     },
     {
       q: 'How do clients submit work orders, fault tickets, and track maintenance?',
-      a: 'You can submit requests via our direct phone line (+27 74 518 7012), WhatsApp support (+27 74 518 7012), email (info@eurekasolutions.co.za), or our online inquiry dispatch system. All tasks receive unique reference tracking and digital job sign-offs.',
+      a: 'You can submit requests via our direct phone line (+27 60 880 9635), WhatsApp support (+27 60 880 9635), email (info@eurekasolutions.co.za), or our online inquiry dispatch system. All tasks receive unique reference tracking and digital job sign-offs.',
     },
     {
       q: 'What contract structures and payment options do you support?',
@@ -191,7 +191,7 @@ export const EurekaContactPage: React.FC<EurekaContactPageProps> = ({
             <StaggerItem>
               <div className="bg-white/5 rounded-lg p-3 border border-white/10 hover:border-emerald-500/40 transition-colors">
                 <div className="text-xl sm:text-2xl font-black text-emerald-400">WhatsApp</div>
-                <div className="text-xs text-slate-400 font-medium mt-0.5">+27 74 518 7012</div>
+                <div className="text-xs text-slate-400 font-medium mt-0.5">+27 60 880 9635</div>
               </div>
             </StaggerItem>
             <StaggerItem>
@@ -270,7 +270,7 @@ export const EurekaContactPage: React.FC<EurekaContactPageProps> = ({
                     </button>
 
                     <a
-                      href="https://wa.me/27745187012?text=Hello%20Eureka%20Facilities%20Management%20Solutions"
+                      href="https://wa.me/27608809635?text=Hello%20Eureka%20Facilities%20Management%20Solutions"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="px-5 py-2.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-xs font-bold text-white flex items-center gap-2"
@@ -280,11 +280,11 @@ export const EurekaContactPage: React.FC<EurekaContactPageProps> = ({
                     </a>
 
                     <a
-                      href="tel:+27745187012"
+                      href="tel:+27608809635"
                       className="px-5 py-2.5 rounded-lg bg-[#08286b] hover:bg-blue-900 text-xs font-bold text-white flex items-center gap-2"
                     >
                       <Phone className="w-3.5 h-3.5" />
-                      <span>Call +27 74 518 7012</span>
+                      <span>Call +27 60 880 9635</span>
                     </a>
                   </div>
                 </div>
@@ -382,7 +382,7 @@ export const EurekaContactPage: React.FC<EurekaContactPageProps> = ({
                         required
                         value={formData.phone}
                         onChange={handleInputChange}
-                        placeholder="e.g. +27 74 518 7012"
+                        placeholder="e.g. +27 60 880 9635"
                         className="w-full px-3.5 py-2.5 text-xs rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-[#0b3582] focus:border-transparent"
                       />
                     </div>
@@ -522,17 +522,17 @@ export const EurekaContactPage: React.FC<EurekaContactPageProps> = ({
                       Telephone &amp; Helpdesk Number
                     </div>
                     <a
-                      href="tel:+27745187012"
+                      href="tel:+27608809635"
                       className="text-2xl font-black text-white hover:text-red-300 transition-colors tracking-tight flex items-center gap-2 mt-0.5"
                     >
                       <Phone className="w-5 h-5 text-red-400" />
-                      <span>+27 74 518 7012</span>
+                      <span>+27 60 880 9635</span>
                     </a>
                   </div>
 
                   <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
                     <a
-                      href="https://wa.me/27745187012?text=Hello%20Eureka%20Facilities%20Management%20Solutions"
+                      href="https://wa.me/27608809635?text=Hello%20Eureka%20Facilities%20Management%20Solutions"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center justify-center gap-1.5 py-2.5 px-3 bg-emerald-600 hover:bg-emerald-700 rounded-lg text-white font-bold transition-colors shadow-sm"
@@ -573,19 +573,19 @@ export const EurekaContactPage: React.FC<EurekaContactPageProps> = ({
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-slate-500 font-medium">Telephone Number:</span>
-                    <a href="tel:+27745187012" className="font-bold text-[#0b3582] hover:underline">
-                      +27 74 518 7012
+                    <a href="tel:+27608809635" className="font-bold text-[#0b3582] hover:underline">
+                      +27 60 880 9635
                     </a>
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-slate-500 font-medium">WhatsApp Support:</span>
                     <a
-                      href="https://wa.me/27745187012"
+                      href="https://wa.me/27608809635"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="font-bold text-emerald-600 hover:underline"
                     >
-                      +27 74 518 7012
+                      +27 60 880 9635
                     </a>
                   </div>
                   <div className="flex items-center justify-between">

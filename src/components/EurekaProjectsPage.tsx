@@ -661,11 +661,11 @@ export const EurekaProjectsPage: React.FC<EurekaProjectsPageProps> = ({ onNaviga
 
           <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
             <a
-              href="tel:+27745187012"
+              href="tel:+27608809635"
               className="px-5 py-2.5 rounded-lg text-xs font-bold bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white transition-all flex items-center gap-2"
             >
               <Phone className="w-3.5 h-3.5 text-red-400" />
-              <span>+27 74 518 7012</span>
+              <span>+27 60 880 9635</span>
             </a>
             <button
               onClick={() => handleNav('contact')}

@@ -83,7 +83,7 @@ const KNOWLEDGE_BASE: FAQItem[] = [
     keywords: ['contact', 'phone', 'number', 'email', 'address', 'where are you', 'location', 'call', 'office', 'head office'],
     question: 'How can I contact EFMS directly?',
     category: 'contact',
-    answer: 'You can reach EFMS through our direct communication channels:\n\n📞 Phone / WhatsApp: +27 74 518 7012\n✉️ General Inquiries: info@eurekasolutions.co.za\n📍 Head Office: Gauteng, South Africa (serving Johannesburg, Pretoria, Centurion, Midrand & nationwide/SADC)\n⏰ Operating Hours: Mon – Fri: 07:30 – 17:30 (with 24/7 emergency response protocols for SLA clients).',
+    answer: 'You can reach EFMS through our direct communication channels:\n\n📞 Phone / WhatsApp: +27 60 880 9635\n✉️ General Inquiries: info@eurekasolutions.co.za\n📍 Head Office: Gauteng, South Africa (serving Johannesburg, Pretoria, Centurion, Midrand & nationwide/SADC)\n⏰ Operating Hours: Mon – Fri: 07:30 – 17:30 (with 24/7 emergency response protocols for SLA clients).',
     actionPage: 'contact',
     actionLabel: 'Go to Contact Page'
   },
@@ -451,7 +451,7 @@ export const EurekaChatbot: React.FC<EurekaChatbotProps> = ({
             timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
             isEscalationCard: true,
             suggestions: [
-              'Call +27 74 518 7012 Now',
+              'Call +27 60 880 9635 Now',
               'Back to Main Services',
               'Check Pricing Guide'
             ]
@@ -528,7 +528,7 @@ export const EurekaChatbot: React.FC<EurekaChatbotProps> = ({
     const confirmMsg: Message = {
       id: `bot-esc-confirm-${Date.now()}`,
       sender: 'bot',
-      text: `✅ **Email Escalation Recorded Successfully!**\n\n• **Reference Number:** \`${ticketRef}\`\n• **Name:** ${escName || 'Client'}\n• **Contact:** ${escEmail || escPhone}\n• **Status:** Dispatched to \`${TARGET_LEAD_EMAIL}\`\n\nOur engineering and management team typically responds within **2 to 4 business hours**. For emergency building facilities or critical claims, feel free to call directly at **+27 74 518 7012**.`,
+      text: `✅ **Email Escalation Recorded Successfully!**\n\n• **Reference Number:** \`${ticketRef}\`\n• **Name:** ${escName || 'Client'}\n• **Contact:** ${escEmail || escPhone}\n• **Status:** Dispatched to \`${TARGET_LEAD_EMAIL}\`\n\nOur engineering and management team typically responds within **2 to 4 business hours**. For emergency building facilities or critical claims, feel free to call directly at **+27 60 880 9635**.`,
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       suggestions: [
         'Open Pre-filled Email Client ↗',
@@ -780,7 +780,7 @@ export const EurekaChatbot: React.FC<EurekaChatbotProps> = ({
                                   <label className="block text-[10px] text-slate-400 mb-0.5">Phone / WhatsApp</label>
                                   <input
                                     type="tel"
-                                    placeholder="+27 74 000 0000"
+                                    placeholder="+27 60 880 9635"
                                     value={escPhone}
                                     onChange={(e) => setEscPhone(e.target.value)}
                                     className="w-full bg-slate-800 border border-slate-700 rounded px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-amber-400"
@@ -854,8 +854,8 @@ export const EurekaChatbot: React.FC<EurekaChatbotProps> = ({
                                 window.location.href = `mailto:info@eurekasolutions.co.za?subject=${encodeURIComponent(
                                   'EFMS Technical & Commercial Inquiry'
                                 )}`;
-                              } else if (sug.includes('Call +27 74 518 7012')) {
-                                window.location.href = 'tel:+27745187012';
+                              } else if (sug.includes('Call +27 60 880 9635')) {
+                                window.location.href = 'tel:+27608809635';
                               } else if (sug.includes('Back to Home') && onNavigate) {
                                 onNavigate('home');
                                 setIsOpen(false);
@@ -932,11 +932,11 @@ export const EurekaChatbot: React.FC<EurekaChatbotProps> = ({
                 <div className="mt-2 flex items-center justify-between text-[10px] text-slate-400 px-1">
                   <div className="flex items-center gap-2">
                     <a
-                      href="tel:+27745187012"
+                      href="tel:+27608809635"
                       className="hover:text-amber-300 flex items-center gap-1 transition-colors"
                     >
                       <Phone className="w-2.5 h-2.5" />
-                      <span>+27 74 518 7012</span>
+                      <span>+27 60 880 9635</span>
                     </a>
                     <span>•</span>
                     <a

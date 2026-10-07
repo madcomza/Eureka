@@ -756,7 +756,7 @@ export const EurekaPricingPage: React.FC<EurekaPricingPageProps> = ({
                     />
                     <input
                       type="tel"
-                      placeholder="Contact Number (e.g. 074 518 7012) *"
+                      placeholder="Contact Number (e.g. 060 880 9635) *"
                       required
                       value={quotePhone}
                       onChange={(e) => setQuotePhone(e.target.value)}
