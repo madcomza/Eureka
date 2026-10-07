@@ -304,6 +304,14 @@ export const EurekaFooter: React.FC<EurekaFooterProps> = ({
             >
               Terms &amp; Conditions
             </button>
+            <button
+              onClick={() => {
+                window.dispatchEvent(new Event('open-cookie-preferences'));
+              }}
+              className="hover:text-amber-400 transition-colors font-medium cursor-pointer"
+            >
+              Cookie Settings
+            </button>
           </div>
         </div>
       </div>

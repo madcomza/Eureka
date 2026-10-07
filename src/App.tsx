@@ -23,6 +23,7 @@ import { EurekaContactPage } from './components/EurekaContactPage';
 import { EurekaPrivacyPolicyPage } from './components/EurekaPrivacyPolicyPage';
 import { EurekaTermsConditionsPage } from './components/EurekaTermsConditionsPage';
 import { EurekaChatbot } from './components/EurekaChatbot';
+import { EurekaCookieConsent } from './components/EurekaCookieConsent';
 
 export type ActivePage =
   | 'home'
@@ -152,6 +153,9 @@ export default function App() {
 
       {/* Global EFMS Consultant Chatbot with FAQ Knowledge & Email Escalation */}
       <EurekaChatbot onNavigate={handleNavigate} currentPage={currentPage} />
+
+      {/* Global Bottom-Left Cookie and Privacy Consent Popup Banner */}
+      <EurekaCookieConsent onNavigate={handleNavigate} />
     </div>
   );
 }
