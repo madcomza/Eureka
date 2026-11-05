@@ -1,128 +1,141 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- Homepage -->
   <url>
     <loc>https://eurekasolutions.co.za/</loc>
-    <lastmod>2026-10-06</lastmod>
+    <lastmod>2026-11-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
+
+  <!-- Core Company & Solutions Overview -->
   <url>
-    <loc>https://eurekasolutions.co.za/#about</loc>
-    <lastmod>2026-10-06</lastmod>
+    <loc>https://eurekasolutions.co.za/about</loc>
+    <lastmod>2026-11-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://eurekasolutions.co.za/#solutions</loc>
-    <lastmod>2026-10-06</lastmod>
+    <loc>https://eurekasolutions.co.za/solutions</loc>
+    <lastmod>2026-11-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Facilities & Property Hygiene Solutions -->
+  <url>
+    <loc>https://eurekasolutions.co.za/facilities-management</loc>
+    <lastmod>2026-11-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://eurekasolutions.co.za/#facilities-management</loc>
-    <lastmod>2026-10-06</lastmod>
+    <loc>https://eurekasolutions.co.za/commercial-cleaning</loc>
+    <lastmod>2026-11-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://eurekasolutions.co.za/#commercial-cleaning</loc>
-    <lastmod>2026-10-06</lastmod>
+    <loc>https://eurekasolutions.co.za/pest-control</loc>
+    <lastmod>2026-11-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://eurekasolutions.co.za/pre-soil-treatment</loc>
+    <lastmod>2026-11-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://eurekasolutions.co.za/#pest-control</loc>
-    <lastmod>2026-10-06</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://eurekasolutions.co.za/#pre-soil-treatment</loc>
-    <lastmod>2026-10-06</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://eurekasolutions.co.za/#office-relocation</loc>
-    <lastmod>2026-10-06</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://eurekasolutions.co.za/#construction-management</loc>
-    <lastmod>2026-10-06</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://eurekasolutions.co.za/#project-management</loc>
-    <lastmod>2026-10-06</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://eurekasolutions.co.za/#freelance-pm</loc>
-    <lastmod>2026-10-06</lastmod>
+    <loc>https://eurekasolutions.co.za/office-relocation</loc>
+    <lastmod>2026-11-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
+
+  <!-- Construction Delivery Solutions -->
   <url>
-    <loc>https://eurekasolutions.co.za/#construction-consultancy</loc>
-    <lastmod>2026-10-06</lastmod>
+    <loc>https://eurekasolutions.co.za/construction-management</loc>
+    <lastmod>2026-11-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://eurekasolutions.co.za/#quantity-surveying</loc>
-    <lastmod>2026-10-06</lastmod>
+    <loc>https://eurekasolutions.co.za/project-management</loc>
+    <lastmod>2026-11-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://eurekasolutions.co.za/#construction-claims</loc>
-    <lastmod>2026-10-06</lastmod>
+    <loc>https://eurekasolutions.co.za/freelance-pm</loc>
+    <lastmod>2026-11-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Built Environment Consultancy & Commercial Advisory -->
+  <url>
+    <loc>https://eurekasolutions.co.za/construction-consultancy</loc>
+    <lastmod>2026-11-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://eurekasolutions.co.za/#delay-analysis</loc>
-    <lastmod>2026-10-06</lastmod>
+    <loc>https://eurekasolutions.co.za/quantity-surveying</loc>
+    <lastmod>2026-11-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://eurekasolutions.co.za/#projects</loc>
-    <lastmod>2026-10-06</lastmod>
+    <loc>https://eurekasolutions.co.za/construction-claims</loc>
+    <lastmod>2026-11-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://eurekasolutions.co.za/delay-analysis</loc>
+    <lastmod>2026-11-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Portfolio, Gallery, Pricing & Contact -->
+  <url>
+    <loc>https://eurekasolutions.co.za/projects</loc>
+    <lastmod>2026-11-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://eurekasolutions.co.za/#gallery</loc>
-    <lastmod>2026-10-06</lastmod>
+    <loc>https://eurekasolutions.co.za/gallery</loc>
+    <lastmod>2026-11-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://eurekasolutions.co.za/#pricing</loc>
-    <lastmod>2026-10-06</lastmod>
+    <loc>https://eurekasolutions.co.za/pricing</loc>
+    <lastmod>2026-11-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://eurekasolutions.co.za/#contact</loc>
-    <lastmod>2026-10-06</lastmod>
+    <loc>https://eurekasolutions.co.za/contact</loc>
+    <lastmod>2026-11-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
+
+  <!-- Legal & Compliance Policies -->
   <url>
-    <loc>https://eurekasolutions.co.za/#privacy-policy</loc>
-    <lastmod>2026-10-06</lastmod>
+    <loc>https://eurekasolutions.co.za/privacy-policy</loc>
+    <lastmod>2026-11-05</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://eurekasolutions.co.za/#terms-conditions</loc>
-    <lastmod>2026-10-06</lastmod>
+    <loc>https://eurekasolutions.co.za/terms-conditions</loc>
+    <lastmod>2026-11-05</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.5</priority>
   </url>
