@@ -2,6 +2,7 @@ import { EurekaHeader } from "./EurekaHeader";
 import { EurekaFooter } from "./EurekaFooter";
 import React, { useState, useMemo } from 'react';
 import { sendLeadToInbox, TARGET_LEAD_EMAIL } from '../utils/sendLead';
+import { trackLeadFormSubmission } from '../utils/trackConversion';
 import { AntiSpamShield } from './AntiSpamShield';
 import { initializeAntiSpam, validateHumanSubmission, AntiSpamState } from '../utils/antiSpam';
 import { EurekaLogo } from './EurekaLogo';
@@ -298,9 +299,27 @@ export const EurekaPricingPage: React.FC<EurekaPricingPageProps> = ({
         }
       });
       setQuoteTicketId(res.ticketId);
+      // Trigger Google Ads Submit lead form conversion event
+      trackLeadFormSubmission({
+        formType: 'Instant Price Calculator Quote',
+        ticketId: res.ticketId,
+        email: quoteEmail,
+        phone: quotePhone,
+        value: Number(cartCalculation.subtotal.toFixed(2)) || 1.0,
+        currency: 'ZAR',
+      });
     } catch (err) {
       console.error(err);
-      setQuoteTicketId('EFM-' + Math.floor(100000 + Math.random() * 900000));
+      const fallbackId = 'EFM-' + Math.floor(100000 + Math.random() * 900000);
+      setQuoteTicketId(fallbackId);
+      trackLeadFormSubmission({
+        formType: 'Instant Price Calculator Quote',
+        ticketId: fallbackId,
+        email: quoteEmail,
+        phone: quotePhone,
+        value: Number(cartCalculation.subtotal.toFixed(2)) || 1.0,
+        currency: 'ZAR',
+      });
     } finally {
       setQuoteSubmitting(false);
       setQuoteSubmitted(true);

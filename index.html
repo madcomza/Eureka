@@ -61,26 +61,66 @@
     }
     </script>
 
-    <!-- Google Tag Manager -->
-    <script async src="https://www.googletagmanager.com/gtm.js?id=GTM-TR5M77WF"></script>
+    <!-- Google Consent Mode v2 Default (Must precede Google Tag Manager & gtag.js) -->
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
+
+      // Initial default consent state (Denied until user grants in banner)
+      var defaultConsentState = {
+        'ad_storage': 'denied',
+        'ad_user_data': 'denied',
+        'ad_personalization': 'denied',
+        'analytics_storage': 'denied',
+        'functionality_storage': 'granted',
+        'personalization_storage': 'granted',
+        'security_storage': 'granted',
+        'wait_for_update': 500
+      };
+
+      // Check if user has previously saved consent choices in localStorage
+      try {
+        var storedConsent = localStorage.getItem('efms_cookie_consent_v1');
+        if (storedConsent) {
+          var parsedConsent = JSON.parse(storedConsent);
+          if (parsedConsent) {
+            if (parsedConsent.marketing !== false) {
+              defaultConsentState['ad_storage'] = 'granted';
+              defaultConsentState['ad_user_data'] = 'granted';
+              defaultConsentState['ad_personalization'] = 'granted';
+            }
+            if (parsedConsent.analytics !== false) {
+              defaultConsentState['analytics_storage'] = 'granted';
+            }
+          }
+        }
+      } catch (e) {}
+
+      gtag('consent', 'default', defaultConsentState);
+      gtag('set', 'ads_data_redaction', defaultConsentState['ad_storage'] === 'denied');
+      gtag('set', 'url_passthrough', true);
     </script>
+
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-TR5M77WF');</script>
     <!-- End Google Tag Manager -->
 
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-19WFKYZ43B"></script>
     <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-
       gtag('config', 'G-19WFKYZ43B');
     </script>
   </head>
   <body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TR5M77WF"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

@@ -24,6 +24,7 @@ import {
 } from 'lucide-react';
 import { ActivePage } from '../App';
 import { sendLeadToInbox, TARGET_LEAD_EMAIL } from '../utils/sendLead';
+import { trackLeadFormSubmission } from '../utils/trackConversion';
 import { AntiSpamShield } from './AntiSpamShield';
 import { initializeAntiSpam, validateHumanSubmission, AntiSpamState } from '../utils/antiSpam';
 
@@ -512,8 +513,26 @@ export const EurekaChatbot: React.FC<EurekaChatbotProps> = ({
         company_fax_number: chatSpamState.honeypotFax,
         form_rendered_at: chatSpamState.formRenderTime,
       });
+
+      // Fire Google Ads conversion tracking for "Submit lead form"
+      trackLeadFormSubmission({
+        formType: `Chatbot Escalation (${escCategory.toUpperCase()})`,
+        ticketId: ticketRef,
+        email: escEmail,
+        phone: escPhone,
+        value: 1000,
+        currency: 'ZAR',
+      });
     } catch (err) {
       console.error('Escalation send error:', err);
+      trackLeadFormSubmission({
+        formType: `Chatbot Escalation (${escCategory.toUpperCase()})`,
+        ticketId: ticketRef,
+        email: escEmail,
+        phone: escPhone,
+        value: 1000,
+        currency: 'ZAR',
+      });
     }
 
     // Prepare mailto fallback string

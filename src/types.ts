@@ -18,3 +18,10 @@ export interface StatItem {
   label: string;
   isRed?: boolean;
 }
+
+declare global {
+  interface Window {
+    dataLayer?: any[];
+    gtag?: (...args: any[]) => void;
+  }
+}

@@ -10,6 +10,7 @@ export interface EurekaCookieConsentProps {
 interface CookiePreferences {
   essential: boolean;
   analytics: boolean;
+  marketing: boolean;
   timestamp: string;
 }
 
@@ -19,6 +20,7 @@ export const EurekaCookieConsent: React.FC<EurekaCookieConsentProps> = ({ onNavi
   const [isVisible, setIsVisible] = useState(false);
   const [showPreferences, setShowPreferences] = useState(false);
   const [analyticsEnabled, setAnalyticsEnabled] = useState(true);
+  const [marketingEnabled, setMarketingEnabled] = useState(true);
 
   useEffect(() => {
     // Check if consent has already been granted or customized
@@ -32,7 +34,10 @@ export const EurekaCookieConsent: React.FC<EurekaCookieConsentProps> = ({ onNavi
     } else {
       try {
         const parsed: CookiePreferences = JSON.parse(stored);
-        applyGtagConsent(parsed.analytics);
+        const marketing = parsed.marketing !== undefined ? parsed.marketing : parsed.analytics;
+        setAnalyticsEnabled(parsed.analytics);
+        setMarketingEnabled(marketing);
+        applyGtagConsent({ analytics: parsed.analytics, marketing });
       } catch {
         setIsVisible(true);
       }
@@ -49,14 +54,35 @@ export const EurekaCookieConsent: React.FC<EurekaCookieConsentProps> = ({ onNavi
     };
   }, []);
 
-  const applyGtagConsent = (granted: boolean) => {
-    if (typeof window !== 'undefined' && (window as any).gtag) {
-      (window as any).gtag('consent', 'update', {
-        analytics_storage: granted ? 'granted' : 'denied',
-        ad_storage: 'denied',
-        ad_user_data: 'denied',
-        ad_personalization: 'denied',
+  const applyGtagConsent = (prefs: { analytics: boolean; marketing: boolean }) => {
+    const consentState = {
+      analytics_storage: prefs.analytics ? 'granted' : 'denied',
+      ad_storage: prefs.marketing ? 'granted' : 'denied',
+      ad_user_data: prefs.marketing ? 'granted' : 'denied',
+      ad_personalization: prefs.marketing ? 'granted' : 'denied',
+      functionality_storage: 'granted',
+      personalization_storage: 'granted',
+      security_storage: 'granted',
+    };
+
+    if (typeof window !== 'undefined') {
+      window.dataLayer = window.dataLayer || [];
+
+      // Update gtag Consent Mode v2
+      if (typeof (window as any).gtag === 'function') {
+        (window as any).gtag('consent', 'update', consentState);
+      } else {
+        window.dataLayer.push(['consent', 'update', consentState]);
+      }
+
+      // Explicit dataLayer push for Google Tag Manager triggers
+      window.dataLayer.push({
+        event: 'consent_update',
+        consent_status: prefs.marketing && prefs.analytics ? 'all_granted' : 'custom',
+        ...consentState,
       });
+
+      console.info('[Consent Mode v2] Updated consent state:', consentState);
     }
   };
 
@@ -64,10 +90,13 @@ export const EurekaCookieConsent: React.FC<EurekaCookieConsentProps> = ({ onNavi
     const prefs: CookiePreferences = {
       essential: true,
       analytics: true,
+      marketing: true,
       timestamp: new Date().toISOString(),
     };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(prefs));
-    applyGtagConsent(true);
+    setAnalyticsEnabled(true);
+    setMarketingEnabled(true);
+    applyGtagConsent({ analytics: true, marketing: true });
     setIsVisible(false);
   };
 
@@ -75,10 +104,13 @@ export const EurekaCookieConsent: React.FC<EurekaCookieConsentProps> = ({ onNavi
     const prefs: CookiePreferences = {
       essential: true,
       analytics: false,
+      marketing: false,
       timestamp: new Date().toISOString(),
     };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(prefs));
-    applyGtagConsent(false);
+    setAnalyticsEnabled(false);
+    setMarketingEnabled(false);
+    applyGtagConsent({ analytics: false, marketing: false });
     setIsVisible(false);
   };
 
@@ -86,10 +118,11 @@ export const EurekaCookieConsent: React.FC<EurekaCookieConsentProps> = ({ onNavi
     const prefs: CookiePreferences = {
       essential: true,
       analytics: analyticsEnabled,
+      marketing: marketingEnabled,
       timestamp: new Date().toISOString(),
     };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(prefs));
-    applyGtagConsent(analyticsEnabled);
+    applyGtagConsent({ analytics: analyticsEnabled, marketing: marketingEnabled });
     setIsVisible(false);
   };
 
@@ -212,6 +245,30 @@ export const EurekaCookieConsent: React.FC<EurekaCookieConsentProps> = ({ onNavi
                           type="checkbox"
                           checked={analyticsEnabled}
                           onChange={(e) => setAnalyticsEnabled(e.target.checked)}
+                          className="sr-only peer"
+                        />
+                        <div className="w-8 h-4 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-3 after:w-3.5 after:transition-all peer-checked:bg-red-600"></div>
+                      </label>
+                    </div>
+
+                    {/* Marketing & Google Ads Conversions */}
+                    <div className="flex items-start justify-between gap-2 p-2 rounded-lg bg-slate-900/60 border border-slate-800 text-[11px]">
+                      <div>
+                        <div className="font-semibold text-white flex items-center gap-1.5">
+                          Marketing &amp; Google Ads
+                          <span className="text-[9px] px-1.5 py-0.2 rounded bg-red-500/20 text-red-300 font-mono">
+                            Ad Storage &amp; Leads
+                          </span>
+                        </div>
+                        <p className="text-slate-400 text-[10px] mt-0.5">
+                          Required for Google Ads conversion attribution, lead form verification, and campaign measurement.
+                        </p>
+                      </div>
+                      <label className="relative inline-flex items-center cursor-pointer mt-1 shrink-0">
+                        <input
+                          type="checkbox"
+                          checked={marketingEnabled}
+                          onChange={(e) => setMarketingEnabled(e.target.checked)}
                           className="sr-only peer"
                         />
                         <div className="w-8 h-4 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-3 after:w-3.5 after:transition-all peer-checked:bg-red-600"></div>

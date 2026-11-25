@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { motion } from 'motion/react';
 import { ScrollReveal, StaggerContainer, StaggerItem } from './ScrollAnimation';
 import { sendLeadToInbox, TARGET_LEAD_EMAIL } from '../utils/sendLead';
+import { trackLeadFormSubmission } from '../utils/trackConversion';
 import { AntiSpamShield } from './AntiSpamShield';
 import { initializeAntiSpam, validateHumanSubmission, AntiSpamState } from '../utils/antiSpam';
 import { EurekaLogo } from './EurekaLogo';
@@ -95,14 +96,18 @@ export const EurekaContactPage: React.FC<EurekaContactPageProps> = ({
     setSpamError(null);
 
     setIsSubmitting(true);
+    const formTypeName =
+      inquiryType === 'emergency'
+        ? 'Emergency Callout Request'
+        : inquiryType === 'audit'
+        ? 'Free Asset Condition Audit'
+        : 'Quote & PPM Inquiry';
+
+    let resolvedTicketId = '';
+
     try {
       const res = await sendLeadToInbox({
-        formType:
-          inquiryType === 'emergency'
-            ? 'Emergency Callout Request'
-            : inquiryType === 'audit'
-            ? 'Free Asset Condition Audit'
-            : 'Quote & PPM Inquiry',
+        formType: formTypeName,
         fullName: formData.fullName,
         email: formData.email,
         phone: formData.phone,
@@ -117,12 +122,24 @@ export const EurekaContactPage: React.FC<EurekaContactPageProps> = ({
         company_fax_number: spamState.honeypotFax,
         form_rendered_at: spamState.formRenderTime,
       });
+      resolvedTicketId = res.ticketId;
       setTicketId(res.ticketId);
     } catch (err) {
       console.error('Failed to submit lead:', err);
-      const fallbackId = 'EFM-' + Math.floor(100000 + Math.random() * 900000);
-      setTicketId(fallbackId);
+      resolvedTicketId = 'EFM-' + Math.floor(100000 + Math.random() * 900000);
+      setTicketId(resolvedTicketId);
     } finally {
+      // Fire Google Ads conversion tracking for "Submit lead form" & GA4 generate_lead
+      trackLeadFormSubmission({
+        formType: formTypeName,
+        ticketId: resolvedTicketId || ('EFM-' + Math.floor(100000 + Math.random() * 900000)),
+        email: formData.email,
+        phone: formData.phone,
+        companyName: formData.companyName,
+        value: inquiryType === 'emergency' ? 2500 : 1500,
+        currency: 'ZAR',
+      });
+
       setIsSubmitting(false);
       setFormSubmitted(true);
     }

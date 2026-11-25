@@ -294,7 +294,10 @@ export const EurekaPrivacyPolicyPage: React.FC<EurekaPrivacyPolicyPageProps> = (
                 Our website utilizes modern telemetry to improve loading performance, monitor availability, and understand user interactions:
               </p>
               <p>
-                We implement Google Analytics via Google tag (<strong>G-19WFKYZ43B</strong>). These analytics cookies collect aggregated, anonymized metrics such as browser viewport dimensions, page traversal paths, and referral origins without identifying individual persons. You can configure your browser to decline non-essential cookies at any time.
+                We implement Google Analytics via Google tag (<strong>G-19WFKYZ43B</strong>) and Google Tag Manager (<strong>GTM-TR5M77WF</strong>) operating in strict compliance with <strong>Google Consent Mode v2</strong>. By default, marketing storage, ad user data, and ad personalization are set to denied until explicitly authorized by you through our interactive Cookie &amp; Privacy Notice banner.
+              </p>
+              <p>
+                When consent is granted, conversion measurement cookies enable Google Ads to attribute commercial inquiries and quote submissions ("Submit lead form" actions) without profiling unconsented visitors. You may reopen and update your granular cookie preferences at any time.
               </p>
             </section>
 
